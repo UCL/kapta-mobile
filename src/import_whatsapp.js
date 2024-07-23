@@ -134,8 +134,8 @@ function processText(text) {
         let location = locationRegex.exec(message.content);
         if (location) {
             message.location = {
-                lat: location[1],
-                long: location[2],
+                lat: parseFloat(location[1]),
+                long: parseFloat(location[2]),
             };
         }
         messages.push(message);
