@@ -1,0 +1,11 @@
+{
+    "api": {
+        "invokeUrl": ""
+    },
+    "mapbox": {
+        "accessToken": ""
+    },
+    "kapta": {
+        "askTheTeamURL": ""
+    }
+}
