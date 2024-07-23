@@ -494,12 +494,15 @@ body {
     min-height: 40vh;
     border: 1px solid var(--black-blue);
     border-radius: 8px;
-    backdrop-filter: blur(4px);
     text-align: center;
     justify-content: space-around;
 
     button {
         height: 3rem;
+    }
+
+    img {
+        margin-inline: 12%;
     }
 }
 
