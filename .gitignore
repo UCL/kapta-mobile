@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# Build directory
+dist/
+
+# VS Code
+.vscode/
+
+# Config
+src/config.json

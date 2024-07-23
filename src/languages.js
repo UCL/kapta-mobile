@@ -1,0 +1,135 @@
+import i18next from "i18next";
+
+const supportedLanguages = {
+	en: "🇬🇧 English",
+	es: "🇪🇸 Español",
+	fr: "🇫🇷 Français",
+	am: "🇪🇹 አማርኛ",
+};
+
+i18next.init({
+	lng: "en", // if you're using a language detector, do not define the lng option
+	fallbackLng: ["en", "es", "fr", "am"],
+	supportedLngs: Object.keys(supportedLanguages),
+	debug: true,
+	resources: {
+		en: {
+			translation: {
+				key: "hello world",
+				asktheteam: "Ask us anything",
+				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Share locations in WhatsApp 📎📍 <br> 2 - Export the chat to Kapta 💬🗺️ <br> 3 - Share or sell your map 🗺️💸`,
+				viewrecentmap: "View recent map",
+				showmap: "Show map",
+				observer: "Observer",
+				date: "Date",
+				inputtopiclabel: "What have you mapped in this WhatsApp group?",
+				inputgoallabel: "What do you want to achieve with this map?",
+				datasovmessage:
+					"Do you allow the Kapta team to use your map to support your community?",
+				confirm: "Confirm",
+				yes: "Yes",
+				no: "No",
+				sharedata: "Share the map DATA",
+				shareimg: "Share the map IMAGE",
+				uploaddata: "Upload to Kapta Web",
+				addMetadataTitle: "Describe this map",
+				sharingTitle: "Share this map",
+				addDescription: "Title of your map",
+				copyright: "© Kapta by UCL",
+				supportOption: "Get support to improve your map",
+				installPrompt: "Kapta works best when installed on a mobile device. Install now?",
+				install: "Install",
+				dismiss: "Dismiss"
+			},
+		},
+		es: {
+			translation: {
+				key: "hola mundo",
+				asktheteam: "Pregúntanos lo que quieras",
+				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Comparte ubicaciones en WhatsApp 📎📍<br>2 - Exporta el chat a Kapta 💬🗺️<br>3 - Comparte o vende tu mapa 🗺️💸`,
+				viewrecentmap: "Ver mapa reciente",
+				showmap: "Mostrar mapa",
+				observer: "Observador",
+				date: "Fecha",
+				datasovmessage:
+					"¿Permites que el equipo de Kapta use tu mapa para apoyar a tu comunidad?",
+				inputtopiclabel: "¿Qué has mapeado en este grupo de WhatsApp?",
+				inputgoallabel: "¿Qué deseas lograr con este mapa?",
+				confirm: "Confirme",
+				yes: "Sí",
+				no: "No",
+				sharedata: "Compartir los datos del mapa",
+				shareimg: "Comparte el mapa",
+				uploaddata: "Subir a Kapta Web",
+				addMetadataTitle: "Describe este mapa",
+				sharingTitle: "Comparte este mapa",
+				cancel: "cancel",
+				addDescription: "Añada descripción",
+				copyright: "© Kapta de UCL",
+				supportOption: "Obtenga apoyo para mejorar su mapa",
+				installPrompt: "Kapta funciona mejor cuando se instala en un dispositivo móvil. ¿Instalar ahora?",
+				install: "Instalar",
+				dismiss: "despedir"
+			},
+		},
+		fr: {
+			translation: {
+				key: "bonjour le monde",
+				asktheteam: "Demandez-nous n`importe quoi",
+				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Partagez des emplacements dans WhatsApp 📎📍<br>2 - Exportez la conversation vers Kapta 💬🗺️<br>3 - Partagez ou vendez votre carte 🗺️💸`,
+				viewrecentmap: "Voir la carte récente",
+				showmap: "Afficher la carte",
+				observer: "Observateur",
+				date: "Date",
+				inputtopiclabel: "Qu`avez-vous cartographié dans ce groupe WhatsApp?",
+				inputgoallabel: "Que souhaitez-vous accomplir avec cette carte?",
+				datasovmessage:
+					"Autorisez-vous l`équipe de Kapta à utiliser votre carte pour soutenir votre communauté?",
+				confirm: "Confirmer",
+				yes: "Oui",
+				no: "Non",
+				sharedata: "Partagez les données",
+				shareimg: "Partager une photo",
+				uploaddata: "Télécharger sur Kapta Web",
+				addMetadataTitle: "Décrivez cette carte",
+				sharingTitle: "Partager cette carte",
+				addDescription: "Titre de votre carte",
+				copyright: "© Kapta par UCL",
+				supportOption: "Obtenez un support pour améliorer votre carte",
+				installPrompt: "Kapta fonctionne mieux lorsqu'il est installé sur un appareil mobile. Installer maintenant?",
+				install: "Installer",
+				dismiss: "rejeter"
+			},
+		},
+		am: {
+			translation: {
+				key: "ሠላም ዓለም",
+				asktheteam: "ምንም ጥያቄ ጠይቁን",
+				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - ቦታዎችን በWhatsApp ያካፍሉ 📎📍<br>2 - ውይይቱን ወደ Kapta ይላኩ 💬🗺️<br>3 - ካርታዎን ያካፍሉ ወይም ይሽጡ 🗺️💸`,
+				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
+				showmap: "ካርታ አሳይ",
+				observer: "ተመልካች",
+				date: "ቀን",
+				inputtopiclabel: "በዚህ ዋትስአፕ ቡድን ምን አሳፍረክ?",
+				inputgoallabel: "በዚህ ካርታ ምን ማንኛት ነገር ልታከናውን ትፈልጋለህ?",
+				datasovmessage: "በኮምዩኒቲዎ ማገዶ እንዲረዳዎ ካፕታ ቡድን ካርታዎን ማጠቃለያን ትፈቅድለታለህ?",
+				confirm: "አረጋግጥ",
+				yes: "አዎን",
+				no: "አይደለም",
+				sharedata: "ከዚህ ካርታ ውሂብ አጋራ",
+				shareimg: "ምስል አጋራ",
+				uploaddata: "ወደ ካፕታ ድር ይስቀሉ።",
+				addMetadataTitle: "ይህን ካርታ ይግለጹ",
+				sharingTitle: "ይህን ካርታ አጋራ",
+				addDescription: "የካርታዎ ርዕስ",
+				copyright: "© ካፕታ በ UCL",
+				supportOption: "ካርታዎን ለማሻሻል ድጋፍ ያግኙ",
+				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
+				install: "ጫን",
+				dismiss: "ማሰናበት"
+			},
+		},
+	},
+});
+
+export { i18next, supportedLanguages };
