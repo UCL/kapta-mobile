@@ -2,6 +2,7 @@ import Alpine from "alpinejs";
 import { displayMap } from "./map.js";
 import * as JSZip from 'jszip';
 import { removeOptionsMenu } from "./menu.js";
+import { slugify } from "./utils.js";
 
 var totalcontribmap = 0;
 var username = localStorage.getItem("username");
@@ -203,6 +204,12 @@ function processText(text) {
         mapdata.features.push(feature);
     }
     Alpine.store("currentDataset").geoJSON = mapdata;
+    if (groupName) {
+        Alpine.store("currentDataset").slug = slugify(groupName);
+    } else {
+        Alpine.store("currentDataset").slug = slugify("Kapta");
+    }
+
     removeOptionsMenu();
     displayLoader();
     setTimeout(() => {
