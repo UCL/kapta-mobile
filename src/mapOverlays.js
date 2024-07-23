@@ -13,6 +13,7 @@ import {
 } from "./icons";
 import { i18next } from "./languages.js";
 import { removeMap } from "./map.js";
+import { slugify } from "./utils.js";
 
 const config = require("./config.json");
 
@@ -91,7 +92,7 @@ export function buildActionTray() {
 					});
 				}
 				// Create slug from topic and add to Alpine store
-				const slug = `kapta-${slugify(topic)}`;
+				const slug = slugify(`${currentDataset.slug}-${topic}`);
 				currentDataset.slug = slug;
 				let titleElem = document.querySelector(".leaflet-map-title");
 				titleElem.textContent = Alpine.store("appData").mapTitle;
@@ -105,16 +106,6 @@ export function buildActionTray() {
 	});
 
 	return actionTray;
-}
-
-function slugify(str) {
-	str = str.replace(/^\s+|\s+$/g, ""); // trim leading/trailing white space
-	str = str.toLowerCase();
-	str = str
-		.replace(/[^a-z0-9 -]/g, "") // remove any non-alphanumeric characters
-		.replace(/\s+/g, "-") // replace spaces with hyphens
-		.replace(/-+/g, "-"); // remove consecutive hyphens
-	return str;
 }
 
 // Modal stuff
@@ -250,7 +241,7 @@ function sharingAction() {
 	shareDataBtn.innerHTML = dataIcn + i18next.t("sharedata");
 	shareDataBtn.addEventListener("click", () => {
 		const currentDataset = Alpine.store("currentDataset").geoJSON;
-		const filename = `${Alpine.store("currentDataset").slug}.txt`;
+		const filename = `${Alpine.store("currentDataset").slug}-${new Date().toDateString()}.txt`;
 		const blob = new Blob([JSON.stringify(currentDataset, null, 2)], {
 			type: "text/plain",
 		});

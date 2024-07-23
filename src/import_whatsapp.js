@@ -2,6 +2,7 @@ import Alpine from "alpinejs";
 import { displayMap } from "./map.js";
 import * as JSZip from 'jszip';
 import { removeOptionsMenu } from "./menu.js";
+import { slugify } from "./utils.js";
 
 var totalcontribmap = 0;
 var username = localStorage.getItem("username");
@@ -134,8 +135,8 @@ function processText(text) {
         let location = locationRegex.exec(message.content);
         if (location) {
             message.location = {
-                lat: location[1],
-                long: location[2],
+                lat: parseFloat(location[1]),
+                long: parseFloat(location[2]),
             };
         }
         messages.push(message);
@@ -203,6 +204,12 @@ function processText(text) {
         mapdata.features.push(feature);
     }
     Alpine.store("currentDataset").geoJSON = mapdata;
+    if (groupName) {
+        Alpine.store("currentDataset").slug = slugify(groupName);
+    } else {
+        Alpine.store("currentDataset").slug = slugify("Kapta");
+    }
+
     removeOptionsMenu();
     displayLoader();
     setTimeout(() => {
