@@ -6,3 +6,6 @@ dist/
 
 # VS Code
 .vscode/
+
+# Config
+src/config.json
