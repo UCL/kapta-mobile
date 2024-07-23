@@ -37,3 +37,6 @@ Visiting the website with a compatible mobile device and browser will prompt you
 2. Tap the three dots in the top right corner and select 'Export chat'
 3. Select Kapta from the list of apps
 4. The app will process the chat and display a map of the locations mentioned in the chat
+
+## Test
+Hello
