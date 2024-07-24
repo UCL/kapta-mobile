@@ -4,12 +4,14 @@ const supportedLanguages = {
 	en: "🇬🇧 English",
 	es: "🇪🇸 Español",
 	fr: "🇫🇷 Français",
+	pt: "🇵🇹 Português",
 	am: "🇪🇹 አማርኛ",
+	yo: "🇳🇬 Yorùbá",
 };
 
 i18next.init({
 	lng: "en", // if you're using a language detector, do not define the lng option
-	fallbackLng: ["en", "es", "fr", "am"],
+	fallbackLng: ["en", "es", "fr", "am", "pt", "yo"],
 	supportedLngs: Object.keys(supportedLanguages),
 	debug: true,
 	resources: {
@@ -17,7 +19,7 @@ i18next.init({
 			translation: {
 				key: "hello world",
 				asktheteam: "Ask us anything",
-				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Share locations in WhatsApp 📎📍 <br> 2 - Export the chat to Kapta 💬🗺️ <br> 3 - Share or sell your map 🗺️💸`,
+				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group <br>👥💬 <br> 2 - Share & describe locations <br> 📎📍 <br> 3 - Export the chat to Kapta <br> 💬🗺️ <br> 4 - Share or sell your map <br> 🗺️💸`,
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -46,8 +48,7 @@ i18next.init({
 			translation: {
 				key: "hola mundo",
 				asktheteam: "Pregúntanos lo que quieras",
-				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Comparte ubicaciones en WhatsApp 📎📍<br>2 - Exporta el chat a Kapta 💬🗺️<br>3 - Comparte o vende tu mapa 🗺️💸`,
-				viewrecentmap: "Ver mapa reciente",
+				instructions: `<span class="title">Cómo usar Kapta</span><hr>1 - Crear un grupo de Mapas de WhatsApp <br>👥💬 <br>2 - Compartir y describir ubicaciones <br> 📎📍<br>3 - Exportar el chat a Kapta <br> 💬🗺️ <br>4 - Compartir o vender tu mapa <br> 🗺️💸`,				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
 				date: "Fecha",
@@ -63,7 +64,6 @@ i18next.init({
 				uploaddata: "Subir a Kapta Web",
 				addMetadataTitle: "Describe este mapa",
 				sharingTitle: "Comparte este mapa",
-				cancel: "cancel",
 				addDescription: "Añada descripción",
 				copyright: "© Kapta de UCL",
 				supportOption: "Obtenga apoyo para mejorar su mapa",
@@ -76,8 +76,7 @@ i18next.init({
 			translation: {
 				key: "bonjour le monde",
 				asktheteam: "Demandez-nous n`importe quoi",
-				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Partagez des emplacements dans WhatsApp 📎📍<br>2 - Exportez la conversation vers Kapta 💬🗺️<br>3 - Partagez ou vendez votre carte 🗺️💸`,
-				viewrecentmap: "Voir la carte récente",
+				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe de WhatsApp <br>👥💬 <br>2 - Partagez et décrivez les emplacements <br> 📎📍 <br>3 - Exportez la discussion vers Kapta <br> 💬🗺️ <br>4 - Partagez ou vendez votre carte <br> 🗺️💸`,				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
 				date: "Date",
@@ -105,8 +104,7 @@ i18next.init({
 			translation: {
 				key: "ሠላም ዓለም",
 				asktheteam: "ምንም ጥያቄ ጠይቁን",
-				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - ቦታዎችን በWhatsApp ያካፍሉ 📎📍<br>2 - ውይይቱን ወደ Kapta ይላኩ 💬🗺️<br>3 - ካርታዎን ያካፍሉ ወይም ይሽጡ 🗺️💸`,
-				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
+				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - የWhatsApp ካርታዎች ቡድን ይፍጠሩ <br>👥💬 <br>2 - ቦታዎችን ያካፍሉና ይግለጹ <br> 📎📍 <br>3 - ውይይቱን ወደ ካፕታ ይላኩ <br> 💬🗺️ <br>4 - ካርታዎን ይካፍሉ ወይም ይሽጡ <br> 🗺️💸`,				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
 				observer: "ተመልካች",
 				date: "ቀን",
@@ -127,6 +125,63 @@ i18next.init({
 				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
 				install: "ጫን",
 				dismiss: "ማሰናበት"
+			},
+		},
+		pt: {
+			translation: {
+				key: "olá mundo",
+				asktheteam: "Pergunte-nos qualquer coisa",
+				instructions: `<span class="title">Como usar o Kapta</span><hr>1 - Crie um grupo de WhatsApp <br>👥💬 <br>2 - Compartilhe e descreva locais <br> 📎📍 <br> 3 - Exporte o chat para o Kapta <br> 💬🗺️ <br> 4 - Compartilhe ou venda seu mapa <br> 🗺️💸`,
+				viewrecentmap: "Ver mapa recente",
+				showmap: "Mostrar mapa",
+				observer: "Observador",
+				date: "Data",
+				inputtopiclabel: "O que você mapeou neste grupo de WhatsApp?",
+				inputgoallabel: "O que você quer alcançar com este mapa?",
+				datasovmessage:
+					"Você permite que a equipe Kapta use seu mapa para apoiar sua comunidade?",
+				confirm: "Confirmar",
+				yes: "Sim",
+				no: "Não",
+				sharedata: "Compartilhar os dados do mapa",
+				shareimg: "Compartilhar a imagem do mapa",
+				uploaddata: "Carregar para a Web Kapta",
+				addMetadataTitle: "Descreva este mapa",
+				sharingTitle: "Compartilhar este mapa",
+				addDescription: "Título do seu mapa",
+				copyright: "© Kapta por UCL",
+				supportOption: "Obtenha suporte para melhorar seu mapa",
+				installPrompt: "Kapta funciona melhor quando instalado em um dispositivo móvel. Instalar agora?",
+				install: "Instalar",
+				dismiss: "Dispensar"
+			},
+		},
+		yo: {
+			translation: {
+				key: "báwo ni ayé",
+				asktheteam: "Béèrè ohunkóhun lọ́wọ́ wa",
+				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Dá ìgbìmọ̀ àwáàrí ní WhatsApp <br>👥💬 <br>2 - Pín & ṣàpèjúwe àwọn àyè <br> 📎📍 <br>3 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta <br> 💬🗺️ <br>4 - Pín tàbí tà átààwá àwáàrí rẹ <br> 🗺️💸`,				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
+				showmap: "Fíhàn àwáàrí",
+				observer: "Olùtọ́jú",
+				date: "Ọjọ́",
+				inputtopiclabel: "Kí ni o ti ṣe àwáàrí ní àpàdé WhatsApp yìí?",
+				inputgoallabel: "Kí ni o fẹ́ ṣe tán pẹ̀lú àwáàrí yìí?",
+				datasovmessage:
+					"Ṣe o jẹ́ kí ẹgbẹ́ Kapta lò àwáàrí rẹ láti ṣèrànwọ́ ààárín rẹ?",
+				confirm: "Ẹ̀rí",
+				yes: "Bẹ́ẹ̀ni",
+				no: "Rárá",
+				sharedata: "Pín ìwòye àwáàrí",
+				shareimg: "Pín àwòrán àwáàrí",
+				uploaddata: "Gbé só Kapta lórí Ayélujára",
+				addMetadataTitle: "Ṣàpèjúwe àwáàrí yìí",
+				sharingTitle: "Pín àwáàrí yìí",
+				addDescription: "Àkọlé àwáàrí rẹ",
+				copyright: "© Kapta láti UCL",
+				supportOption: "Gba ìtìlẹ́yìn láti mú àwáàrí rẹ dàra sí",
+				installPrompt: "Kapta dára jùlọ tí ó bá wà nínú ètò alágbèéká. Ṣe yóò ìgbele?",
+				install: "Ìgbele",
+				dismiss: "Ìsọfúnni"
 			},
 		},
 	},
