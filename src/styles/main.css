@@ -497,6 +497,10 @@ body {
     text-align: center;
     justify-content: space-around;
 
+    @media screen and (min-width: 700px) {
+        width: clamp(28vw, 30vw, 32vw);
+    }
+
     button {
         height: 3rem;
     }
