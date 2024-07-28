@@ -1,7 +1,7 @@
 # Kapta
 
 ## What? ###
-[Kapta Lite](http://kapta.earth) is a Progressive Web App enabling users to generate maps from WhatsApp chats.
+[Kapta Mobile](http://kapta.earth) is a Progressive Web App enabling users to generate maps from WhatsApp chats.
 
 To start creating & sharing WhatsApp Maps with Kapta!:
   * Share & describe locations in your WhatsApp chats ����
@@ -17,21 +17,18 @@ To connect users and producers of ground information. See our latest blog and wh
 Kapta: A (de)centralised crowdsourcing system to connect users and producers of ground information.
 
 ## Who? ###
-Kapta is being developed by the [University College London (UCL)](http://ucl.ac.uk) [Extreme Citizen Science (ExCiteS) research group](http://ucl.ac.uk/excites) and the  [Advanced Research Computing Centre (UCL ARC)](https://www.ucl.ac.uk/advanced-research-computing), with help from outside partners & contributors.
+Kapta is being developed by the [University College London (UCL)](http://ucl.ac.uk) [Extreme Citizen Science (ExCiteS) research group](http://ucl.ac.uk/excites) and the [Advanced Research Computing Centre (UCL ARC)](https://www.ucl.ac.uk/advanced-research-computing), with help from outside partners & contributors.
 
 Currently the core Kapta team consists of:
   * [Marcos Moreu](https://www.ucl.ac.uk/geography/marcos-moreu), UCL Geography
   * [Fabien Moustard](https://www.ucl.ac.uk/geography/fabien-moustard), UCL Geography
   * [Tom Couch](https://www.ucl.ac.uk/advanced-research-computing/people/tom-couch), UCL ARC
+  * [Muki Haklay](http://www.ucl.ac.uk/excites/people/academic-staff/muki-haklay), UCL Geography
+  * [Jonathan Cooper](https://www.ucl.ac.uk/advanced-research-computing/people/jonathan-cooper), UCL ARC
+  * [Claire Ellul](https://www.ucl.ac.uk/civil-environmental-geomatic-engineering/people/dr-claire-ellul), UCL CEGE
   * [Amanda Ho-Lyn](https://www.ucl.ac.uk/advanced-research-computing/research-software-engineers-0), UCL ARC
   * [Jed Stevenson](https://www.durham.ac.uk/staff/jed-stevenson/), Durham University
   * [Dessalegn Teckle](https://et.linkedin.com/in/dessalegn-tekle-02b848ba), Addis Ababa University, NGO IPC
-  * [Ayoade Adetoye](https://scholar.google.com/citations?user=BNWkhTwAAAAJ&hl=en), Environmental & Economic Resource Centre, Nigeria
-  * [Jonathan Cooper](https://www.ucl.ac.uk/advanced-research-computing/people/jonathan-cooper), UCL ARC
-  * [Jerome Lewis](http://www.ucl.ac.uk/anthropology/people/academic_staff/j_lewis), UCL Anthropology
-  * [Claire Ellul](https://www.ucl.ac.uk/civil-environmental-geomatic-engineering/people/dr-claire-ellul), UCL CEGE
-  * [Muki Haklay](http://www.ucl.ac.uk/excites/people/academic-staff/muki-haklay), UCL Geography
-
 
 # Guidance for Developers
 
