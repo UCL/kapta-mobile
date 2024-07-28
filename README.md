@@ -1,12 +1,15 @@
 # Kapta
 
 ## What? ###
-[Kapta Mobile](http://kapta.earth) is a Progressive Web App enabling users to generate maps from WhatsApp chats.
 
-To start creating & sharing WhatsApp Maps with Kapta!:
-  * Share & describe locations in your WhatsApp chats ����
-  * Convert your chats to maps with Kapta ����️ 
-  * Share or sell your maps ��️��
+Kapta Mobile is a Progressive Web App enabling users to generate maps from WhatsApp chats.
+👉 📱 http://kapta.earth
+
+To start creating & sharing WhatsApp Maps with Kapta:
+  * Create a WhatsApp group 👥💬
+  * Share & describe locations in your WhatsApp chats 📎📍
+  * Convert your chats to maps with Kapta 💬🗺️ 
+  * Share or sell your maps 🗺️💸
 
 ## Why? ###
 To connect users and producers of ground information. See our latest blog and where this started in 2010:
