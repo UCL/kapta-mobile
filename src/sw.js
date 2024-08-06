@@ -1,6 +1,6 @@
 import { precacheAndRoute } from 'workbox-precaching/precacheAndRoute';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
 
@@ -8,7 +8,7 @@ clientsClaim();
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-registerRoute(({ url }) => url.hostname === 'api.mapbox.com', new StaleWhileRevalidate({
+registerRoute(({ url }) => url.hostname === 'api.mapbox.com', new CacheFirst({
     cacheName: 'map-tiles',
     plugins: [
         new ExpirationPlugin({
