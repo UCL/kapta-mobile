@@ -1,24 +1,21 @@
 import { precacheAndRoute } from 'workbox-precaching/precacheAndRoute';
 import { registerRoute } from 'workbox-routing';
+import { CacheFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
 
 clientsClaim();
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// const matchCb = ({ url, request, event }) => {
-//     return url.pathname === '/share-target';
-// };
-
-// const handlerCb = async ({ url, request, event, params }) => {
-//     const data = await event.request.formData();
-//     const file = data.get('file');
-//     const client = await self.clients.get(event.resultingClientId);
-//     client.postMessage({ file });
-//     event.respondWith(Response.redirect('./index.html'))
-// }
-
-// registerRoute(matchCb, handlerCb, 'POST');
+registerRoute(({ url }) => url.hostname === 'api.mapbox.com', new CacheFirst({
+    cacheName: 'map-tiles',
+    plugins: [
+        new ExpirationPlugin({
+            maxEntries: 250,
+        }),
+    ]
+}));
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
