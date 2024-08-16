@@ -194,15 +194,29 @@ body {
             padding: 0.5rem;
             color: var(--black-blue);
 
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+
             svg {
                 height: 95%;
                 margin-right: 0.4rem;
+                transition: color 0.3s ease
             }
 
 
             .disabled,
             &[disabled]>svg {
                 color: var(--mid-grey);
+            }
+
+            &:active,
+            :focus {
+                background-color: #9f1203;
+                color: #eee;
+                border-color: #031927;
+
+                svg {
+                    color: #eee;
+                }
             }
         }
 
@@ -551,21 +565,35 @@ body {
 .loader {
     display: inline-flex;
     gap: 5px;
-  }
-  .loader:before,
-  .loader:after {
+}
+
+.loader:before,
+.loader:after {
     content: "";
     width: 25px;
     aspect-ratio: 1;
     box-shadow: 0 0 0 3px inset #fff;
     animation: l5 1.5s infinite;
-  }
-  .loader:after {
-    --s:-1;
-  }
-  @keyframes l5 {
-    0%   {transform:scaleX(var(--s,1)) translate(0) scale(1)}
-    33%  {transform:scaleX(var(--s,1)) translate(calc(50% + 2.5px)) scale(1)}
-    66%  {transform:scaleX(var(--s,1)) translate(calc(50% + 2.5px)) scale(2)}
-    100% {transform:scaleX(var(--s,1)) translate(0) scale(1)}
-  }
+}
+
+.loader:after {
+    --s: -1;
+}
+
+@keyframes l5 {
+    0% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+
+    33% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(1)
+    }
+
+    66% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(2)
+    }
+
+    100% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+}
