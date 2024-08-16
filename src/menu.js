@@ -31,7 +31,6 @@ function buildLanguageSelector() {
 
 		// Save the selected language to localStorage
 		localStorage.setItem("preferredLanguage", selectedLanguage);
-		console.log("set preferred language to", selectedLanguage);
 
 		i18next.changeLanguage(selectedLanguage).then((t) => {
 			reloadOptionsMenu();
