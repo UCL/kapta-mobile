@@ -5,7 +5,7 @@ import {
 	respondToSMSChallenge,
 	signOut,
 } from "./auth.js";
-import KaptaLogo from "./images/icons/icon-256x256.webp";
+import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
 
 var loginDialog;

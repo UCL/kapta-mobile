@@ -50,11 +50,13 @@ body {
 #menuContainer {
     flex: 7;
     display: grid;
-    grid-template-rows: 6vh repeat(auto-fill, minmax(10vh, 14vh));
+    grid-template-rows: 6vh 20vh;
+    grid-auto-rows: minmax(10vh, 14vh);
     justify-content: center;
     justify-items: center;
     align-content: center;
-    row-gap: 4vh;
+    row-gap: 3vh;
+    padding-bottom: 4vh;
 
     .btn {
         border-radius: 60px;
@@ -69,7 +71,7 @@ body {
         font-weight: 600;
         color: var(--mid-red);
         margin-top: 2vh;
-        margin-bottom: 2vh;
+        margin-bottom: 1vh;
     }
 
     #languageSelector {

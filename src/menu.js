@@ -54,13 +54,6 @@ function buildOptionsMenu() {
 	instructions.innerHTML = i18next.t("instructions");
 	menuContainer.appendChild(instructions);
 
-	// tutorial button
-	const tutorialBtn = document.createElement("button");
-	tutorialBtn.id = "tutorialBtn";
-	tutorialBtn.innerText = i18next.t("watchtutorial");
-	tutorialBtn.classList.add("btn");
-	menuContainer.appendChild(tutorialBtn);
-
 	// Help button
 	const helpBtn = document.createElement("button");
 	helpBtn.id = "helpBtn";
@@ -115,10 +108,12 @@ function displayOptionsMenu() {
 	addMenuListeners();
 
 	// Copyright
-	const copyright = document.createElement("div");
-	copyright.id = "copyright";
-	copyright.innerHTML = i18next.t("copyright");
-	parent.appendChild(copyright);
+	if (!document.getElementById("copyright")) {
+		const copyright = document.createElement("div");
+		copyright.id = "copyright";
+		copyright.innerHTML = i18next.t("copyright");
+		parent.appendChild(copyright);
+	}
 }
 
 function removeOptionsMenu() {
