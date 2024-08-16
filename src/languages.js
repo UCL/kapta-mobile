@@ -6,9 +6,9 @@ const supportedLanguages = {
 	fr: "🇫🇷 Français",
 	am: "🇪🇹 አማርኛ",
 };
-
+const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 i18next.init({
-	lng: "en", // if you're using a language detector, do not define the lng option
+	lng: savedLanguage,
 	fallbackLng: ["en", "es", "fr", "am"],
 	supportedLngs: Object.keys(supportedLanguages),
 	debug: true,
@@ -17,7 +17,8 @@ i18next.init({
 			translation: {
 				key: "hello world",
 				asktheteam: "Ask us anything",
-				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Share locations in WhatsApp 📎📍 <br> 2 - Export the chat to Kapta 💬🗺️ <br> 3 - Share or sell your map 🗺️💸`,
+				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group 👥💬 <br> 2 - Ask the group to share and describe locations 📎📍💬 <br> 3 - Click 'Export chat' to the Kapta mobile app 💬🗺️ <br> 4 - Use and share your WhatsApp Map with Kapta 🗺️💸`,
+				watchtutorial: "watch tutorial",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -37,16 +38,18 @@ i18next.init({
 				addDescription: "Title of your map",
 				copyright: "© Kapta by UCL",
 				supportOption: "Get support to improve your map",
-				installPrompt: "Kapta works best when installed on a mobile device. Install now?",
+				installPrompt:
+					"Kapta works best when installed on a mobile device. Install now?",
 				install: "Install",
-				dismiss: "Dismiss"
+				dismiss: "Dismiss",
 			},
 		},
 		es: {
 			translation: {
 				key: "hola mundo",
 				asktheteam: "Pregúntanos lo que quieras",
-				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Comparte ubicaciones en WhatsApp 📎📍<br>2 - Exporta el chat a Kapta 💬🗺️<br>3 - Comparte o vende tu mapa 🗺️💸`,
+				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Crea un grupo de WhatsApp 👥💬 <br> 2 - Pídele al grupo que comparta y describa ubicaciones 📎📍💬 <br> 3 - Haz clic en 'Exportar chat' a la aplicación móvil de Kapta 💬🗺️ <br> 4 - Usa y comparte tu mapa de WhatsApp con Kapta 🗺️💸`,
+				watchtutorial: "ver tutorial",
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -67,16 +70,18 @@ i18next.init({
 				addDescription: "Añada descripción",
 				copyright: "© Kapta de UCL",
 				supportOption: "Obtenga apoyo para mejorar su mapa",
-				installPrompt: "Kapta funciona mejor cuando se instala en un dispositivo móvil. ¿Instalar ahora?",
+				installPrompt:
+					"Kapta funciona mejor cuando se instala en un dispositivo móvil. ¿Instalar ahora?",
 				install: "Instalar",
-				dismiss: "despedir"
+				dismiss: "despedir",
 			},
 		},
 		fr: {
 			translation: {
 				key: "bonjour le monde",
 				asktheteam: "Demandez-nous n`importe quoi",
-				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Partagez des emplacements dans WhatsApp 📎📍<br>2 - Exportez la conversation vers Kapta 💬🗺️<br>3 - Partagez ou vendez votre carte 🗺️💸`,
+				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp 👥💬 <br> 2 - Demandez au groupe de partager et de décrire des emplacements 📎📍💬 <br> 3 - Cliquez sur 'Exporter le chat' vers l'application mobile Kapta 💬🗺️ <br> 4 - Utilisez et partagez votre carte WhatsApp avec Kapta 🗺️💸`,
+				watchtutorial: "regarder le tutoriel",
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
@@ -96,16 +101,18 @@ i18next.init({
 				addDescription: "Titre de votre carte",
 				copyright: "© Kapta par UCL",
 				supportOption: "Obtenez un support pour améliorer votre carte",
-				installPrompt: "Kapta fonctionne mieux lorsqu'il est installé sur un appareil mobile. Installer maintenant?",
+				installPrompt:
+					"Kapta fonctionne mieux lorsqu'il est installé sur un appareil mobile. Installer maintenant?",
 				install: "Installer",
-				dismiss: "rejeter"
+				dismiss: "rejeter",
 			},
 		},
 		am: {
 			translation: {
 				key: "ሠላም ዓለም",
 				asktheteam: "ምንም ጥያቄ ጠይቁን",
-				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - ቦታዎችን በWhatsApp ያካፍሉ 📎📍<br>2 - ውይይቱን ወደ Kapta ይላኩ 💬🗺️<br>3 - ካርታዎን ያካፍሉ ወይም ይሽጡ 🗺️💸`,
+				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - የ WhatsApp ቡድን ይፍጠሩ 👥💬 <br>2 - ቡድኑን እንዲያካፍል እና አካባቢዎችን እንዲገልጽ ጠይቅ 📎📍💬 <br>3 - ወደ ካፕታ ሞባይል መተግበሪያ 'ቻት ላክ' የሚለውን ጠቅ ያድርጉ 💬🗺️ <br>4 - የ WhatsApp ካርታዎን በካፕታ 🗺️💸 ይጠቀሙ እና ያካፍሉ።`,
+				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
 				observer: "ተመልካች",
@@ -126,7 +133,7 @@ i18next.init({
 				supportOption: "ካርታዎን ለማሻሻል ድጋፍ ያግኙ",
 				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
 				install: "ጫን",
-				dismiss: "ማሰናበት"
+				dismiss: "ማሰናበት",
 			},
 		},
 	},

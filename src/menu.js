@@ -9,21 +9,35 @@ function buildLanguageSelector() {
 	const selector = document.createElement("select");
 	selector.id = "languageSelector";
 
+	// get saved language from localStorage if it's there
+	const savedLanguage = localStorage.getItem("preferredLanguage");
+
+	const initialLanguage = savedLanguage || i18next.language;
+
 	Object.entries(supportedLanguages).forEach(([key, value]) => {
 		let option = document.createElement("option");
 		option.value = key;
 		option.textContent = value;
-		if (key == i18next.language) {
-			option.selected = "selected";
+		if (key === initialLanguage) {
+			option.selected = true;
 		}
 		selector.appendChild(option);
 	});
-	selector.value = i18next.resolvedLanguage;
+
+	selector.value = initialLanguage;
+
 	selector.addEventListener("change", (evt) => {
-		i18next.changeLanguage(evt.target.value).then((t) => {
+		const selectedLanguage = evt.target.value;
+
+		// Save the selected language to localStorage
+		localStorage.setItem("preferredLanguage", selectedLanguage);
+		console.log("set preferred language to", selectedLanguage);
+
+		i18next.changeLanguage(selectedLanguage).then((t) => {
 			reloadOptionsMenu();
 		});
 	});
+
 	return selector;
 }
 
@@ -40,6 +54,13 @@ function buildOptionsMenu() {
 	instructions.id = "instructions";
 	instructions.innerHTML = i18next.t("instructions");
 	menuContainer.appendChild(instructions);
+
+	// tutorial button
+	const tutorialBtn = document.createElement("button");
+	tutorialBtn.id = "tutorialBtn";
+	tutorialBtn.innerText = i18next.t("watchtutorial");
+	tutorialBtn.classList.add("btn");
+	menuContainer.appendChild(tutorialBtn);
 
 	// Help button
 	const helpBtn = document.createElement("button");
