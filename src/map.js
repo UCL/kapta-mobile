@@ -18,7 +18,6 @@ const config = require("./config.json");
 var scaleLine;
 var attributionContainer;
 var currentLocation;
-var filesArray;
 
 /************************************************************************************************
  *   Basemaps
@@ -124,34 +123,32 @@ function error(err) {
 navigator.geolocation.getCurrentPosition(success, error, options);
 
 var gpsButton = L.easyButton({
-    id: "gps",
-    class: "easyButton",
-    position: "topright",
-    states: [
-        {
-            icon: `<span>${GPSIcn}</span>`,
-            //stateName: 'check-mark',
-            onClick: function (control) {
-                control.button.style.backgroundColor = "#696868";
-                setTimeout(function () {
-                    control.button.style.backgroundColor = "#afafaf";
-                }, 300);
-
-                if (currentLocation[0] != null) {
-                    L.marker(currentLocation, {
-                        icon: gpsPositionIcon,
-                        // rotationAngle: 90,
-                        draggable: false,
-                        zIndexOffset: 100,
-                    }).addTo(control._map);
-                    control._map.panTo(currentLocation, 10);
-                } else {
-                    console.error("GPS not available");
-                    control.button.src = "images/gpsSearching.gif";
-                }
-            },
-        },
-    ],
+	id: "gps",
+	class: "easyButton",
+	position: "topright",
+	states: [
+		{
+			icon: `<span>${GPSIcn}</span>`,
+			//stateName: 'check-mark',
+			onClick: function (control) {
+				if (currentLocation !== undefined && currentLocation[0] !== null) {
+					L.marker(currentLocation, {
+						icon: gpsPositionIcon,
+						draggable: false,
+						zIndexOffset: 100,
+					}).addTo(control._map);
+					control._map.panTo(currentLocation, 10);
+				} else {
+					console.error("GPS not available");
+					control.button.src = "images/gpsSearching.gif";
+					L.popup()
+						.setLatLng(control._map.getCenter()) // or use a specific lat/lng if known
+						.setContent("GPS not available. Please check your device settings.")
+						.openOn(control._map);
+				}
+			},
+		},
+	],
 });
 
 /************************************************************************************************
@@ -206,14 +203,6 @@ function addDataToMap(map, mapdata) {
 			paddingBottomRight: [0, 0],
 		});
 	});
-	// Disable mobile interactions
-	// map.dragging.disable();
-	// map.touchZoom.disable();
-	// Disable mouse and keyboard interactions
-	// map.doubleClickZoom.disable();
-	// map.scrollWheelZoom.disable();
-	// map.boxZoom.disable();
-	// map.keyboard.disable();
 }
 
 /************************************************************************************************
@@ -245,47 +234,47 @@ export function removeMap() {
 }
 
 function displayMap(mapdata) {
-    let mapContainer = document.createElement("div");
-    mapContainer.id = "map";
-    document.querySelector("#main").appendChild(mapContainer);
-    var southWest = L.latLng(-70, -180);
-    var northEast = L.latLng(80, 180);
-    var map = L.map("map", {
-        renderer: L.canvas({ padding: 0.5, tolerance: 8 }),
-        editable: true,
-        center: [0, 0], //global center
-        zoom: 2,
-        minZoom: 2,
-        maxZoom: 21,
-        zoomControl: false,
-        attributionControl: false,
-        maxBounds: L.latLngBounds(southWest, northEast),
-    });
-    let attribution = L.control
-        .attribution({
-            position: "bottomright",
-            prefix: "",
-        })
-        .addTo(map);
-    attributionContainer = attribution.getContainer();
+	let mapContainer = document.createElement("div");
+	mapContainer.id = "map";
+	document.querySelector("#main").appendChild(mapContainer);
+	var southWest = L.latLng(-70, -180);
+	var northEast = L.latLng(80, 180);
+	var map = L.map("map", {
+		renderer: L.canvas({ padding: 0.5, tolerance: 8 }),
+		editable: true,
+		center: [0, 0], //global center
+		zoom: 2,
+		minZoom: 2,
+		maxZoom: 21,
+		zoomControl: false,
+		attributionControl: false,
+		maxBounds: L.latLngBounds(southWest, northEast),
+	});
+	let attribution = L.control
+		.attribution({
+			position: "bottomright",
+			prefix: "",
+		})
+		.addTo(map);
+	attributionContainer = attribution.getContainer();
 
-    let scale = L.control
-        .scale({
-            maxWidth: 100,
-            metric: true,
-            imperial: false,
-            position: "bottomleft",
-        })
-        .addTo(map);
-    scaleLine = scale.getContainer().querySelector(".leaflet-control-scale-line");
+	let scale = L.control
+		.scale({
+			maxWidth: 100,
+			metric: true,
+			imperial: false,
+			position: "bottomleft",
+		})
+		.addTo(map);
+	scaleLine = scale.getContainer().querySelector(".leaflet-control-scale-line");
 
 	var mapTitle = L.DomUtil.create("div", "leaflet-map-title");
 	map.getContainer().appendChild(mapTitle);
 
-    basemapDark.addTo(map);
-    basemapButton.addTo(map);
-    gpsButton.addTo(map);
-    printBtn.addTo(map);
+	basemapDark.addTo(map);
+	basemapButton.addTo(map);
+	gpsButton.addTo(map);
+	printBtn.addTo(map);
 
 	if (mapdata) {
 		addDataToMap(map, mapdata);

@@ -253,8 +253,13 @@ body {
         &:has(.fa-moon) {
             width: 45px;
         }
+
+
     }
 
+    #gps:active {
+        background-color: rgb(175, 175, 175);
+    }
 
     .position-marker-icon {
         color: var(--bright-green);
