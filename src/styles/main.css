@@ -275,7 +275,7 @@ body {
         top: 1rem;
         text-align: center;
         color: #efedec;
-        z-index: 1100;
+        z-index: 999;
         font-size: 190%;
     }
 
