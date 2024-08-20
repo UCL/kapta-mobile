@@ -114,10 +114,10 @@ if ("serviceWorker" in navigator) {
 		navigator.serviceWorker
 			.register("/sw.js")
 			.then((registration) => {
-				console.log("SW registered: ", registration);
+				console.info("SW registered: ", registration);
 			})
 			.catch((registrationError) => {
-				console.log("SW registration failed: ", registrationError);
+				console.info("SW registration failed: ", registrationError);
 			});
 	});
 	if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop

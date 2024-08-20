@@ -43,7 +43,7 @@ function promptToInstall() {
 
 async function handleInstallPrompt() {
 	let install = await promptToInstall();
-	console.log("Install prompt outcome", install);
+	console.info("Install prompt outcome", install);
 }
 
 function initialiseInstallPrompt() {

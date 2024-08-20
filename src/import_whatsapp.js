@@ -77,8 +77,24 @@ function getSenderColour(senders) {
 function formatDateString(date, time) {
 	// Given strings representing a date (dd/mm/yyyy) and
 	// time (hh:mm) return a datetime object
+	// Check if time includes AM/PM to determine the format
+	const is12HourFormat =
+		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
+	let hour, min;
 	let [day, month, year] = date.split("/");
-	let [hour, min] = time.split(":");
+	if (is12HourFormat) {
+		// Handle 12-hour format
+		let [timePart, meridiem] = time.toLowerCase().split(" ");
+		[hour, min] = timePart.split(":");
+
+		// Convert 12-hour to 24-hour format
+		if (meridiem === "pm" && hour !== "12") {
+			hour = parseInt(hour, 10) + 12;
+		} else if (meridiem === "am" && hour === "12") {
+			hour = "00";
+		}
+	} else [hour, min] = time.split(":"); // 24hr format used already
+
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 }
 
@@ -104,7 +120,8 @@ function processText(text) {
 	// stopping when new line starts with date or text ends
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	const messageRegex =
-		/(\d{2}\/\d{2}\/\d{4}),\s(\d{2}:\d{2})\s-\s(.*?):\s((.|\n)*?)(?=((\n\d{2}\/\d{2}\/\d{4})|$))/g;
+		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):\s((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+
 	let messageMatches = [...text.matchAll(messageRegex)];
 
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)

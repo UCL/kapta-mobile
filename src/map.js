@@ -195,7 +195,6 @@ function addDataToMap(map, mapdata) {
 			}
 		},
 	}).addTo(map);
-	let bounds = map.getBounds();
 	let boundsLayer = layerChatGeom.getBounds();
 	setTimeout(function () {
 		map.fitBounds(boundsLayer, {
