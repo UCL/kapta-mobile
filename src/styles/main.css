@@ -65,6 +65,7 @@ body {
 
 
     #helpBtn,
+    #tutorialBtn,
     #recentBtn {
         font-size: 145%;
         text-align: center;
@@ -515,6 +516,23 @@ body {
 
     button {
         height: 3rem;
+    }
+}
+
+#video-modal {
+    position: absolute;
+    display: flex;
+    width: 95%;
+    background-color: #eee;
+    border-radius: 6px;
+
+    .video-modal__inner {
+        width: 100%;
+    }
+
+    .modal-close {
+        float: right;
+        border-color: lightgray;
     }
 }
 

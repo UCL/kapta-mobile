@@ -114,20 +114,20 @@ export function closeModal(modal) {
 	modal.innerHTML = "";
 	modal.classList.remove("visible");
 	main.onclick = null;
-	switchToShareBtn(document.getElementById("tray__button"));
+	if (modal.id == "sharing-modal") {
+		switchToShareBtn(document.getElementById("tray__button"));
+	}
 }
 
 function createModalCloseButton(modal) {
 	var closeButton = document.createElement("button");
 	closeButton.classList.add("modal-close", "btn");
 	closeButton.innerHTML = closeIcon;
-	closeButton.onclick = function () {
-		closeModal(modal);
-	};
+	closeButton.onclick = () => closeModal(modal);
 	return closeButton;
 }
 
-function makeModalVisible(modal) {
+export function makeModalVisible(modal) {
 	var main = document.getElementById("main");
 	modal.classList.add("visible");
 	modal.classList.remove("invisible");

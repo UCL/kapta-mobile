@@ -2,6 +2,7 @@ import { displayMap } from "./map.js";
 import { displayFile } from "./import_whatsapp.js";
 import { i18next, supportedLanguages } from "./languages.js";
 import Alpine from "alpinejs";
+import { closeModal, makeModalVisible } from "./mapOverlays.js";
 
 const config = require("./config.json");
 
@@ -39,6 +40,17 @@ function buildLanguageSelector() {
 
 	return selector;
 }
+function displayVideoModal() {
+	const videoModal = document.getElementById("video-modal");
+	videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
+        <video id="videoElement" width="100%" controls>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video></div>`;
+	videoModal.querySelector("button").onclick = () => closeModal(videoModal);
+
+	makeModalVisible(videoModal);
+}
 
 function buildOptionsMenu() {
 	const menuContainer = document.createElement("div");
@@ -53,6 +65,14 @@ function buildOptionsMenu() {
 	instructions.id = "instructions";
 	instructions.innerHTML = i18next.t("instructions");
 	menuContainer.appendChild(instructions);
+
+	// tutorial button
+	const tutorialBtn = document.createElement("button");
+	tutorialBtn.id = "tutorialBtn";
+	tutorialBtn.innerText = i18next.t("watchtutorial");
+	tutorialBtn.classList.add("btn");
+	tutorialBtn.onclick = displayVideoModal;
+	menuContainer.appendChild(tutorialBtn);
 
 	// Help button
 	const helpBtn = document.createElement("button");
