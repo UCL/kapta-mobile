@@ -43,10 +43,12 @@ function buildLanguageSelector() {
 function displayVideoModal() {
 	const videoModal = document.getElementById("video-modal");
 	videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
-        <video id="videoElement" width="100%" controls>
-            <source src="" type="video/mp4">
-            Your browser does not support the video tag.
-        </video></div>`;
+        <iframe id="videoElement" width="100%"
+    src="https://www.youtube.com/embed/hgrMLPZb3aw?si=YrIz4ETxH_F6DRw8" 
+    frameborder="0" allow="autoplay; encrypted-media;" 
+    allowfullscreen>
+</iframe>
+</div>`;
 	videoModal.querySelector("button").onclick = () => closeModal(videoModal);
 
 	makeModalVisible(videoModal);
