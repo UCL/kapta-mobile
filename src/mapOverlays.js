@@ -114,20 +114,20 @@ export function closeModal(modal) {
 	modal.innerHTML = "";
 	modal.classList.remove("visible");
 	main.onclick = null;
-	switchToShareBtn(document.getElementById("tray__button"));
+	if (modal.id == "sharing-modal") {
+		switchToShareBtn(document.getElementById("tray__button"));
+	}
 }
 
 function createModalCloseButton(modal) {
 	var closeButton = document.createElement("button");
 	closeButton.classList.add("modal-close", "btn");
 	closeButton.innerHTML = closeIcon;
-	closeButton.onclick = function () {
-		closeModal(modal);
-	};
+	closeButton.onclick = () => closeModal(modal);
 	return closeButton;
 }
 
-function makeModalVisible(modal) {
+export function makeModalVisible(modal) {
 	var main = document.getElementById("main");
 	modal.classList.add("visible");
 	modal.classList.remove("invisible");
@@ -236,12 +236,25 @@ function sharingAction() {
 	});
 	optionsContainer.appendChild(shareImgBtn);
 
+	function downloadFile(blob, filename) {
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	}
+
 	const shareDataBtn = document.createElement("button");
 	shareDataBtn.classList.add("btn");
 	shareDataBtn.innerHTML = dataIcn + i18next.t("sharedata");
 	shareDataBtn.addEventListener("click", () => {
 		const currentDataset = Alpine.store("currentDataset").geoJSON;
-		const filename = `${Alpine.store("currentDataset").slug}-${new Date().toDateString()}.txt`;
+		const filename = `${
+			Alpine.store("currentDataset").slug
+		}-${new Date().toDateString()}.txt`;
 		const blob = new Blob([JSON.stringify(currentDataset, null, 2)], {
 			type: "text/plain",
 		});
@@ -266,6 +279,8 @@ function sharingAction() {
 					() => console.info("Data shared"),
 					() => console.error("Failed to share data")
 				);
+		} else if (!Alpine.store("deviceInfo").isMobile) {
+			downloadFile(blob, filename);
 		}
 	});
 	optionsContainer.appendChild(shareDataBtn);
