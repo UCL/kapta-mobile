@@ -35,6 +35,7 @@ var basemapDark = L.tileLayer(
 		subdomains: ["mt0", "mt1", "mt2", "mt3"],
 		attribution: "Leaflet | Mapbox | OSM Contributors",
 		accessToken: config.mapbox.accessToken,
+		crossOrigin: "anonymous",
 	}
 );
 
@@ -51,6 +52,7 @@ var basemapSat = L.tileLayer(
 		subdomains: ["mt0", "mt1", "mt2", "mt3"],
 		attribution: "Leaflet | Mapbox | OSM Contributors",
 		accessToken: config.mapbox.accessToken,
+		crossOrigin: "anonymous",
 	}
 );
 
@@ -131,9 +133,15 @@ var gpsButton = L.easyButton({
 			icon: `<span>${GPSIcn}</span>`,
 			//stateName: 'check-mark',
 			onClick: function (control) {
+				control.button.style.backgroundColor = "#696868";
+				setTimeout(function () {
+					control.button.style.backgroundColor = "#afafaf";
+				}, 300);
+
 				if (currentLocation !== undefined && currentLocation[0] !== null) {
 					L.marker(currentLocation, {
 						icon: gpsPositionIcon,
+
 						draggable: false,
 						zIndexOffset: 100,
 					}).addTo(control._map);
@@ -178,9 +186,9 @@ function addDataToMap(map, mapdata) {
 				layer.bindPopup(
 					`<div class="map-popup-body">
                       ${feature.properties.observations.replaceAll(
-												"\n",
-												"<br/>"
-											)}
+						"\n",
+						"<br/>"
+					)}
                     </div>
                     <div class="map-popup-footer">
                       ${i18next.t("date")}: ${getFriendlyDatetime(
