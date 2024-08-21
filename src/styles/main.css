@@ -51,8 +51,8 @@ body {
 #menuContainer {
     flex: 7;
     display: grid;
-    grid-template-rows: 6vh 20vh;
-    grid-auto-rows: minmax(10vh, 14vh);
+    grid-template-rows: 6vh 35vh;
+    grid-auto-rows: minmax(8vh, 10vh);
     justify-content: center;
     justify-items: center;
     align-content: center;
@@ -92,7 +92,8 @@ body {
 
     #instructions {
         text-align: center;
-        font-size: 120%;
+        font-size: 115%;
+        margin-inline: 3px;
         color: white;
         height: fit-content;
         line-height: 2;
@@ -529,11 +530,13 @@ body {
 
     img {
         margin-inline: 12%;
+        border-radius: 6px;
     }
 }
 
 #video-modal {
     position: absolute;
+    top: 28vh;
     display: flex;
     width: 95%;
     background-color: #eee;
