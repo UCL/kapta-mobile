@@ -36,7 +36,7 @@ i18next.init({
 				addMetadataTitle: "Describe this map",
 				sharingTitle: "Share this map",
 				addDescription: "Title of your map",
-				copyright: "© Kapta by UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Get support to improve your map",
 				installPrompt:
 					"Kapta works best when installed on a mobile device. Install now?",

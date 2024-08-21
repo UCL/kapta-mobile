@@ -43,8 +43,8 @@ function buildLanguageSelector() {
 function displayVideoModal() {
 	const videoModal = document.getElementById("video-modal");
 	videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
-        <iframe id="videoElement" width="100%"
-    src="https://www.youtube.com/embed/hgrMLPZb3aw?si=YrIz4ETxH_F6DRw8" 
+        <iframe id="videoElement" width="100%" height="500px"
+    src="https://www.youtube.com/embed/fiM6DIaML_Q" 
     frameborder="0" allow="autoplay; encrypted-media;" 
     allowfullscreen>
 </iframe>

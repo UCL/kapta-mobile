@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import KaptaLogo from "./images/icons/kapta-white.png";
 
 let installPrompt = null;
 let dismissed = false;
@@ -7,6 +8,9 @@ function promptToInstall() {
 	return new Promise(async function (resolve) {
 		const installDialog = document.createElement("dialog");
 		installDialog.id = "install-dialog";
+		var kaptaLogo = document.createElement("img");
+		kaptaLogo.src = KaptaLogo;
+		installDialog.appendChild(kaptaLogo);
 		const installReason = document.createElement("div");
 		installReason.innerText = i18next.t("installPrompt");
 		installDialog.appendChild(installReason);
