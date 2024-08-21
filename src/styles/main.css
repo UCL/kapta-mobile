@@ -51,11 +51,13 @@ body {
 #menuContainer {
     flex: 7;
     display: grid;
+    grid-template-rows: 6vh 35vh;
+    grid-auto-rows: minmax(8vh, 10vh);
     justify-content: center;
     justify-items: center;
     align-content: center;
-    max-width: 90vw;
-    row-gap: 4vh;
+    row-gap: 3vh;
+    padding-bottom: 4vh;
 
     .btn {
         border-radius: 60px;
@@ -65,13 +67,14 @@ body {
 
 
     #helpBtn,
+    #tutorialBtn,
     #recentBtn {
         font-size: 145%;
         text-align: center;
         font-weight: 600;
         color: var(--mid-red);
         margin-top: 2vh;
-        margin-bottom: 2vh;
+        margin-bottom: 1vh;
     }
 
     #languageSelector {
@@ -89,7 +92,8 @@ body {
 
     #instructions {
         text-align: center;
-        font-size: 150%;
+        font-size: 115%;
+        margin-inline: 3px;
         color: white;
         height: fit-content;
         line-height: 2;
@@ -198,15 +202,29 @@ body {
             padding: 0.5rem;
             color: var(--black-blue);
 
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+
             svg {
                 height: 95%;
                 margin-right: 0.4rem;
+                transition: color 0.3s ease
             }
 
 
             .disabled,
             &[disabled]>svg {
                 color: var(--mid-grey);
+            }
+
+            &:active,
+            :focus {
+                background-color: #9f1203;
+                color: #eee;
+                border-color: #031927;
+
+                svg {
+                    color: #eee;
+                }
             }
         }
 
@@ -241,8 +259,13 @@ body {
         &:has(.fa-moon) {
             width: 45px;
         }
+
+
     }
 
+    #gps:active {
+        background-color: rgb(175, 175, 175);
+    }
 
     .position-marker-icon {
         color: var(--bright-green);
@@ -258,7 +281,7 @@ body {
         top: 1rem;
         text-align: center;
         color: #efedec;
-        z-index: 1100;
+        z-index: 999;
         font-size: 190%;
     }
 
@@ -497,12 +520,35 @@ body {
     text-align: center;
     justify-content: space-around;
 
+    @media screen and (min-width: 700px) {
+        width: clamp(28vw, 30vw, 32vw);
+    }
+
     button {
         height: 3rem;
     }
 
     img {
         margin-inline: 12%;
+        border-radius: 6px;
+    }
+}
+
+#video-modal {
+    position: absolute;
+    top: 28vh;
+    display: flex;
+    width: 95%;
+    background-color: #eee;
+    border-radius: 6px;
+
+    .video-modal__inner {
+        width: 100%;
+    }
+
+    .modal-close {
+        float: right;
+        border-color: lightgray;
     }
 }
 
