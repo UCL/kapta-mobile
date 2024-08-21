@@ -8,24 +8,13 @@ import { initialiseInstallPrompt } from "./install.js";
 window.Alpine = Alpine;
 
 function isMobileOrTablet() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Check for iOS devices
-    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        return true;
-    }
-
-    // Check for Android devices
-    if (/android/i.test(userAgent)) {
-        return true;
-    }
-
-    // Check for other mobile devices
-    if (/Mobile|mini|Fennec|Symbian|Windows Phone|BlackBerry/i.test(userAgent)) {
-        return true;
-    }
-
-    return false;
+	return (
+		/iPad|iPhone|iPod|android|Mobile|mini|Fennec|Symbian|Windows Phone|BlackBerry|IEMobile/i.test(
+			navigator.userAgent
+		) ||
+		(window.innerWidth <= 1024 &&
+			("ontouchstart" in window || navigator.maxTouchPoints > 0))
+	);
 }
 
 document.addEventListener("alpine:init", () => {
@@ -125,14 +114,13 @@ if ("serviceWorker" in navigator) {
 		navigator.serviceWorker
 			.register("/sw.js")
 			.then((registration) => {
-				console.log("SW registered: ", registration);
+				console.info("SW registered: ", registration);
 			})
 			.catch((registrationError) => {
-				console.log("SW registration failed: ", registrationError);
+				console.info("SW registration failed: ", registrationError);
 			});
 	});
-  
-  initialiseInstallPrompt();
+	if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
 }
 
 navigator.serviceWorker.addEventListener("message", (event) => {

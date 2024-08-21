@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import KaptaLogo from "./images/icons/icon-256x256.webp";
+import KaptaLogo from "./images/icons/kapta-white.png";
 
 let installPrompt = null;
 let dismissed = false;
@@ -22,7 +22,6 @@ function promptToInstall() {
 			}
 			const result = await installPrompt.prompt();
 			if (result.outcome === "dismissed") {
-				console.log("Installation dismissed");
 				dismissed = true;
 			}
 			installPrompt = null;
@@ -34,7 +33,6 @@ function promptToInstall() {
 		const closeBtn = document.createElement("button");
 		closeBtn.innerText = i18next.t("dismiss");
 		closeBtn.addEventListener("click", () => {
-			console.log("Close button clicked");
 			dismissed = true;
 			resolve(false);
 			installPrompt = null;
@@ -49,7 +47,7 @@ function promptToInstall() {
 
 async function handleInstallPrompt() {
 	let install = await promptToInstall();
-	console.log("Install prompt outcome", install);
+	console.info("Install prompt outcome", install);
 }
 
 function initialiseInstallPrompt() {
