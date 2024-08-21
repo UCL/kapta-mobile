@@ -18,7 +18,6 @@ const config = require("./config.json");
 var scaleLine;
 var attributionContainer;
 var currentLocation;
-var filesArray;
 
 /************************************************************************************************
  *   Basemaps
@@ -139,10 +138,10 @@ var gpsButton = L.easyButton({
 					control.button.style.backgroundColor = "#afafaf";
 				}, 300);
 
-				if (currentLocation[0] != null) {
+				if (currentLocation !== undefined && currentLocation[0] !== null) {
 					L.marker(currentLocation, {
 						icon: gpsPositionIcon,
-						// rotationAngle: 90,
+
 						draggable: false,
 						zIndexOffset: 100,
 					}).addTo(control._map);
@@ -150,6 +149,10 @@ var gpsButton = L.easyButton({
 				} else {
 					console.error("GPS not available");
 					control.button.src = "images/gpsSearching.gif";
+					L.popup()
+						.setLatLng(control._map.getCenter()) // or use a specific lat/lng if known
+						.setContent("GPS not available. Please check your device settings.")
+						.openOn(control._map);
 				}
 			},
 		},
@@ -200,7 +203,6 @@ function addDataToMap(map, mapdata) {
 			}
 		},
 	}).addTo(map);
-	let bounds = map.getBounds();
 	let boundsLayer = layerChatGeom.getBounds();
 	setTimeout(function () {
 		map.fitBounds(boundsLayer, {
@@ -208,14 +210,6 @@ function addDataToMap(map, mapdata) {
 			paddingBottomRight: [0, 0],
 		});
 	});
-	// Disable mobile interactions
-	// map.dragging.disable();
-	// map.touchZoom.disable();
-	// Disable mouse and keyboard interactions
-	// map.doubleClickZoom.disable();
-	// map.scrollWheelZoom.disable();
-	// map.boxZoom.disable();
-	// map.keyboard.disable();
 }
 
 /************************************************************************************************

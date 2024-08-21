@@ -8,7 +8,7 @@
     --mid-grey: #555;
     --light-grey: #808080;
     --bright-green: #05f505;
-    --black-grey: #242323;
+    --black-grey: #2d2c2c;
 }
 
 html,
@@ -36,9 +36,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    user-select: none;
 
     #copyright {
-        color: white;
+        color: #DBC7C7;
         position: fixed;
         bottom: 1vh;
     }
@@ -50,33 +51,37 @@ body {
 #menuContainer {
     flex: 7;
     display: grid;
-    grid-template-rows: 6vh repeat(auto-fill, minmax(10vh, 14vh));
+    grid-template-rows: 6vh 35vh;
+    grid-auto-rows: minmax(8vh, 10vh);
     justify-content: center;
     justify-items: center;
     align-content: center;
-    row-gap: 4vh;
+    row-gap: 3vh;
+    padding-bottom: 4vh;
 
     .btn {
         border-radius: 60px;
         min-width: 60vw;
+        padding: 0.8rem;
     }
 
 
     #helpBtn,
+    #tutorialBtn,
     #recentBtn {
         font-size: 145%;
         text-align: center;
         font-weight: 600;
         color: var(--mid-red);
         margin-top: 2vh;
-        margin-bottom: 2vh;
+        margin-bottom: 1vh;
     }
 
     #languageSelector {
         background-color: transparent;
         color: white;
         border: none;
-        font-size: 105%;
+        font-size: 108%;
         width: fit-content;
         font-family: Ubuntu, sans-serif;
 
@@ -87,10 +92,11 @@ body {
 
     #instructions {
         text-align: center;
-        font-size: 105%;
+        font-size: 115%;
+        margin-inline: 3px;
         color: white;
         height: fit-content;
-        max-width: 90%;
+        line-height: 2;
 
         .title {
             font-weight: 600;
@@ -113,6 +119,8 @@ body {
     display: grid;
     align-content: center;
     width: 100%;
+    position: fixed;
+    top: 0;
 
     div {
         display: grid;
@@ -194,15 +202,29 @@ body {
             padding: 0.5rem;
             color: var(--black-blue);
 
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+
             svg {
                 height: 95%;
                 margin-right: 0.4rem;
+                transition: color 0.3s ease
             }
 
 
             .disabled,
             &[disabled]>svg {
                 color: var(--mid-grey);
+            }
+
+            &:active,
+            :focus {
+                background-color: #9f1203;
+                color: #eee;
+                border-color: #031927;
+
+                svg {
+                    color: #eee;
+                }
             }
         }
 
@@ -237,8 +259,13 @@ body {
         &:has(.fa-moon) {
             width: 45px;
         }
+
+
     }
 
+    #gps:active {
+        background-color: rgb(175, 175, 175);
+    }
 
     .position-marker-icon {
         color: var(--bright-green);
@@ -254,7 +281,7 @@ body {
         top: 1rem;
         text-align: center;
         color: #efedec;
-        z-index: 1100;
+        z-index: 999;
         font-size: 190%;
     }
 
@@ -484,16 +511,44 @@ body {
 #install-dialog {
     display: flex;
     flex-direction: column;
+    position: absolute;
+    top: 30%;
     width: 50vw;
     min-height: 40vh;
     border: 1px solid var(--black-blue);
     border-radius: 8px;
-    backdrop-filter: blur(4px);
     text-align: center;
     justify-content: space-around;
 
+    @media screen and (min-width: 700px) {
+        width: clamp(28vw, 30vw, 32vw);
+    }
+
     button {
         height: 3rem;
+    }
+
+    img {
+        margin-inline: 12%;
+        border-radius: 6px;
+    }
+}
+
+#video-modal {
+    position: absolute;
+    top: 28vh;
+    display: flex;
+    width: 95%;
+    background-color: #eee;
+    border-radius: 6px;
+
+    .video-modal__inner {
+        width: 100%;
+    }
+
+    .modal-close {
+        float: right;
+        border-color: lightgray;
     }
 }
 
@@ -514,7 +569,7 @@ body {
     font-family: Ubuntu, sans-serif;
     border: 1px solid var(--mid-grey);
     background-color: white;
-    box-shadow: 2px 2px 15px -6px rgba(34, 34, 34, 0.7);
+    box-shadow: 2px 2px 10px -6px rgba(34, 34, 34, 0.7);
 
     &.confirm {
         color: green;
@@ -551,21 +606,35 @@ body {
 .loader {
     display: inline-flex;
     gap: 5px;
-  }
-  .loader:before,
-  .loader:after {
+}
+
+.loader:before,
+.loader:after {
     content: "";
     width: 25px;
     aspect-ratio: 1;
     box-shadow: 0 0 0 3px inset #fff;
     animation: l5 1.5s infinite;
-  }
-  .loader:after {
-    --s:-1;
-  }
-  @keyframes l5 {
-    0%   {transform:scaleX(var(--s,1)) translate(0) scale(1)}
-    33%  {transform:scaleX(var(--s,1)) translate(calc(50% + 2.5px)) scale(1)}
-    66%  {transform:scaleX(var(--s,1)) translate(calc(50% + 2.5px)) scale(2)}
-    100% {transform:scaleX(var(--s,1)) translate(0) scale(1)}
-  }
+}
+
+.loader:after {
+    --s: -1;
+}
+
+@keyframes l5 {
+    0% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+
+    33% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(1)
+    }
+
+    66% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(2)
+    }
+
+    100% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+}

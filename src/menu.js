@@ -2,6 +2,7 @@ import { displayMap } from "./map.js";
 import { displayFile } from "./import_whatsapp.js";
 import { i18next, supportedLanguages } from "./languages.js";
 import Alpine from "alpinejs";
+import { closeModal, makeModalVisible } from "./mapOverlays.js";
 
 const config = require("./config.json");
 
@@ -9,22 +10,48 @@ function buildLanguageSelector() {
 	const selector = document.createElement("select");
 	selector.id = "languageSelector";
 
+	// get saved language from localStorage if it's there
+	const savedLanguage = localStorage.getItem("preferredLanguage");
+
+	const initialLanguage = savedLanguage || i18next.language;
+
 	Object.entries(supportedLanguages).forEach(([key, value]) => {
 		let option = document.createElement("option");
 		option.value = key;
 		option.textContent = value;
-		if (key == i18next.language) {
-			option.selected = "selected";
+		if (key === initialLanguage) {
+			option.selected = true;
 		}
 		selector.appendChild(option);
 	});
-	selector.value = i18next.resolvedLanguage;
+
+	selector.value = initialLanguage;
+
 	selector.addEventListener("change", (evt) => {
-		i18next.changeLanguage(evt.target.value).then((t) => {
+		const selectedLanguage = evt.target.value;
+
+		// Save the selected language to localStorage
+		localStorage.setItem("preferredLanguage", selectedLanguage);
+
+		i18next.changeLanguage(selectedLanguage).then((t) => {
 			reloadOptionsMenu();
 		});
 	});
+
 	return selector;
+}
+function displayVideoModal() {
+	const videoModal = document.getElementById("video-modal");
+	videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
+        <iframe id="videoElement" width="100%" height="500px"
+    src="https://www.youtube.com/embed/fiM6DIaML_Q" 
+    frameborder="0" allow="autoplay; encrypted-media;" 
+    allowfullscreen>
+</iframe>
+</div>`;
+	videoModal.querySelector("button").onclick = () => closeModal(videoModal);
+
+	makeModalVisible(videoModal);
 }
 
 function buildOptionsMenu() {
@@ -40,6 +67,14 @@ function buildOptionsMenu() {
 	instructions.id = "instructions";
 	instructions.innerHTML = i18next.t("instructions");
 	menuContainer.appendChild(instructions);
+
+	// tutorial button
+	const tutorialBtn = document.createElement("button");
+	tutorialBtn.id = "tutorialBtn";
+	tutorialBtn.innerText = i18next.t("watchtutorial");
+	tutorialBtn.classList.add("btn");
+	tutorialBtn.onclick = displayVideoModal;
+	menuContainer.appendChild(tutorialBtn);
 
 	// Help button
 	const helpBtn = document.createElement("button");
@@ -95,10 +130,12 @@ function displayOptionsMenu() {
 	addMenuListeners();
 
 	// Copyright
-	const copyright = document.createElement("div");
-	copyright.id = "copyright";
-	copyright.innerHTML = i18next.t("copyright");
-	parent.appendChild(copyright);
+	if (!document.getElementById("copyright")) {
+		const copyright = document.createElement("div");
+		copyright.id = "copyright";
+		copyright.innerHTML = i18next.t("copyright");
+		parent.appendChild(copyright);
+	}
 }
 
 function removeOptionsMenu() {

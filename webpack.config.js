@@ -54,7 +54,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: "./src/images/icons/icon-256x256.png",
+					from: "./src/images/icons/kapta-white.png",
 					to: "og-icon.png",
 				},
 			],
@@ -96,7 +96,7 @@ module.exports = {
 					content: "249",
 				},
 			},
-			appMountIds: ["main", "sharing-modal"],
+			appMountIds: ["main", "sharing-modal", "video-modal"],
 			manifest: "src/manifest.webmanifest",
 		}),
 		new WorkboxPlugin.InjectManifest({
@@ -164,11 +164,11 @@ module.exports = {
 			},
 			icons: [
 				{
-					src: path.resolve("src/images/icons/icon-512x512.png"),
+					src: path.resolve("src/images/icons/kapta-white.png"),
 					sizes: [72, 96, 128, 192, 256, 512],
 				},
 				{
-					src: path.resolve("src/images/icons/icon-512x512.png"),
+					src: path.resolve("src/images/icons/kapta-white.png"),
 					size: "512x512",
 					purpose: "maskable",
 				},
