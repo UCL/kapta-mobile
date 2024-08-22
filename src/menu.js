@@ -100,7 +100,7 @@ function buildOptionsMenu() {
 	if (!Alpine.store("deviceInfo").isMobile) {
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
-		fileInput.accept = ".txt,.zip";
+		fileInput.accept = ".txt,.zip,.geojson";
 		fileInput.classList.add("file-input");
 		fileInput.addEventListener("change", (evt) => {
 			displayFile(evt.target.files[0]);
