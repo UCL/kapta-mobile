@@ -53,12 +53,12 @@ body {
     display: grid;
     margin-top: 6vh;
     grid-template-rows: 6vh 35vh;
-    grid-auto-rows: minmax(8vh, 10vh);
+    grid-auto-rows: auto;
     justify-content: center;
     justify-items: center;
     align-content: center;
-    row-gap: 3vh;
-    padding-bottom: 4vh;
+    row-gap: 1.5vh;
+    padding-bottom: 3vh;
 
     .btn {
         border-radius: 60px;
@@ -66,6 +66,10 @@ body {
         padding: 0.8rem;
     }
 
+    .button-area {
+        height: fit-content;
+        text-align: center;
+    }
 
     #helpBtn,
     #tutorialBtn,
@@ -94,10 +98,11 @@ body {
     #instructions {
         text-align: center;
         font-size: 115%;
-        margin-inline: 3px;
+        margin-inline: 4vw;
         color: white;
         height: fit-content;
         line-height: 2;
+        margin-bottom: 2vh;
 
         .title {
             font-weight: 600;

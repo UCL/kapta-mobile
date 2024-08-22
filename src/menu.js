@@ -53,6 +53,38 @@ function displayVideoModal() {
 
 	makeModalVisible(videoModal);
 }
+function buildButtonArea() {
+	var btnContainer = document.createElement("div");
+	btnContainer.classList.add("button-area");
+	// tutorial button
+	const tutorialBtn = document.createElement("button");
+	tutorialBtn.id = "tutorialBtn";
+	tutorialBtn.innerText = i18next.t("watchtutorial");
+	tutorialBtn.classList.add("btn");
+	tutorialBtn.onclick = displayVideoModal;
+	btnContainer.appendChild(tutorialBtn);
+
+	// Help button
+	const helpBtn = document.createElement("button");
+	helpBtn.id = "helpBtn";
+	helpBtn.innerText = i18next.t("asktheteam");
+	helpBtn.classList.add("btn");
+	btnContainer.appendChild(helpBtn);
+
+	// Show most recent map
+	if (Alpine.store("currentDataset").geoJSON) {
+		const recentBtn = document.createElement("button");
+		recentBtn.id = "recentBtn";
+		recentBtn.innerText = i18next.t("viewrecentmap");
+		recentBtn.classList.add("btn");
+		recentBtn.addEventListener("click", () => {
+			removeOptionsMenu();
+			displayMap(Alpine.store("currentDataset").geoJSON);
+		});
+		btnContainer.appendChild(recentBtn);
+	}
+	return btnContainer;
+}
 
 function buildOptionsMenu() {
 	const menuContainer = document.createElement("div");
@@ -68,33 +100,9 @@ function buildOptionsMenu() {
 	instructions.innerHTML = i18next.t("instructions");
 	menuContainer.appendChild(instructions);
 
-	// tutorial button
-	const tutorialBtn = document.createElement("button");
-	tutorialBtn.id = "tutorialBtn";
-	tutorialBtn.innerText = i18next.t("watchtutorial");
-	tutorialBtn.classList.add("btn");
-	tutorialBtn.onclick = displayVideoModal;
-	menuContainer.appendChild(tutorialBtn);
-
-	// Help button
-	const helpBtn = document.createElement("button");
-	helpBtn.id = "helpBtn";
-	helpBtn.innerText = i18next.t("asktheteam");
-	helpBtn.classList.add("btn");
-	menuContainer.appendChild(helpBtn);
-
-	// Show most recent map
-	if (Alpine.store("currentDataset").geoJSON) {
-		const recentBtn = document.createElement("button");
-		recentBtn.id = "recentBtn";
-		recentBtn.innerText = i18next.t("viewrecentmap");
-		recentBtn.classList.add("btn");
-		recentBtn.addEventListener("click", () => {
-			removeOptionsMenu();
-			displayMap(Alpine.store("currentDataset").geoJSON);
-		});
-		menuContainer.appendChild(recentBtn);
-	}
+	//buttons
+	var btnContainer = buildButtonArea();
+	menuContainer.appendChild(btnContainer);
 
 	// File picker (web only)
 	if (!Alpine.store("deviceInfo").isMobile) {
