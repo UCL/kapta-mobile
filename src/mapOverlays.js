@@ -205,8 +205,8 @@ function sharingAction() {
 				navigator
 					.share({
 						files: filesArray,
-						title: "#kapta",
-						text: "#kapta",
+						title: "#MadeWithKapta",
+						text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
 						url: "https://kapta.earth/",
 					})
 					.then(() => {
