@@ -84,7 +84,7 @@ i18next.init({
 		fr: {
 			translation: {
 				key: "bonjour le monde",
-				asktheteam: "Demandez-nous n`importe quoi",
+				asktheteam: "Demandez-nous ce que vous voulez",
 				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp 👥💬 <br> 2 - Demandez au groupe de partager et de décrire des emplacements 📎📍💬 <br> 3 - Cliquez sur 'Exporter le chat' vers l'application mobile Kapta 💬🗺️ <br> 4 - Utilisez et partagez votre carte WhatsApp avec Kapta 🗺️💸`,
 				watchtutorial: "Regarder le tutoriel",
 				viewrecentmap: "Voir la carte récente",
