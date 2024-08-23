@@ -52,9 +52,9 @@ async function handleInstallPrompt() {
 
 function initialiseInstallPrompt() {
 	window.addEventListener("beforeinstallprompt", (event) => {
-		event.preventDefault;
+		event.preventDefault();
+		installPrompt = event;
 		if (!dismissed) {
-			installPrompt = event;
 			handleInstallPrompt();
 		}
 	});

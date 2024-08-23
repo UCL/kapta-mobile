@@ -51,13 +51,13 @@ body {
 #menuContainer {
     flex: 7;
     display: grid;
-    grid-template-rows: 6vh 35vh;
-    grid-auto-rows: minmax(8vh, 10vh);
+    margin-top: 6vh;
+    grid-template-rows: 6vh minmax(35vh, 45vh) auto;
     justify-content: center;
     justify-items: center;
     align-content: center;
-    row-gap: 3vh;
-    padding-bottom: 4vh;
+    row-gap: 1.5vh;
+    padding-bottom: 3vh;
 
     .btn {
         border-radius: 60px;
@@ -65,6 +65,15 @@ body {
         padding: 0.8rem;
     }
 
+    .button-area {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: fit-content;
+        text-align: center;
+        bottom: 1vh;
+    }
 
     #helpBtn,
     #tutorialBtn,
@@ -93,10 +102,11 @@ body {
     #instructions {
         text-align: center;
         font-size: 115%;
-        margin-inline: 3px;
+        margin-inline: 4vw;
         color: white;
         height: fit-content;
         line-height: 2;
+        margin-bottom: 2vh;
 
         .title {
             font-weight: 600;
@@ -232,6 +242,17 @@ body {
     }
 }
 
+@keyframes pulseShadow {
+
+    0% {
+        box-shadow: inset 0 0 0 0px rgba(255, 255, 255, 0.2), 0 0 0 0px rgba(255, 255, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: inset 0 0 0 20px rgba(255, 255, 255, 0), 0 0 0 40px rgba(255, 255, 255, 0);
+
+    }
+}
 
 #map {
     height: 100vh;
@@ -276,6 +297,7 @@ body {
         }
     }
 
+
     .leaflet-map-title {
         position: relative;
         top: 1rem;
@@ -283,6 +305,12 @@ body {
         color: #efedec;
         z-index: 999;
         font-size: 190%;
+
+
+    }
+
+    .pulse-shadow {
+        animation: pulseShadow 3s ease 2;
     }
 
     .leaflet-control-scale-line {
@@ -536,7 +564,7 @@ body {
 
 #video-modal {
     position: absolute;
-    top: 28vh;
+    top: 10vh;
     display: flex;
     width: 95%;
     background-color: #eee;
@@ -549,6 +577,7 @@ body {
     .modal-close {
         float: right;
         border-color: lightgray;
+        font-size: 150%;
     }
 }
 

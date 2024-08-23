@@ -64,6 +64,13 @@ function displayFile(file) {
 		reader.onloadend = function (e) {
 			processText(e.target.result);
 		};
+	} else if (file.name.endsWith(".geojson")) {
+		const reader = new FileReader();
+		reader.readAsText(file);
+		reader.onloadend = function (e) {
+			console.log(e.target.result);
+			processGeoJson(e.target.result);
+		};
 	} else {
 		console.error("Unsupported file format");
 	}
@@ -109,6 +116,37 @@ function displayLoader() {
 
 function removeLoader() {
 	document.querySelector("#loader-container").remove();
+}
+function updateMapdata(mapdata, groupName = null) {
+	Alpine.store("currentDataset").geoJSON = mapdata;
+	if (groupName) {
+		Alpine.store("currentDataset").slug = slugify(groupName);
+	} else {
+		Alpine.store("currentDataset").slug = slugify("Kapta");
+	}
+
+	removeOptionsMenu();
+	displayLoader();
+	setTimeout(() => {
+		removeLoader();
+		displayMap(Alpine.store("currentDataset").geoJSON);
+	}, 2000);
+}
+function processGeoJson(json) {
+	var mapdata = {
+		type: "FeatureCollection",
+		features: [],
+	};
+	let groupName;
+	var geoJSONData = JSON.parse(json);
+
+	if (geoJSONData.type === "FeatureCollection") {
+		mapdata.features = mapdata.features.concat(geoJSONData.features);
+
+		if (geoJSONData.name) groupName = geoJSONData.name;
+	}
+
+	updateMapdata(mapdata, groupName);
 }
 
 function processText(text) {
@@ -212,19 +250,7 @@ function processText(text) {
 	if (feature) {
 		mapdata.features.push(feature);
 	}
-	Alpine.store("currentDataset").geoJSON = mapdata;
-	if (groupName) {
-		Alpine.store("currentDataset").slug = slugify(groupName);
-	} else {
-		Alpine.store("currentDataset").slug = slugify("Kapta");
-	}
-
-	removeOptionsMenu();
-	displayLoader();
-	setTimeout(() => {
-		removeLoader();
-		displayMap(Alpine.store("currentDataset").geoJSON);
-	}, 2000);
+	updateMapdata(mapdata, groupName);
 }
 
 export { displayFile, processText };

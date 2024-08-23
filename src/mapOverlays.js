@@ -96,8 +96,17 @@ export function buildActionTray() {
 				currentDataset.slug = slug;
 				let titleElem = document.querySelector(".leaflet-map-title");
 				titleElem.textContent = Alpine.store("appData").mapTitle;
+				navigator.vibrate(100);
+				titleElem.classList.add("pulse-shadow");
+
+				// Remove the pulse effect after the animation ends
+				setTimeout(() => {
+					titleElem.classList.remove("pulse-shadow");
+				}, 6000);
 
 				form.querySelector("textarea").value = "";
+				form.querySelector("textarea").placeholder =
+					i18next.t("updateDescription");
 				switchToShareBtn(submitBtn);
 			});
 		} else {
@@ -172,11 +181,9 @@ function sharingAction() {
 			foreignObjectRendering: false,
 			ignoreElements: function (element) {
 				var src = element.src;
-				/* Remove element with id="MyElementIdHere" */
 				if ("button" == element.type || "submit" == element.type) {
 					return true;
 				}
-				/* Remove all elements with class="MyClassNameHere" */
 				if (element.classList.contains("buttons")) {
 					return true;
 				}
@@ -198,8 +205,8 @@ function sharingAction() {
 				navigator
 					.share({
 						files: filesArray,
-						title: "#kapta",
-						text: "#kapta",
+						title: "#MadeWithKapta",
+						text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
 						url: "https://kapta.earth/",
 					})
 					.then(() => {
