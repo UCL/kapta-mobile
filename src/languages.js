@@ -20,7 +20,7 @@ i18next.init({
 				key: "hello world",
 				asktheteam: "Ask us anything",
 				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group 👥💬 <br> 2 - Ask the group to share and describe locations 📎📍💬 <br> 3 - Click 'Export chat' to the Kapta mobile app 💬🗺️ <br> 4 - Use and share your WhatsApp Map with Kapta 🗺️💸`,
-				watchtutorial: "watch tutorial",
+				watchtutorial: "Watch tutorial",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -86,7 +86,7 @@ i18next.init({
 				key: "bonjour le monde",
 				asktheteam: "Demandez-nous n`importe quoi",
 				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp 👥💬 <br> 2 - Demandez au groupe de partager et de décrire des emplacements 📎📍💬 <br> 3 - Cliquez sur 'Exporter le chat' vers l'application mobile Kapta 💬🗺️ <br> 4 - Utilisez et partagez votre carte WhatsApp avec Kapta 🗺️💸`,
-				watchtutorial: "regarder le tutoriel",
+				watchtutorial: "Regarder le tutoriel",
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
@@ -167,16 +167,18 @@ i18next.init({
 				addDescription: "Título do seu mapa",
 				copyright: "Kapta por UCL",
 				supportOption: "Obtenha suporte para melhorar seu mapa",
-				installPrompt: "Kapta funciona melhor quando instalado em um dispositivo móvel. Instalar agora?",
+				installPrompt:
+					"Kapta funciona melhor quando instalado em um dispositivo móvel. Instalar agora?",
 				install: "Instalar",
-				dismiss: "Dispensar"
+				dismiss: "Dispensar",
 			},
 		},
 		yo: {
 			translation: {
 				key: "báwo ni ayé",
 				asktheteam: "Béèrè ohunkóhun lọ́wọ́ wa",
-				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Dá ìgbìmọ̀ àwáàrí ní WhatsApp <br>👥💬 <br>2 - Pín & ṣàpèjúwe àwọn àyè <br> 📎📍 <br>3 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta <br> 💬🗺️ <br>4 - Pín tàbí tà átààwá àwáàrí rẹ <br> 🗺️💸`,				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
+				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Dá ìgbìmọ̀ àwáàrí ní WhatsApp <br>👥💬 <br>2 - Pín & ṣàpèjúwe àwọn àyè <br> 📎📍 <br>3 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta <br> 💬🗺️ <br>4 - Pín tàbí tà átààwá àwáàrí rẹ <br> 🗺️💸`,
+				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
 				observer: "Olùtọ́jú",
 				date: "Ọjọ́",
@@ -195,9 +197,10 @@ i18next.init({
 				addDescription: "Àkọlé àwáàrí rẹ",
 				copyright: "Kapta láti UCL",
 				supportOption: "Gba ìtìlẹ́yìn láti mú àwáàrí rẹ dàra sí",
-				installPrompt: "Kapta dára jùlọ tí ó bá wà nínú ètò alágbèéká. Ṣe yóò ìgbele?",
+				installPrompt:
+					"Kapta dára jùlọ tí ó bá wà nínú ètò alágbèéká. Ṣe yóò ìgbele?",
 				install: "Ìgbele",
-				dismiss: "Ìsọfúnni"
+				dismiss: "Ìsọfúnni",
 			},
 		},
 	},
