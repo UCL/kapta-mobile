@@ -83,6 +83,19 @@ function buildButtonArea() {
 		});
 		btnContainer.appendChild(recentBtn);
 	}
+
+	// File picker (web only)
+	if (!Alpine.store("deviceInfo").isMobile) {
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept = ".txt,.zip,.geojson";
+		fileInput.classList.add("file-input");
+		fileInput.addEventListener("change", (evt) => {
+			displayFile(evt.target.files[0]);
+			fileInput.value = null;
+		});
+		btnContainer.appendChild(fileInput);
+	}
 	return btnContainer;
 }
 
@@ -103,19 +116,6 @@ function buildOptionsMenu() {
 	//buttons
 	var btnContainer = buildButtonArea();
 	menuContainer.appendChild(btnContainer);
-
-	// File picker (web only)
-	if (!Alpine.store("deviceInfo").isMobile) {
-		const fileInput = document.createElement("input");
-		fileInput.type = "file";
-		fileInput.accept = ".txt,.zip,.geojson";
-		fileInput.classList.add("file-input");
-		fileInput.addEventListener("change", (evt) => {
-			displayFile(evt.target.files[0]);
-			fileInput.value = null;
-		});
-		menuContainer.appendChild(fileInput);
-	}
 
 	return menuContainer;
 }
