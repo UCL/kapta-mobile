@@ -564,7 +564,7 @@ body {
 
 #video-modal {
     position: absolute;
-    top: 28vh;
+    top: 10vh;
     display: flex;
     width: 95%;
     background-color: #eee;
@@ -577,6 +577,7 @@ body {
     .modal-close {
         float: right;
         border-color: lightgray;
+        font-size: 150%;
     }
 }
 
