@@ -19,7 +19,7 @@ i18next.init({
 			translation: {
 				key: "hello world",
 				asktheteam: "Ask us anything",
-				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group<br> 2 - Ask the group to share & describe locations<br> 3 - Click 'Export chat' to the Kapta mobile app<br> 4 - Share your WhatsApp Map with Kapta`,
+				instructions: `<span class="title">Create WhatsApp Maps with Kapta </span><hr> 1 - Create a WhatsApp group<br> 2 - Ask the group to share locations<br> 3 - Export chat to Kapta<br> 4 - Share your WhatsApp Map`,
 				watchtutorial: "Watch tutorial",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
@@ -51,7 +51,7 @@ i18next.init({
 			translation: {
 				key: "hola mundo",
 				asktheteam: "Pregúntanos lo que quieras",
-				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Crea un grupo de WhatsApp<br> 2 - Pídele al grupo que comparta y describa ubicaciones<br> 3 - Haz clic en 'Exportar chat' a la app Kapta<br> 4 - Comparte tu mapa de WhatsApp con Kapta`,
+				instructions: `<span class="title">Crea WhatsApp Maps con Kapta</span><hr>1 - Crea un grupo de WhatsApp<br> 2 - Pídele al grupo que comparta ubicaciones<br> 3 - Haz clic en 'Exportar chat' a Kapta<br> 4 - Comparte tu WhatsApp Map`,
 				watchtutorial: "Ver tutorial",
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
@@ -85,7 +85,7 @@ i18next.init({
 			translation: {
 				key: "bonjour le monde",
 				asktheteam: "Demandez-nous ce que vous voulez",
-                instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp<br> 2 - Demandez au groupe de partager et de décrire des localisations<br> 3 - Cliquez sur “Exporter discussion” vers l'application mobile Kapta<br> 4 - Partagez votre WhatsApp Map avec Kapta`,
+                instructions: `<span class="title">Créer des WhatsApp Maps avec Kapta</span><hr>1 - Créez un groupe WhatsApp<br> 2 - Demandez au groupe de partager des localisations<br> 3 - Exportez la discussion vers Kapta<br> 4 - Partagez votre WhatsApp Map`,
                 watchtutorial: "Regarder le tutoriel",
                 viewrecentmap: "Voir la carte récente",
                 showmap: "Afficher la carte",
@@ -147,7 +147,7 @@ i18next.init({
 			translation: {
 				key: "olá mundo",
 				asktheteam: "Pergunte-nos qualquer coisa",
-				instructions: `<span class="title">Como usar o Kapta</span><hr>1 - Crie um grupo de WhatsApp<br>2 - Compartilhe e descreva locais<br> 3 - Exporte o chat para o Kapta<br> 4 - Compartilhe ou venda seu mapa`,
+				instructions: `<span class="title">Crie Mapas do WhatsApp com o Kapta</span><hr>1 - Crie um grupo no WhatsApp<br>2 - Peça ao grupo para compartilhar locais<br> 3 - Exporte o chat para o Kapta<br> 4 - Compartilhe seu WhatsApp Map`,
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
