@@ -11,7 +11,7 @@ const supportedLanguages = {
 const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 i18next.init({
 	lng: savedLanguage,
-	fallbackLng: ["en", "es", "fr", "am"],
+	fallbackLng: ["en", "es", "fr", "pt", "am", "yo"],
 	supportedLngs: Object.keys(supportedLanguages),
 	debug: true,
 	resources: {
@@ -19,7 +19,7 @@ i18next.init({
 			translation: {
 				key: "hello world",
 				asktheteam: "Ask us anything",
-				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group 👥💬 <br> 2 - Ask the group to share and describe locations 📎📍💬 <br> 3 - Click 'Export chat' to the Kapta mobile app 💬🗺️ <br> 4 - Use and share your WhatsApp Map with Kapta 🗺️💸`,
+				instructions: `<span class="title">How to use Kapta </span><hr> 1 - Create a WhatsApp group<br> 2 - Ask the group to share & describe locations<br> 3 - Click 'Export chat' to the Kapta mobile app<br> 4 - Share your WhatsApp Map with Kapta`,
 				watchtutorial: "Watch tutorial",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
@@ -51,7 +51,7 @@ i18next.init({
 			translation: {
 				key: "hola mundo",
 				asktheteam: "Pregúntanos lo que quieras",
-				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Crea un grupo de WhatsApp 👥💬 <br> 2 - Pídele al grupo que comparta y describa ubicaciones 📎📍💬 <br> 3 - Haz clic en 'Exportar chat' a la aplicación móvil de Kapta 💬🗺️ <br> 4 - Usa y comparte tu mapa de WhatsApp con Kapta 🗺️💸`,
+				instructions: `<span class="title">Como usar Kapta</span><hr>1 - Crea un grupo de WhatsApp<br> 2 - Pídele al grupo que comparta y describa ubicaciones<br> 3 - Haz clic en 'Exportar chat' a la app Kapta<br> 4 - Comparte tu mapa de WhatsApp con Kapta`,
 				watchtutorial: "Ver tutorial",
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
@@ -64,7 +64,7 @@ i18next.init({
 				confirm: "Confirmar",
 				yes: "Sí",
 				no: "No",
-				sharedata: "Compartir los datos del mapa",
+				sharedata: "Compartir los DATOS del mapa",
 				shareimg: "Comparte el mapa",
 				uploaddata: "Subir a Kapta Web",
 				addMetadataTitle: "Describe este mapa",
@@ -72,7 +72,7 @@ i18next.init({
 				cancel: "cancel",
 				addDescription: "Agrega un título a tu mapa",
 				updateDescription: "Actualizar el título del mapa",
-				copyright: "© Kapta de UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Obtenga apoyo para mejorar su mapa",
 
 				installPrompt:
@@ -85,7 +85,7 @@ i18next.init({
 			translation: {
 				key: "bonjour le monde",
 				asktheteam: "Demandez-nous ce que vous voulez",
-				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp 👥💬 <br> 2 - Demandez au groupe de partager et de décrire des emplacements 📎📍💬 <br> 3 - Cliquez sur 'Exporter le chat' vers l'application mobile Kapta 💬🗺️ <br> 4 - Utilisez et partagez votre carte WhatsApp avec Kapta 🗺️💸`,
+				instructions: `<span class="title">Comment utiliser Kapta</span><hr>1 - Créez un groupe WhatsApp<br> 2 - Demandez au groupe de partager et de décrire des emplacements<br> 3 - Cliquez sur 'Exporter le chat' vers l'application mobile Kapta<br> 4 - Utilisez et partagez votre carte WhatsApp avec Kapta`,
 				watchtutorial: "Regarder le tutoriel",
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
@@ -105,7 +105,7 @@ i18next.init({
 				sharingTitle: "Partager cette carte",
 				addDescription: "Ajoutez un titre à votre carte",
 				updateDescription: "Mettre à jour le titre de la carte",
-				copyright: "© Kapta par UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Obtenez un support pour améliorer votre carte",
 				installPrompt:
 					"Kapta fonctionne mieux lorsqu'il est installé sur un appareil mobile. Installer maintenant?",
@@ -117,7 +117,7 @@ i18next.init({
 			translation: {
 				key: "ሠላም ዓለም",
 				asktheteam: "ምንም ጥያቄ ጠይቁን",
-				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - የ WhatsApp ቡድን ይፍጠሩ 👥💬 <br>2 - ቡድኑን እንዲያካፍል እና አካባቢዎችን እንዲገልጽ ጠይቅ 📎📍💬 <br>3 - ወደ ካፕታ ሞባይል መተግበሪያ 'ቻት ላክ' የሚለውን ጠቅ ያድርጉ 💬🗺️ <br>4 - የ WhatsApp ካርታዎን በካፕታ 🗺️💸 ይጠቀሙ እና ያካፍሉ።`,
+				instructions: `<span class="title">ካፕታ እንዴት እንደሚጠቀሙ</span><hr>1 - የ WhatsApp ቡድን ይፍጠሩ<br>2 - ቡድኑን እንዲያካፍል እና አካባቢዎችን እንዲገልጽ ጠይቅ<br>3 - ወደ ካፕታ ሞባይል መተግበሪያ 'ቻት ላክ' የሚለውን ጠቅ ያድርጉ<br>4 - የ WhatsApp ካርታዎን በካፕታይጠቀሙ እና ያካፍሉ።`,
 				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
@@ -136,7 +136,7 @@ i18next.init({
 				sharingTitle: "ይህን ካርታ አጋራ",
 				addDescription: "በካርታዎ ላይ ርዕስ ያክሉ",
 				updateDescription: "የካርታ ርዕስ ያዘምኑ",
-				copyright: "© ካፕታ በ UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "ካርታዎን ለማሻሻል ድጋፍ ያግኙ",
 				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
 				install: "ጫን",
@@ -147,7 +147,7 @@ i18next.init({
 			translation: {
 				key: "olá mundo",
 				asktheteam: "Pergunte-nos qualquer coisa",
-				instructions: `<span class="title">Como usar o Kapta</span><hr>1 - Crie um grupo de WhatsApp <br>👥💬 <br>2 - Compartilhe e descreva locais <br> 📎📍 <br> 3 - Exporte o chat para o Kapta <br> 💬🗺️ <br> 4 - Compartilhe ou venda seu mapa <br> 🗺️💸`,
+				instructions: `<span class="title">Como usar o Kapta</span><hr>1 - Crie um grupo de WhatsApp<br>2 - Compartilhe e descreva locais<br> 3 - Exporte o chat para o Kapta<br> 4 - Compartilhe ou venda seu mapa`,
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -165,7 +165,7 @@ i18next.init({
 				addMetadataTitle: "Descreva este mapa",
 				sharingTitle: "Compartilhar este mapa",
 				addDescription: "Título do seu mapa",
-				copyright: "Kapta por UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Obtenha suporte para melhorar seu mapa",
 				installPrompt:
 					"Kapta funciona melhor quando instalado em um dispositivo móvel. Instalar agora?",
@@ -177,7 +177,7 @@ i18next.init({
 			translation: {
 				key: "báwo ni ayé",
 				asktheteam: "Béèrè ohunkóhun lọ́wọ́ wa",
-				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Dá ìgbìmọ̀ àwáàrí ní WhatsApp <br>👥💬 <br>2 - Pín & ṣàpèjúwe àwọn àyè <br> 📎📍 <br>3 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta <br> 💬🗺️ <br>4 - Pín tàbí tà átààwá àwáàrí rẹ <br> 🗺️💸`,
+				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Dá ìgbìmọ̀ àwáàrí ní WhatsApp<br>2 - Pín & ṣàpèjúwe àwọn àyè<br>3 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>4 - Pín tàbí tà átààwá àwáàrí rẹ`,
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
 				observer: "Olùtọ́jú",
@@ -195,7 +195,7 @@ i18next.init({
 				addMetadataTitle: "Ṣàpèjúwe àwáàrí yìí",
 				sharingTitle: "Pín àwáàrí yìí",
 				addDescription: "Àkọlé àwáàrí rẹ",
-				copyright: "Kapta láti UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Gba ìtìlẹ́yìn láti mú àwáàrí rẹ dàra sí",
 				installPrompt:
 					"Kapta dára jùlọ tí ó bá wà nínú ètò alágbèéká. Ṣe yóò ìgbele?",
