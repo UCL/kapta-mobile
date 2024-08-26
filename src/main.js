@@ -121,6 +121,13 @@ if ("serviceWorker" in navigator) {
 			});
 	});
 	if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
+	if (!Alpine.store("deviceInfo").isMobile){ //to show an alert to users who are not on mobile
+		window.addEventListener("load", function() {
+			alert("Kapta works best on mobile devices. Please visit this page on a mobile device to use the app.");
+		  })
+		}
+
+
 }
 
 navigator.serviceWorker.addEventListener("message", (event) => {
