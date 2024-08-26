@@ -3,6 +3,7 @@
 ## What? ###
 
 Kapta Mobile is a Progressive Web App enabling users to generate maps from WhatsApp chats.
+
 👉 📱 http://kapta.earth
 
 To start creating & sharing WhatsApp Maps with Kapta:
