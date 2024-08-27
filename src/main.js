@@ -121,17 +121,19 @@ if ("serviceWorker" in navigator) {
 			});
 	});
 	if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
-	if (!Alpine.store("deviceInfo").isMobile){ //to show an alert to users who are not on mobile
-		window.addEventListener("load", function() {
-			alert("Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.");
-		  })
-		}
-	if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)){
-		window.addEventListener("load", function() {
-			alert("Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.");
-		  })
-	}
 
+	var bestOnAndroidMsg =
+		"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
+	if (
+		!Alpine.store("deviceInfo").isMobile ||
+		navigator.userAgent.match(/iPhone/i) ||
+		navigator.userAgent.match(/iPad/i)
+	) {
+		// to show an alert to users who are not on mobile or are on iPhone
+		window.addEventListener("load", function () {
+			alert(bestOnAndroidMsg);
+		});
+	}
 }
 
 navigator.serviceWorker.addEventListener("message", (event) => {
