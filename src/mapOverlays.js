@@ -96,7 +96,6 @@ export function buildActionTray() {
 				currentDataset.slug = slug;
 				let titleElem = document.querySelector(".leaflet-map-title");
 				titleElem.textContent = Alpine.store("appData").mapTitle;
-				navigator.vibrate(100);
 				titleElem.classList.add("pulse-shadow");
 
 				// Remove the pulse effect after the animation ends
