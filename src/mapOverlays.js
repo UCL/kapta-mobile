@@ -278,8 +278,8 @@ function sharingAction() {
 			navigator
 				.share({
 					files: filesArray,
-					title: "#kapta",
-					text: "#kapta",
+					title: "#MadeWithKapta",
+					text: "#MadeWithKapta",
 					url: "https://kapta.earth/",
 				})
 				.then(
