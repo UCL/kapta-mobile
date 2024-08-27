@@ -28,13 +28,16 @@ function promptToInstall() {
 				installDialog.remove();
 				resolve(result.outcome);
 			} else {
+				installDialog
+					.querySelectorAll("button")
+					.forEach((button) => button.remove());
 				installReason.innerText = i18next.t("installClickMessage");
 				setTimeout(function () {
 					installPrompt = null;
 					installDialog.close();
 					installDialog.remove();
 					resolve(result.outcome);
-				}, 4000);
+				}, 5000);
 			}
 		});
 		installDialog.appendChild(installBtn);
