@@ -41,27 +41,16 @@ function buildLanguageSelector() {
 	return selector;
 }
 function displayVideoModal() {
+	var tutorialUrl = i18next.t("tutorialUrl");
 	const videoModal = document.getElementById("video-modal");
 	videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
         <iframe id="videoElement" width="100%" height="500px"
-    src="https://www.youtube.com/embed/PDOVl8smi2Q?si=CiIkw6_rm1TzmZgF" 
+    src="${tutorialUrl}" 
     frameborder="0" allow="autoplay; encrypted-media;" 
     allowfullscreen>
 </iframe>
 </div>`;
 	videoModal.querySelector("button").onclick = () => closeModal(videoModal);
-	
-	if(i18next.language === "fr") {
-		videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
-        <iframe id="videoElement" width="100%" height="500px"
-    src="https://www.youtube.com/embed/Dd4dFC-J_Bo?si=CvzkDasZX-ocN-K2" 
-    frameborder="0" allow="autoplay; encrypted-media;" 
-    allowfullscreen>
-</iframe>
-</div>`;
-	}
-	// console.log(i18next.language);
-	//if for other languages once we have the YouTube video in other languages
 
 	makeModalVisible(videoModal);
 }
