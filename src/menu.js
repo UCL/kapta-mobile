@@ -50,6 +50,18 @@ function displayVideoModal() {
 </iframe>
 </div>`;
 	videoModal.querySelector("button").onclick = () => closeModal(videoModal);
+	
+	if(i18next.language === "fr") {
+		videoModal.innerHTML = `<div class="video-modal__inner"><button class="modal-close btn">&times;</button>
+        <iframe id="videoElement" width="100%" height="500px"
+    src="https://www.youtube.com/embed/Dd4dFC-J_Bo?si=CvzkDasZX-ocN-K2" 
+    frameborder="0" allow="autoplay; encrypted-media;" 
+    allowfullscreen>
+</iframe>
+</div>`;
+	}
+	// console.log(i18next.language);
+	//if for other languages once we have the YouTube video in other languages
 
 	makeModalVisible(videoModal);
 }
