@@ -23,11 +23,22 @@ function promptToInstall() {
 			const result = await installPrompt.prompt();
 			if (result.outcome === "dismissed") {
 				dismissed = true;
+				installPrompt = null;
+				installDialog.close();
+				installDialog.remove();
+				resolve(result.outcome);
+			} else {
+				installDialog
+					.querySelectorAll("button")
+					.forEach((button) => button.remove());
+				installReason.innerText = i18next.t("installClickMessage");
+				setTimeout(function () {
+					installPrompt = null;
+					installDialog.close();
+					installDialog.remove();
+					resolve(result.outcome);
+				}, 5000);
 			}
-			installPrompt = null;
-			installDialog.close();
-			installDialog.remove();
-			resolve(result.outcome);
 		});
 		installDialog.appendChild(installBtn);
 		const closeBtn = document.createElement("button");
