@@ -22,7 +22,7 @@ i18next.init({
 				instructions: `<span class="title">Create WhatsApp Maps with Kapta </span><hr> 1 - Share locations in a WhatsApp group<br> 2 - Export chat to Kapta<br> 3 - Share your WhatsApp Map`,
 				watchtutorial: "Watch tutorial",
 				tutorialUrl:
-					"https://youtube.com/shorts/vaPHy8S-OpA?si=w6ou_ekAzkZbHJ3i",
+					"https://youtube.com/embed/vaPHy8S-OpA?si=w6ou_ekAzkZbHJ3i",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -58,7 +58,7 @@ i18next.init({
 				instructions: `<span class="title">Crea WhatsApp Maps con Kapta</span><hr>1 - Comparte ubicaciones en un grupo de WhatsApp<br>2 - Exporta el chat a Kapta<br>3 - Comparte tu WhatsApp Map`,
 				watchtutorial: "Ver tutorial",
 				tutorialUrl:
-					"https://youtube.com/shorts/hq2h8Ou2BOE?si=tVKt_J3L_0svUekr",
+					"https://youtube.com/embed/hq2h8Ou2BOE?si=tVKt_J3L_0svUekr",
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -95,7 +95,7 @@ i18next.init({
 				instructions: `<span class="title">Créer des WhatsApp Maps avec Kapta</span><hr>1 - Partagez des localisations dans un groupe WhatsApp<br>2 - Exportez la discussion dans Kapta<br>3 - Partagez votre WhatsApp Map`,
 				watchtutorial: "Regarder le tutoriel",
 				tutorialUrl:
-					"https://youtube.com/shorts/3KrsKgFHYMs?si=liiXRfVzN4N4YMXk",
+					"https://youtube.com/embed/3KrsKgFHYMs?si=liiXRfVzN4N4YMXk",
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
