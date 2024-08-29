@@ -64,8 +64,8 @@ module.exports = {
 			title: "Kapta",
 			favicon: "src/images/icons/favicon.ico",
 			meta: {
-				"Content-Security-Policy": {
-					"http-equiv": "Content-Security-Policy",
+				"Content-Type": {
+					"http-equiv": "content-type",
 					content: "text/html; charset=UTF-8",
 				},
 				viewport:
@@ -176,13 +176,13 @@ module.exports = {
 		}),
 	],
 	/**
-    * In Webpack version v2.0.0 and earlier, you must tell 
-    * webpack how to use "json-loader" to load 'json' files.
-    * To do this Enter 'npm --save-dev install json-loader' at the 
-    * command line to install the "json-loader' package, and include the 
-    * following entry in your webpack.config.js.
-    * module: {
-      rules: [{test: /\.json$/, use: use: "json-loader"}]
-    }
-    **/
+	* In Webpack version v2.0.0 and earlier, you must tell 
+	* webpack how to use "json-loader" to load 'json' files.
+	* To do this Enter 'npm --save-dev install json-loader' at the 
+	* command line to install the "json-loader' package, and include the 
+	* following entry in your webpack.config.js.
+	* module: {
+	  rules: [{test: /\.json$/, use: use: "json-loader"}]
+	}
+	**/
 };
