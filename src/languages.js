@@ -22,7 +22,7 @@ i18next.init({
 				instructions: `<span class="title">Create WhatsApp Maps with Kapta </span><hr> 1 - Share locations in a WhatsApp group<br> 2 - Export chat to Kapta<br> 3 - Share your WhatsApp Map`,
 				watchtutorial: "Watch tutorial",
 				tutorialUrl:
-					"https://youtube.com/embed/vaPHy8S-OpA?si=w6ou_ekAzkZbHJ3i",
+					"https://youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -58,7 +58,7 @@ i18next.init({
 				instructions: `<span class="title">Crea WhatsApp Maps con Kapta</span><hr>1 - Comparte ubicaciones en un grupo de WhatsApp<br>2 - Exporta el chat a Kapta<br>3 - Comparte tu WhatsApp Map`,
 				watchtutorial: "Ver tutorial",
 				tutorialUrl:
-					"https://youtube.com/embed/hq2h8Ou2BOE?si=tVKt_J3L_0svUekr",
+					"https://youtube.com/embed/hq2h8Ou2BOE",
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -95,7 +95,7 @@ i18next.init({
 				instructions: `<span class="title">Créer des WhatsApp Maps avec Kapta</span><hr>1 - Partagez des localisations dans un groupe WhatsApp<br>2 - Exportez la discussion dans Kapta<br>3 - Partagez votre WhatsApp Map`,
 				watchtutorial: "Regarder le tutoriel",
 				tutorialUrl:
-					"https://youtube.com/embed/3KrsKgFHYMs?si=liiXRfVzN4N4YMXk",
+					"https://youtube.com/embed/3KrsKgFHYMs",
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
@@ -131,7 +131,7 @@ i18next.init({
 				instructions: `<span class="title">በካፕታ መተግብሪያ ዋትስ አፕ ካርታን ይስሩ</span><hr>1 - አከባቢውን ያጋሩ<br>2 - ምልልሱን ወደካፕታ ይላኩ<br>3 - የዋትስ አፕ ካርታዎን ያጋሩ`,
 				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA?si=Mnip_lPMTMiAYlUi",
+					"https://www.youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
 				observer: "ተመልካች",
@@ -166,7 +166,7 @@ i18next.init({
 				instructions: `<span class="title">Crie Mapas do WhatsApp com o Kapta</span><hr>1 - Partilhe locais num grupo do WhatsApp<br> 2 - Exporte o chat para o Kapta<br> 3 - Compartilhe seu WhatsApp Map`,
 				watchtutorial: "Assistir tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA?si=Mnip_lPMTMiAYlUi",
+					"https://www.youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -202,7 +202,7 @@ i18next.init({
 				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>3 - Pín tàbí tà átààwá àwáàrí rẹ`,
 				watchtutorial: "Aago Tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA?si=Mnip_lPMTMiAYlUi",
+					"https://www.youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
 				observer: "Olùtọ́jú",
