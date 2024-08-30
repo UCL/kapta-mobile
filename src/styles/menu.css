@@ -1,0 +1,96 @@
+#menuContainer {
+    flex: 7;
+    display: grid;
+    margin-top: 6vh;
+    grid-template-rows: 6vh minmax(35vh, 45vh) auto;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    row-gap: 1.5vh;
+    padding-bottom: 3vh;
+
+    .menu-btn {
+        border-radius: 60px;
+        min-width: 60vw;
+        padding: 0.8rem;
+    }
+
+    .button-area {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: fit-content;
+        text-align: center;
+        bottom: 1vh;
+    }
+
+    #helpBtn,
+    #tutorialBtn,
+    #recentBtn {
+        font-size: 145%;
+        text-align: center;
+        font-weight: 600;
+        color: var(--mid-red);
+        margin-top: 2vh;
+        margin-bottom: 1vh;
+    }
+
+    #languageSelector {
+        background-color: transparent;
+        color: white;
+        border: none;
+        font-size: 108%;
+        width: fit-content;
+        font-family: Ubuntu, sans-serif;
+
+        >option {
+            color: black;
+        }
+    }
+
+    #instructions {
+        text-align: center;
+        font-size: 115%;
+        margin-inline: 4vw;
+        color: white;
+        height: fit-content;
+        line-height: 2;
+        margin-bottom: 2vh;
+
+        .title {
+            font-weight: 600;
+        }
+    }
+
+
+    .file-input {
+        color: white;
+        font-size: 110%;
+    }
+
+}
+
+
+#video-modal {
+    position: absolute;
+    /* top: 10vh; */
+    display: flex;
+    width: 95%;
+    background-color: #eee;
+    border-radius: 6px;
+
+    .video-modal__inner {
+        width: 100%;
+    }
+
+    .modal-close {
+        float: right;
+        border-color: lightgray;
+        font-size: 150%;
+
+        &.btn {
+            width: 5% !important;
+        }
+    }
+}

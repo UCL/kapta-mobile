@@ -61,7 +61,7 @@ async function handleInstallPrompt() {
 	console.info("Install prompt outcome", install);
 }
 
-function initialiseInstallPrompt() {
+export function initialiseInstallPrompt() {
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
 		installPrompt = event;
@@ -70,5 +70,3 @@ function initialiseInstallPrompt() {
 		}
 	});
 }
-
-export { initialiseInstallPrompt };

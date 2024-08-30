@@ -3,7 +3,7 @@ import "leaflet-easyprint";
 import "leaflet/dist/leaflet.css";
 import { i18next } from "./languages.js";
 
-import { displayOptionsMenu } from "./menu.js";
+// import { displayOptionsMenu } from "./menu.js";
 
 import { buildActionTray, closeModal } from "./mapOverlays.js";
 import {

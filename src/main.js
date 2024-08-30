@@ -1,9 +1,12 @@
 import Alpine from "alpinejs";
-import { displayOptionsMenu, removeOptionsMenu } from "./menu.js";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
 import { displayFile } from "./import_whatsapp.js";
 import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
 import { initialiseInstallPrompt } from "./install.js";
+
+import MainMenu from "./MainMenu.jsx";
 
 window.Alpine = Alpine;
 
@@ -16,8 +19,7 @@ function isMobileOrTablet() {
 			("ontouchstart" in window || navigator.maxTouchPoints > 0))
 	);
 }
-
-document.addEventListener("alpine:init", () => {
+function initAlpine() {
 	Alpine.store("deviceInfo", {
 		init() {
 			this.isMobile = isMobileOrTablet();
@@ -43,7 +45,6 @@ document.addEventListener("alpine:init", () => {
 			this.refreshToken = localStorage.getItem("refreshToken");
 
 			Alpine.effect(() => {
-				// On change, store new tokens in local storage
 				["idToken", "accessToken", "refreshToken"].forEach((key) => {
 					if (this[key] === null) {
 						localStorage.removeItem(key);
@@ -51,7 +52,6 @@ document.addEventListener("alpine:init", () => {
 						localStorage.setItem(key, this[key]);
 					}
 				});
-				// Update display name and phone number
 				this.update_user_info();
 			});
 		},
@@ -104,41 +104,71 @@ document.addEventListener("alpine:init", () => {
 			this.update_user_info();
 		},
 	});
-});
-Alpine.start();
-
-displayOptionsMenu();
-
-if ("serviceWorker" in navigator) {
-	window.addEventListener("load", () => {
-		navigator.serviceWorker
-			.register("/sw.js")
-			.then((registration) => {
-				console.info("SW registered: ", registration);
-			})
-			.catch((registrationError) => {
-				console.info("SW registration failed: ", registrationError);
-			});
-	});
-	if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
-
-	var bestOnAndroidMsg =
-		"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
-	if (
-		!Alpine.store("deviceInfo").isMobile ||
-		navigator.userAgent.match(/iPhone/i) ||
-		navigator.userAgent.match(/iPad/i)
-	) {
-		// to show an alert to users who are not on mobile or are on iPhone
-		window.addEventListener("load", function () {
-			alert(bestOnAndroidMsg);
-		});
-	}
 }
 
-navigator.serviceWorker.addEventListener("message", (event) => {
-	if (event.data.action !== "load-map") return;
-	displayFile(event.data.file);
-});
+function initServiceWorker() {
+	if ("serviceWorker" in navigator) {
+		window.addEventListener("load", () => {
+			navigator.serviceWorker
+				.register("/sw.js")
+				.then((registration) => {
+					console.info("SW registered: ", registration);
+				})
+				.catch((registrationError) => {
+					console.info("SW registration failed: ", registrationError);
+				});
+		});
+		if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
 
-navigator.serviceWorker.controller.postMessage("share-ready");
+		var bestOnAndroidMsg =
+			"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
+		// will need to get a translation done for this
+		if (
+			!Alpine.store("deviceInfo").isMobile ||
+			navigator.userAgent.match(/iPhone/i) ||
+			navigator.userAgent.match(/iPad/i)
+		) {
+			window.addEventListener("load", function () {
+				alert(bestOnAndroidMsg);
+			});
+		}
+	}
+
+	navigator.serviceWorker.addEventListener("message", (event) => {
+		if (event.data.action !== "load-map") return;
+		displayFile(event.data.file);
+	});
+
+	navigator.serviceWorker.controller?.postMessage("share-ready");
+}
+
+export const removeOptionsMenu = () => {
+	setIsVisible(false); // This will "remove" the component by not rendering it
+	// might not need this
+};
+
+function App() {
+	useEffect(() => {
+		// Initialize Alpine and SW
+		document.addEventListener("alpine:init", () => {
+			initAlpine();
+		});
+		Alpine.start();
+		initServiceWorker();
+	}, []); // Empty dependency array ensures this effect runs once on mount
+
+	const [isMenuVisible, setIsMenuVisible] = useState(true);
+
+	const toggleMenu = () => setIsMenuVisible((prev) => !prev); // might want to split this out to be more precise
+
+	return (
+		<div>
+			{/* <SomeOtherComponent toggleMenu={toggleMenu} /> */}
+			<MainMenu isVisible={isMenuVisible} />
+		</div>
+	);
+}
+
+const rootElement = document.getElementById("main");
+const root = ReactDOM.createRoot(rootElement);
+root.render(<App />);

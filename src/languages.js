@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
 
 const supportedLanguages = {
 	en: "🇬🇧 English",
@@ -8,8 +9,8 @@ const supportedLanguages = {
 	am: "🇪🇹 አማርኛ",
 	yo: "🇳🇬 Yorùbá",
 };
-const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
-i18next.init({
+export const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
+i18next.use(initReactI18next).init({
 	lng: savedLanguage,
 	fallbackLng: ["en", "es", "fr", "pt", "am", "yo"],
 	supportedLngs: Object.keys(supportedLanguages),
@@ -44,7 +45,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Get support to improve your map",
 				installPrompt: "Install Kapta to create WhatsApp Maps",
-				installClickMessage: "Kapta is now being added to your home screen. This might take a few seconds",
+				installClickMessage:
+					"Kapta is now being added to your home screen. This might take a few seconds",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.",
 				install: "Install",
@@ -81,7 +83,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Ayuda para mejorar el mapa?",
 				installPrompt: "Instalar Kapta para crear WhatsApp Maps",
-				installClickMessage: "Kapta se está añadiendo a tu pantalla de inicio. Esto puede tardar unos segundos.",
+				installClickMessage:
+					"Kapta se está añadiendo a tu pantalla de inicio. Esto puede tardar unos segundos.",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Instalar",
@@ -117,7 +120,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Aide pour améliorer votre carte",
 				installPrompt: "Installez Kapta pour créer WhatsApp Maps",
-				installClickMessage: "Kapta est maintenant ajouté à votre écran d'accueil. Cela peut prendre quelques secondes",
+				installClickMessage:
+					"Kapta est maintenant ajouté à votre écran d'accueil. Cela peut prendre quelques secondes",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Installer",
@@ -152,7 +156,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "ካርታዎን ለማሻሻል ድጋፍ አማራጭ",
 				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
-				installClickMessage: "ካፕታ አሁን ወደ መነሻ ስክሪንዎ እየታከለ ነው። ይሄ ጥቂት ሰከንዶች ሊወስድ ይችላል።",
+				installClickMessage:
+					"ካፕታ አሁን ወደ መነሻ ስክሪንዎ እየታከለ ነው። ይሄ ጥቂት ሰከንዶች ሊወስድ ይችላል።",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "ጫን",
@@ -188,7 +193,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Obtenha suporte para melhorar seu mapa",
 				installPrompt: "Instale o Kapta para criar WhatsApp Maps",
-				installClickMessage: "Kapta está agora a ser adicionado à sua tela inicial. Isto pode levar alguns segundos",
+				installClickMessage:
+					"Kapta está agora a ser adicionado à sua tela inicial. Isto pode levar alguns segundos",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Instalar",
@@ -224,7 +230,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Gba ìtìlẹ́yìn láti mú àwáàrí rẹ dàra sí",
 				installPrompt: "Install Kapta to create WhatsApp Maps",
-				installClickMessage: "Kapta ti wa ni afikun si iboju ile rẹ. Eyi le gba iṣẹju diẹ",
+				installClickMessage:
+					"Kapta ti wa ni afikun si iboju ile rẹ. Eyi le gba iṣẹju diẹ",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Ìgbele",

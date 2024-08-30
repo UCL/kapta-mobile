@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { displayMap } from "./map.js";
 import * as JSZip from "jszip";
-import { removeOptionsMenu } from "./menu.js";
+import { removeOptionsMenu } from "./main.js";
 import { slugify } from "./utils.js";
 
 var totalcontribmap = 0;
