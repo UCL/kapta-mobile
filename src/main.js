@@ -7,7 +7,7 @@ import { signOut, initiateAuthRefresh } from "./auth.js";
 import { initialiseInstallPrompt } from "./install.js";
 
 import MainMenu from "./MainMenu.jsx";
-import StatusBar from "./status_bar.js";
+import StatusBar from "./StatusBar.jsx";
 
 window.Alpine = Alpine;
 
