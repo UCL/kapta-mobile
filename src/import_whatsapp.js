@@ -164,7 +164,7 @@ function processText(text) {
 
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-		/location: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g;
+		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
