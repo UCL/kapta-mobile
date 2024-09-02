@@ -131,7 +131,7 @@ i18next.init({
 				instructions: `<span class="title">በካፕታ መተግብሪያ ዋትስ አፕ ካርታን ይስሩ</span><hr>1 - አከባቢውን ያጋሩ<br>2 - ምልልሱን ወደካፕታ ይላኩ<br>3 - የዋትስ አፕ ካርታዎን ያጋሩ`,
 				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA",
+					"https://youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
 				observer: "ተመልካች",
@@ -166,7 +166,7 @@ i18next.init({
 				instructions: `<span class="title">Crie Mapas do WhatsApp com o Kapta</span><hr>1 - Partilhe locais num grupo do WhatsApp<br> 2 - Exporte o chat para o Kapta<br> 3 - Compartilhe seu WhatsApp Map`,
 				watchtutorial: "Assistir tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA",
+					"https://youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -202,7 +202,7 @@ i18next.init({
 				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>3 - Pín tàbí tà átààwá àwáàrí rẹ`,
 				watchtutorial: "Aago Tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/vaPHy8S-OpA",
+					"https://youtube.com/embed/vaPHy8S-OpA",
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
 				observer: "Olùtọ́jú",
