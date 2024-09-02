@@ -161,7 +161,6 @@ function processText(text) {
 		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
 
 	let messageMatches = [...text.matchAll(messageRegex)];
-
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
 		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
@@ -188,16 +187,26 @@ function processText(text) {
 		}
 		messages.push(message);
 	});
-	// Sort messages by sender, then by datetime
-	messages.sort((a, b) =>
-		a.sender > b.sender
-			? 1
-			: a.sender === b.sender
-				? a.datetime > b.datetime
-					? 1
-					: -1
-				: -1
-	);
+  
+	// Sort messages by sender, then datetime
+	messages.sort((a, b) => {
+		// Compare by sender
+		if (a.sender > b.sender) {
+			return 1;
+		} else if (a.sender < b.sender) {
+			return -1;
+		} else {
+			// If sender is the same, compare by datetime
+			if (a.datetime > b.datetime) {
+				return 1;
+			} else if (a.datetime < b.datetime) {
+				return -1;
+			} else {
+				return 0; // Otherwise maintain relative order
+			}
+		}
+	});
+
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {
