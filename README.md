@@ -2,7 +2,7 @@
 
 ## What? ###
 
-Kapta Mobile is a Progressive Web App to create WhatsApp Maps. 3 steps:
+Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps:
 
   1. Share locations in a WhatsApp group
   2. Export chat to Kapta
