@@ -100,7 +100,7 @@ function formatDateString(date, time) {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min] = time.split(":"); // 24hr format used already
+	} else[hour, min] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 }
@@ -158,7 +158,7 @@ function processText(text) {
 	// stopping when new line starts with date or text ends
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	const messageRegex =
-		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):\s((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
 
 	let messageMatches = [...text.matchAll(messageRegex)];
 
@@ -193,10 +193,10 @@ function processText(text) {
 		a.sender > b.sender
 			? 1
 			: a.sender === b.sender
-			? a.datetime > b.datetime
-				? 1
+				? a.datetime > b.datetime
+					? 1
+					: -1
 				: -1
-			: -1
 	);
 
 	// Now loop through messages to create geojson for each location
