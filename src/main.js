@@ -7,6 +7,7 @@ import { signOut, initiateAuthRefresh } from "./auth.js";
 import { initialiseInstallPrompt } from "./install.js";
 
 import MainMenu from "./MainMenu.jsx";
+import StatusBar from "./status_bar.js";
 
 window.Alpine = Alpine;
 
@@ -159,11 +160,19 @@ function App() {
 
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
 
+	// set status bar visibility based on if cognito in config
+	const [isSBVisible, setIsSBVisible] = useState(false);
+	useEffect(() => {
+		const hasCognito = Alpine.store("appData")?.hasCognito;
+		setIsSBVisible(hasCognito);
+	});
+
 	const toggleMenu = () => setIsMenuVisible((prev) => !prev); // might want to split this out to be more precise
 
 	return (
 		<div>
 			{/* <SomeOtherComponent toggleMenu={toggleMenu} /> */}
+			<StatusBar isVisible={isSBVisible} />
 			<MainMenu isVisible={isMenuVisible} />
 		</div>
 	);
