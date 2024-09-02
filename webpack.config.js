@@ -10,7 +10,6 @@ module.exports = {
 	// Specify the entry point for our app.
 	entry: {
 		main: "./src/main.js",
-		status: "./src/status.js",
 	},
 	devServer: {
 		static: "./dist",
