@@ -4,7 +4,7 @@ import Alpine from "alpinejs";
 
 window.displayLoginDialog = displayLoginDialog;
 
-export function StatusBar({ isVisible }) {
+export default function StatusBar({ isVisible }) {
 	if (!isVisible) return null;
 
 	const user = Alpine.store("user");
