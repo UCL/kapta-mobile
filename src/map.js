@@ -1,11 +1,21 @@
 import "leaflet-easybutton";
 import "leaflet-easyprint";
 import "leaflet/dist/leaflet.css";
-import { i18next } from "./languages.js";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useState, useRef } from "react";
+import "./styles/map-etc.css";
+import L from "leaflet";
+import {
+	MapContainer,
+	TileLayer,
+	Marker,
+	Popup,
+	CircleMarker,
+	useMap,
+	ScaleControl,
+} from "react-leaflet";
 
-// import { displayOptionsMenu } from "./menu.js";
-
-import { buildActionTray, closeModal } from "./mapOverlays.js";
+import { MapActionArea, ShareModal } from "./mapOverlays.js";
 import {
 	basemapDarkIcon,
 	basemapSatIcon,
@@ -15,143 +25,43 @@ import {
 
 const config = require("./config.json");
 
-var scaleLine;
-var attributionContainer;
-var currentLocation;
-
 /************************************************************************************************
- *   Basemaps
+ *   Basemaps (TileLayers)
  ************************************************************************************************/
 
-var basemapDark = L.tileLayer(
-	`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token={accessToken}`,
-	{
-		minZoom: 2,
-		maxZoom: 21,
-		maxNativeZoom: 21,
-		opacity: 1,
-		savetileend: false,
-		cache: false,
-		subdomains: ["mt0", "mt1", "mt2", "mt3"],
-		attribution: "Leaflet | Mapbox | OSM Contributors",
-		accessToken: config.mapbox.accessToken,
-		crossOrigin: "anonymous",
-	}
-);
+function DarkTileLayer() {
+	const accessToken = config.mapbox.accessToken; // Make sure config is imported or defined
 
-var basemapSat = L.tileLayer(
-	`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token={accessToken}`,
-	{
-		minZoom: 2,
-		maxZoom: 21,
-		maxNativeZoom: 21,
-		opacity: 1,
-		// savetileend:true,
-		// cache:false,
-		// border: 'solid black 5px',
-		subdomains: ["mt0", "mt1", "mt2", "mt3"],
-		attribution: "Leaflet | Mapbox | OSM Contributors",
-		accessToken: config.mapbox.accessToken,
-		crossOrigin: "anonymous",
-	}
-);
-
-var baseMaps = {
-	Satellite: basemapSat,
-	Dark: basemapDark,
-};
-
-var basemapButton = L.easyButton({
-	id: "baseMapToggle",
-	class: "easyButton",
-	position: "topleft",
-	states: [
-		{
-			stateName: "dark",
-			title: "Display Satellite Layer",
-			icon: `<span>${basemapSatIcon}</span>`,
-			onClick: function (control) {
-				control.button.classList.add("btn");
-				// Switch to basemapSat
-				basemapDark.removeFrom(control._map);
-				basemapSat.addTo(control._map);
-				control.state("sat");
-			},
-		},
-		{
-			stateName: "sat",
-			title: "Display Dark Layer",
-			icon: `<span>${basemapDarkIcon}</span>`,
-			onClick: function (control) {
-				control.button.classList.add("btn");
-				// Switch to basemapDark
-				basemapSat.removeFrom(control._map);
-				basemapDark.addTo(control._map);
-				control.state("dark");
-			},
-		},
-	],
-});
-
-/************************************************************************************************
- *   GPS Location
- ************************************************************************************************/
-
-const gpsPositionIcon = L.divIcon({
-	html: GPSPositionIcn,
-	className: "position-marker-icon",
-	iconSize: [30, 30], // size of the icon
-	iconAnchor: [15, 15], // point of the icon which will correspond to marker's location, relative to its top left showCoverageOnHover
-});
-
-//for gps location
-const options = {
-	enableHighAccuracy: true,
-	timeout: 5000,
-	maximumAge: 0,
-};
-
-function success(pos) {
-	const crd = pos.coords;
-	const lat = pos.coords.latitude;
-	const lng = pos.coords.longitude;
-	currentLocation = [lat, lng];
+	return (
+		<TileLayer
+			url={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			minZoom={2}
+			maxZoom={21}
+			maxNativeZoom={21}
+			opacity={1}
+			subdomains={["mt0", "mt1", "mt2", "mt3"]}
+			attribution=" Mapbox | OSM Contributors"
+			crossOrigin="anonymous"
+		/>
+	);
 }
 
-function error(err) {
-	console.warn(`ERROR(${err.code}): ${err.message}`);
+function SatelliteTileLayer() {
+	const accessToken = config.mapbox.accessToken;
+
+	return (
+		<TileLayer
+			url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			minZoom={2}
+			maxZoom={21}
+			maxNativeZoom={21}
+			opacity={1}
+			subdomains={["mt0", "mt1", "mt2", "mt3"]}
+			attribution=" Mapbox | OSM Contributors"
+			crossOrigin="anonymous"
+		/>
+	);
 }
-
-navigator.geolocation.getCurrentPosition(success, error, options);
-
-var gpsButton = L.easyButton({
-	id: "gps",
-	class: "easyButton",
-	position: "topright",
-	states: [
-		{
-			icon: `<span>${GPSIcn}</span>`,
-			onClick: function (control) {
-				if (currentLocation !== undefined && currentLocation[0] !== null) {
-					L.marker(currentLocation, {
-						icon: gpsPositionIcon,
-
-						draggable: false,
-						zIndexOffset: 100,
-					}).addTo(control._map);
-					control._map.panTo(currentLocation, 10);
-				} else {
-					console.error("GPS not available");
-					control.button.src = "images/gpsSearching.gif";
-					L.popup()
-						.setLatLng(control._map.getCenter()) // or use a specific lat/lng if known
-						.setContent("GPS not available. Please check your device settings.")
-						.openOn(control._map);
-				}
-			},
-		},
-	],
-});
 
 /************************************************************************************************
  * Display Data
@@ -170,42 +80,55 @@ function getFriendlyDatetime(datetime) {
 	return datetime.split("T").join(" ").replaceAll("-", "/");
 }
 
-function addDataToMap(map, mapdata) {
-	let layerChatGeom = L.geoJson(mapdata, {
-		pointToLayer: function (feature, latlng) {
-			return L.circleMarker(latlng, geojsonMarkerOptions);
-		},
-		onEachFeature: function (feature, layer) {
-			if (feature.properties && feature.properties.observations) {
-				layer.bindPopup(
-					`<div class="map-popup-body">
-                      ${feature.properties.observations.replaceAll(
-												"\n",
-												"<br/>"
-											)}
-                    </div>
-                    <div class="map-popup-footer">
-                      ${i18next.t("date")}: ${getFriendlyDatetime(
-						feature.properties.datetime
-					)}<br/>
-                      ${i18next.t("observer")}: ${feature.properties.observer}
-                    </div>`
-				);
-			}
-			if (feature.properties && feature.properties.markerColour) {
-				layer.options.fillColor = feature.properties.markerColour;
-			}
-		},
-	}).addTo(map);
-	let boundsLayer = layerChatGeom.getBounds();
-	setTimeout(function () {
-		map.fitBounds(boundsLayer, {
-			maxZoom: 16,
-			paddingBottomRight: [0, 0],
-		});
-	});
-}
+function MapDataLayer({ data }) {
+	const { t } = useTranslation();
+	const map = useMap();
+	const boundsRef = useRef([]);
 
+	useEffect(() => {
+		if (boundsRef.current.length > 0) {
+			map.fitBounds(boundsRef.current);
+		}
+	}, [data, map]);
+	return (
+		<>
+			{data.features.map((feature, index) => {
+				if (feature.geometry?.coordinates) {
+					const { coordinates } = feature.geometry;
+					const latlng = { lat: coordinates[1], lng: coordinates[0] };
+
+					const observations = feature.properties.observations.replace(
+						/<br\s*\/?>/gi,
+						"\n"
+					);
+					boundsRef.current.push([latlng.lat, latlng.lng]);
+
+					return (
+						<CircleMarker
+							key={index}
+							center={latlng}
+							pathOptions={geojsonMarkerOptions}
+						>
+							<Popup>
+								<div className="map-popup-body">
+									{observations.split("\n").map((o, index) => (
+										<p key={index}>{o}</p>
+									))}
+								</div>
+								<div className="map-popup-footer">
+									{t("date")}:{" "}
+									{getFriendlyDatetime(feature.properties.datetime)}
+									<br />
+									{t("observer")}: {feature.properties.observer}
+								</div>
+							</Popup>
+						</CircleMarker>
+					);
+				}
+			})}
+		</>
+	);
+}
 /************************************************************************************************
  * Share image
  ************************************************************************************************/
@@ -215,75 +138,133 @@ var printBtn = L.easyPrint({
 });
 
 /************************************************************************************************
- * Map action tray
- ************************************************************************************************/
-buildActionTray();
-/************************************************************************************************
  *  Display Map
  ************************************************************************************************/
+function ErrorPopup({ error }) {
+	const map = useMap();
 
-export function removeMap() {
-	let modal = document.getElementById("sharing-modal");
-	closeModal(modal); // have to do this before removing the actions
-	document.querySelector("#map").remove();
-	document.getElementById("map-actions-container").remove();
+	// Adjust the map view to a central location (e.g., coordinates [0, 0])
+	useEffect(() => {
+		if (error) {
+			map.setView([0, 0], map.getZoom(), { animate: true }); // Center the map
+		}
+	}, [error, map]);
 
-	// Remove all layers or they get confused when you try to reinstantiate the map
-	basemapDark.remove();
-	basemapSat.remove();
-	displayOptionsMenu();
+	return error ? (
+		<Marker position={[0, 0]}>
+			<Popup
+				position={[0, 0]} // Position within the map (centered in this case)
+				autoClose={false}
+			>
+				<div>{error}</div>
+			</Popup>
+		</Marker>
+	) : null;
 }
 
-function displayMap(mapdata) {
-	let mapContainer = document.createElement("div");
-	mapContainer.id = "map";
-	document.querySelector("#main").appendChild(mapContainer);
+export function Map({ isVisible, showMenu, data }) {
+	if (!isVisible) return null;
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [titleValue, setTitleValue] = useState("");
+	const [shouldPulse, setShouldPulse] = useState(false);
+	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
+	const [currentLocation, setCurrentLocation] = useState(null);
+	const [error, setError] = useState(null);
+
+	// pulse effect on title update
+	useEffect(() => {
+		if (shouldPulse) {
+			const timer = setTimeout(() => {
+				setShouldPulse(false);
+			}, 6000);
+			return () => clearTimeout(timer); // Cleanup to avoid memory leaks
+		}
+	}, [shouldPulse]);
+
+	const getCurrentPosition = () => {
+		const options = {
+			enableHighAccuracy: true,
+			timeout: 5000,
+			maximumAge: 0,
+		};
+		function success(pos) {
+			const lat = pos.coords.latitude;
+			const lng = pos.coords.longitude;
+			setCurrentLocation([lat, lng]);
+		}
+		function error(err) {
+			console.warn(`ERROR(${err.code}): ${err.message}`);
+			setError(
+				"Unable to retrieve location. Please check your device settings."
+			);
+		}
+
+		navigator.geolocation
+			? navigator.geolocation.getCurrentPosition(success, error, options)
+			: console.error("GPS not available");
+	};
+
+	const UpdateMap = () => {
+		// hook to fly to current location when updated
+		const map = useMap();
+		if (currentLocation) {
+			map.flyTo(currentLocation, map.getZoom());
+		}
+		return null;
+	};
 	var southWest = L.latLng(-70, -180);
 	var northEast = L.latLng(80, 180);
-	var map = L.map("map", {
-		renderer: L.canvas({ padding: 0.5, tolerance: 8 }),
-		editable: true,
-		center: [0, 0], //global center
+	const mapConfig = {
+		center: [0, 0],
 		zoom: 2,
 		minZoom: 2,
 		maxZoom: 21,
 		zoomControl: false,
-		attributionControl: false,
+		attributionControl: true,
+		style: { height: "100vh", width: "100%" },
 		maxBounds: L.latLngBounds(southWest, northEast),
-	});
-	let attribution = L.control
-		.attribution({
-			position: "bottomright",
-			prefix: "",
-		})
-		.addTo(map);
-	attributionContainer = attribution.getContainer();
+	};
 
-	let scale = L.control
-		.scale({
-			maxWidth: 100,
-			metric: true,
-			imperial: false,
-			position: "bottomleft",
-		})
-		.addTo(map);
-	scaleLine = scale.getContainer().querySelector(".leaflet-control-scale-line");
-
-	var mapTitle = L.DomUtil.create("div", "leaflet-map-title");
-	map.getContainer().appendChild(mapTitle);
-
-	basemapDark.addTo(map);
-	basemapButton.addTo(map);
-	gpsButton.addTo(map);
-	printBtn.addTo(map);
-
-	if (mapdata) {
-		addDataToMap(map, mapdata);
-	}
-
-	var actionTray = buildActionTray();
-	const parent = document.querySelector("#main");
-	parent.appendChild(actionTray);
+	return (
+		<>
+			<ShareModal isOpen={isModalOpen} />
+			<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
+				{titleValue}
+			</div>
+			<div id="map">
+				<button
+					id="base-map--toggle"
+					className="map-button"
+					onClick={() => setIsSatelliteLayer(!isSatelliteLayer)}
+				>
+					{isSatelliteLayer ? basemapDarkIcon : basemapSatIcon}
+				</button>
+				<button id="gps" className="map-button" onClick={getCurrentPosition}>
+					{GPSIcn}
+				</button>
+				<MapContainer {...mapConfig}>
+					{/* determine which basemap we show */}
+					{isSatelliteLayer ? <SatelliteTileLayer /> : <DarkTileLayer />}
+					{/* current position marker */}
+					{currentLocation && (
+						<Marker position={currentLocation}>
+							<Popup>{GPSPositionIcn}</Popup>
+						</Marker>
+					)}
+					{/* error if currentLocation can't be found */}
+					{error && <ErrorPopup />}
+					{data && <MapDataLayer data={data} />}
+					<UpdateMap />
+					<ScaleControl position="bottomleft" />
+				</MapContainer>
+				<MapActionArea
+					setTitle={setTitleValue}
+					setPulse={setShouldPulse}
+					showMenu={showMenu}
+					setModalOpen={setIsModalOpen}
+				/>
+			</div>
+		</>
+	);
 }
-
-export { displayMap };
