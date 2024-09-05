@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
-import { displayFile } from "./import_whatsapp.js";
-import { displayMap } from "./map.js";
+import { parseFile } from "./import_whatsapp.js";
 import "./styles/menu.css";
+import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
-import { removeOptionsMenu } from "./main.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -15,8 +14,12 @@ function LanguageSelector({ supportedLanguages }) {
 
 	// Handle language change
 	const handleChange = (event) => {
+		// set lang in local storage and il8next
 		const newLanguage = event.target.value;
 		localStorage.setItem("preferredLanguage", newLanguage);
+		i18next.changeLanguage(newLanguage).catch((error) => {
+			console.error("Error changing language", error);
+		});
 		// Update the state to trigger a re-render
 		setSelectedLanguage(newLanguage);
 	};
@@ -46,15 +49,13 @@ function Instructions() {
 	);
 }
 
-function VideoModal({ isOpen, onClose }) {
+function VideoModal({ setIsOpen }) {
 	const { t } = useTranslation();
-
-	if (!isOpen) return null;
 
 	return (
 		<div id="video-modal">
 			<div className="video-modal__inner">
-				<button className="modal-close btn" onClick={onClose}>
+				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					&times;
 				</button>
 				<iframe
@@ -71,28 +72,22 @@ function VideoModal({ isOpen, onClose }) {
 	);
 }
 
-function RecentMapButton({ hasCurrentDataset }) {
-	const handleRecentBtnClick = (hasCurrentDataset) => {
-		removeOptionsMenu();
-		displayMap(hasCurrentDataset);
-	};
+function RecentMapButton({ showMap }) {
+	const { t } = useTranslation();
 	return (
-		<button
-			id="recentBtn"
-			className="btn menu-btn"
-			onclick={handleRecentBtnClick(hasCurrentDataset)}
-		>
+		<button id="recentBtn" className="btn menu-btn" onClick={showMap}>
 			{t("viewrecentmap")}
 		</button>
 	);
 }
 
-function FilePicker() {
+function FilePicker(dataDisplayProps) {
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
-		displayFile(file);
+		parseFile(file, dataDisplayProps);
 		event.target.value = null; // Clear the input value
 	};
+	var filedisplayed = false;
 	return (
 		<input
 			type="file"
@@ -103,31 +98,21 @@ function FilePicker() {
 	);
 }
 
-function ButtonArea() {
-	const [activeModal, setActiveModal] = useState(null);
-
-	const openModal = (modalName) => setActiveModal(modalName);
-	const closeModal = () => setActiveModal(null);
+function ButtonArea({ hasCurrentDataset, showMap }) {
+	const [isOpen, setVideoIsOpen] = useState(false);
 
 	const { t } = useTranslation();
-
-	let hasCurrentDataset = Alpine.store("currentDataset")?.geoJSON || null;
-
-	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
 	return (
 		<div className="button-area">
 			<button
 				id="tutorialBtn"
-				onClick={() => openModal("videoTutorial")}
+				onClick={() => setVideoIsOpen(true)}
 				className="btn menu-btn"
 			>
 				{t("watchtutorial")}
 			</button>
-			<VideoModal
-				isOpen={activeModal === "videoTutorial"}
-				onClose={closeModal}
-			/>
+			{isOpen && <VideoModal setIsOpen={setVideoIsOpen} />}
 
 			<button
 				id="helpBtn"
@@ -140,12 +125,7 @@ function ButtonArea() {
 			</button>
 
 			{/* show recent map */}
-			{hasCurrentDataset && (
-				<RecentMapButton hasCurrentDataset={hasCurrentDataset} />
-			)}
-
-			{/* File picker (web only) */}
-			{!isMobile && <FilePicker />}
+			{hasCurrentDataset && <RecentMapButton showMap={showMap} />}
 		</div>
 	);
 }
@@ -155,17 +135,46 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-export default function MainMenu({ isVisible }) {
+export default function MainMenu({
+	isVisible,
+	showMap,
+	setLoaderVisible,
+	dataset,
+	setMapData,
+}) {
+	const [isSBVisible, setIsSBVisible] = useState(false);
+
+	// set status bar visibility based on if cognito in config
+	useEffect(() => {
+		const hasCognito = Alpine.store("appData")?.hasCognito;
+		setIsSBVisible(hasCognito);
+	});
+
+	// if menu not visible, nor should status bar be
+	useEffect(() => {
+		if (!isVisible) setIsSBVisible(false);
+	}, [isVisible]);
+
+	if (!isVisible) return null;
+	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
+
+	const dataDisplayProps = {
+		setMapData,
+		showMap,
+		setLoaderVisible,
+	}; // setting these in an object so they're easier to pass
 	return (
 		<>
-			{isVisible && (
-				<div id="menuContainer">
-					<LanguageSelector supportedLanguages={supportedLanguages} />
-					<Instructions />
-					<ButtonArea />
-					<Copyright />
-				</div>
-			)}
+			<StatusBar isVisible={isSBVisible} />
+
+			<div id="menuContainer">
+				<LanguageSelector supportedLanguages={supportedLanguages} />
+				<Instructions />
+				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
+				{/* File picker (web only) */}
+				{!isMobile && <FilePicker {...dataDisplayProps} />}
+				<Copyright />
+			</div>
 		</>
 	);
 }
