@@ -105,7 +105,7 @@ module.exports = {
 					content: "249",
 				},
 			},
-			appMountIds: ["main", "sharing-modal"],
+			appMountIds: ["main"],
 			manifest: "src/manifest.webmanifest",
 		}),
 		new WorkboxPlugin.InjectManifest({
