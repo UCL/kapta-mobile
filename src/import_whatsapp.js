@@ -1,14 +1,11 @@
 import Alpine from "alpinejs";
-import { displayMap } from "./map.js";
 import * as JSZip from "jszip";
-import { removeOptionsMenu } from "./main.js";
 import { slugify } from "./utils.js";
 
 var totalcontribmap = 0;
 var username = localStorage.getItem("username");
 var phone = localStorage.getItem("phone");
-var timestamp = getTimestamp();
-var filedisplayed = false;
+
 const colourPalette = [
 	"#d0160f",
 	"#80bf4d",
@@ -20,7 +17,7 @@ const colourPalette = [
 	"#36fffd",
 ];
 
-function getTimestamp() {
+const getTimestamp = () => {
 	var date = new Date();
 	var year = date.getFullYear();
 	var month = date.getMonth() + 1;
@@ -29,15 +26,18 @@ function getTimestamp() {
 	var minutes = date.getMinutes();
 	var seconds = date.getSeconds();
 	return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
-}
+};
+var timestamp = getTimestamp();
 
-function displayFile(file) {
-	const setUIElements = () => {
-		filedisplayed = true;
-	};
+const setDataDisplayMap = (data, name, dataDisplayProps) => {
+	// common function used after parsing files
+	const { setMapData, showMap } = dataDisplayProps;
+	setMapData(data);
+	updateMapdata(name);
+	showMap();
+};
 
-	setUIElements();
-
+export function parseFile(file, dataDisplayProps) {
 	if (file.name.endsWith(".zip")) {
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
@@ -52,7 +52,8 @@ function displayFile(file) {
 							.file(filename)
 							.async("string")
 							.then(function (fileContent) {
-								processText(fileContent);
+								const [data, name] = processText(fileContent);
+								setDataDisplayMap(data, name, dataDisplayProps);
 							});
 					}
 				});
@@ -62,14 +63,15 @@ function displayFile(file) {
 		const reader = new FileReader();
 		reader.readAsText(file);
 		reader.onloadend = function (e) {
-			processText(e.target.result);
+			const [data, name] = processText(e.target.result);
+			setDataDisplayMap(data, name, dataDisplayProps);
 		};
 	} else if (file.name.endsWith(".geojson")) {
 		const reader = new FileReader();
 		reader.readAsText(file);
 		reader.onloadend = function (e) {
-			console.log(e.target.result);
-			processGeoJson(e.target.result);
+			const [data, name] = processGeoJson(e.target.result);
+			setDataDisplayMap(data, name, dataDisplayProps);
 		};
 	} else {
 		console.error("Unsupported file format");
@@ -105,33 +107,15 @@ function formatDateString(date, time) {
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 }
 
-function displayLoader() {
-	const loaderContainer = document.createElement("div");
-	loaderContainer.id = "loader-container";
-	const loader = document.createElement("div");
-	loader.className = "loader";
-	loaderContainer.appendChild(loader);
-	document.querySelector("#main").appendChild(loaderContainer);
-}
-
-function removeLoader() {
-	document.querySelector("#loader-container").remove();
-}
-function updateMapdata(mapdata, groupName = null) {
-	Alpine.store("currentDataset").geoJSON = mapdata;
+function updateMapdata(groupName = null) {
+	// not sure how much this is utilised atm, may need to better incorporate
 	if (groupName) {
 		Alpine.store("currentDataset").slug = slugify(groupName);
 	} else {
 		Alpine.store("currentDataset").slug = slugify("Kapta");
 	}
-
-	removeOptionsMenu();
-	displayLoader();
-	setTimeout(() => {
-		removeLoader();
-		displayMap(Alpine.store("currentDataset").geoJSON);
-	}, 2000);
 }
+
 function processGeoJson(json) {
 	var mapdata = {
 		type: "FeatureCollection",
@@ -145,8 +129,7 @@ function processGeoJson(json) {
 
 		if (geoJSONData.name) groupName = geoJSONData.name;
 	}
-
-	updateMapdata(mapdata, groupName);
+	return [mapdata, groupName];
 }
 
 function processText(text) {
@@ -250,7 +233,5 @@ function processText(text) {
 	if (feature) {
 		mapdata.features.push(feature);
 	}
-	updateMapdata(mapdata, groupName);
+	return [mapdata, groupName];
 }
-
-export { displayFile, processText };

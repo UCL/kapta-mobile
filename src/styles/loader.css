@@ -1,0 +1,44 @@
+#loader {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    /* to be above scale line and attribution */
+    z-index: 1001;
+    gap: 5px;
+    background-color: var(--mid-red);
+}
+
+
+.loader:before,
+.loader:after {
+    content: "";
+    width: 25px;
+    aspect-ratio: 1;
+    box-shadow: 0 0 0 3px inset #fff;
+    animation: l5 1.5s infinite;
+}
+
+.loader:after {
+    --s: -1;
+}
+
+@keyframes l5 {
+    0% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+
+    33% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(1)
+    }
+
+    66% {
+        transform: scaleX(var(--s, 1)) translate(calc(50% + 2.5px)) scale(2)
+    }
+
+    100% {
+        transform: scaleX(var(--s, 1)) translate(0) scale(1)
+    }
+}

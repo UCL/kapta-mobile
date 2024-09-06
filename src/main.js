@@ -1,13 +1,15 @@
 import Alpine from "alpinejs";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { displayFile } from "./import_whatsapp.js";
+import { parseFile } from "./import_whatsapp.js";
 import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
 import { initialiseInstallPrompt } from "./install.js";
 
 import MainMenu from "./MainMenu.jsx";
-import StatusBar from "./StatusBar.jsx";
+
+import Loader from "./Loader.jsx";
+import { Map } from "./map.js";
 
 window.Alpine = Alpine;
 
@@ -21,6 +23,7 @@ function isMobileOrTablet() {
 	);
 }
 function initAlpine() {
+	//may want to entirely convert to state
 	Alpine.store("deviceInfo", {
 		init() {
 			this.isMobile = isMobileOrTablet();
@@ -137,16 +140,11 @@ function initServiceWorker() {
 
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data.action !== "load-map") return;
-		displayFile(event.data.file);
+		parseFile(event.data.file);
 	});
 
 	navigator.serviceWorker.controller?.postMessage("share-ready");
 }
-
-export const removeOptionsMenu = () => {
-	setIsVisible(false); // This will "remove" the component by not rendering it
-	// might not need this
-};
 
 function App() {
 	useEffect(() => {
@@ -159,22 +157,35 @@ function App() {
 	}, []); // Empty dependency array ensures this effect runs once on mount
 
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
-
-	// set status bar visibility based on if cognito in config
-	const [isSBVisible, setIsSBVisible] = useState(false);
-	useEffect(() => {
-		const hasCognito = Alpine.store("appData")?.hasCognito;
-		setIsSBVisible(hasCognito);
-	});
-
-	const toggleMenu = () => setIsMenuVisible((prev) => !prev); // might want to split this out to be more precise
-
+	const [isMapVisible, setIsMapVisible] = useState(false);
+	const [mapData, setMapData] = useState(null);
+	const [isLoaderVisible, setIsLoaderVisible] = useState(false);
+	console.log("loader visibility:", isLoaderVisible);
+	// if map/menu is visible, the other shouldn't be
+	const showMap = () => {
+		setIsLoaderVisible(true);
+		setIsMapVisible(true);
+		setIsMenuVisible(false);
+	};
+	const showMenu = () => {
+		setIsLoaderVisible(true);
+		setIsMapVisible(false);
+		setIsMenuVisible(true);
+	};
 	return (
-		<div>
-			{/* <SomeOtherComponent toggleMenu={toggleMenu} /> */}
-			<StatusBar isVisible={isSBVisible} />
-			<MainMenu isVisible={isMenuVisible} />
-		</div>
+		<>
+			<Loader isVisible={isLoaderVisible} setIsVisible={setIsLoaderVisible} />
+
+			<MainMenu
+				isVisible={isMenuVisible}
+				showMap={showMap}
+				setLoaderVisible={setIsLoaderVisible}
+				dataset={mapData}
+				setMapData={setMapData}
+			/>
+
+			<Map isVisible={isMapVisible} showMenu={showMenu} data={mapData} />
+		</>
 	);
 }
 

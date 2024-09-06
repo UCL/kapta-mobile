@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
+import "./styles/loader.css";
 
 export default function Loader({ isVisible, setIsVisible }) {
 	if (!isVisible) return null;
 
 	useEffect(() => {
 		let timer = setTimeout(() => {
-			setIsVisible(false);
+			try {
+				setIsVisible(false);
+			} catch (error) {
+				console.error("Error hiding the loader:", error);
+			}
 		}, 2000);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes

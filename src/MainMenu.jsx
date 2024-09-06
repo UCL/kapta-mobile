@@ -161,8 +161,7 @@ export default function MainMenu({
 	const dataDisplayProps = {
 		setMapData,
 		showMap,
-		setLoaderVisible,
-	}; // setting these in an object so they're easier to pass
+	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
 			<StatusBar isVisible={isSBVisible} />
