@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import { parseFile } from "./import_whatsapp.js";
 import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
-import { initialiseInstallPrompt } from "./install.js";
+import InstallDialog from "./install.js";
 
 import MainMenu from "./MainMenu.jsx";
 
@@ -160,7 +160,6 @@ function App() {
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
 	const [isLoaderVisible, setIsLoaderVisible] = useState(false);
-	console.log("loader visibility:", isLoaderVisible);
 	// if map/menu is visible, the other shouldn't be
 	const showMap = () => {
 		setIsLoaderVisible(true);
@@ -174,6 +173,7 @@ function App() {
 	};
 	return (
 		<>
+			<InstallDialog />
 			<Loader isVisible={isLoaderVisible} setIsVisible={setIsLoaderVisible} />
 
 			<MainMenu

@@ -1,72 +1,56 @@
-import i18next from "i18next";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import KaptaLogo from "./images/icons/kapta-white.png";
 
-let installPrompt = null;
-let dismissed = false;
+export default function InstallDialog() {
+	const { t } = useTranslation();
+	const [installPrompt, setInstallPrompt] = useState(null);
+	const [isVisible, setIsVisible] = useState(true);
 
-function promptToInstall() {
-	return new Promise(async function (resolve) {
-		const installDialog = document.createElement("dialog");
-		installDialog.id = "install-dialog";
-		var kaptaLogo = document.createElement("img");
-		kaptaLogo.src = KaptaLogo;
-		installDialog.appendChild(kaptaLogo);
-		const installReason = document.createElement("div");
-		installReason.innerText = i18next.t("installPrompt");
-		installDialog.appendChild(installReason);
-		const installBtn = document.createElement("button");
-		installBtn.innerText = i18next.t("install");
-		installBtn.addEventListener("click", async () => {
-			if (!installPrompt) {
-				resolve(false);
-			}
-			const result = await installPrompt.prompt();
-			if (result.outcome === "dismissed") {
-				dismissed = true;
-				installPrompt = null;
-				installDialog.close();
-				installDialog.remove();
-				resolve(result.outcome);
-			} else {
-				installDialog
-					.querySelectorAll("button")
-					.forEach((button) => button.remove());
-				installReason.innerText = i18next.t("installClickMessage");
-				setTimeout(function () {
-					installPrompt = null;
-					installDialog.close();
-					installDialog.remove();
-					resolve(result.outcome);
-				}, 5000);
-			}
-		});
-		installDialog.appendChild(installBtn);
-		const closeBtn = document.createElement("button");
-		closeBtn.innerText = i18next.t("dismiss");
-		closeBtn.addEventListener("click", () => {
-			dismissed = true;
-			resolve(false);
-			installPrompt = null;
-			installDialog.close();
-			installDialog.remove();
-		});
-		installDialog.appendChild(closeBtn);
-		const container = document.querySelector("#main");
-		container.appendChild(installDialog);
-	});
-}
+	useEffect(() => {
+		const handleBeforeInstallPrompt = (e) => {
+			e.preventDefault(); // Prevent the mini-infobar from appearing on mobile
+			setInstallPrompt(e);
+		};
 
-async function handleInstallPrompt() {
-	let install = await promptToInstall();
-	console.info("Install prompt outcome", install);
-}
+		window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-export function initialiseInstallPrompt() {
-	window.addEventListener("beforeinstallprompt", (event) => {
-		event.preventDefault();
-		installPrompt = event;
-		if (!dismissed) {
-			handleInstallPrompt();
+		return () => {
+			window.removeEventListener(
+				"beforeinstallprompt",
+				handleBeforeInstallPrompt
+			);
+		};
+	}, []);
+
+	const handleInstallClick = async () => {
+		if (!installPrompt) return;
+		console.log("install clicked");
+		const result = await installPrompt.prompt();
+		console.log(result);
+		if (result.outcome === "dismissed") {
+			setIsVisible(false);
+		} else {
+			setTimeout(() => {
+				setIsVisible(false);
+			}, 5000);
 		}
-	});
+		setInstallPrompt(null);
+	};
+
+	const handleCloseClick = () => {
+		setIsVisible(false);
+		setInstallPrompt(null);
+	};
+
+	if (!isVisible) return null;
+
+	return (
+		<dialog id="install-dialog">
+			<img src={KaptaLogo}></img>
+			<div>{t("installPrompt")}</div>
+			<button onClick={handleCloseClick}>{t("dismiss")}</button>
+			<button onClick={handleInstallClick}>{t("install")}</button>
+		</dialog>
+	);
 }

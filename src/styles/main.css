@@ -156,6 +156,8 @@ body {
     border-radius: 8px;
     text-align: center;
     justify-content: space-around;
+    z-index: 100;
+    /* for some reason it's rendering behind the buttons */
 
     @media screen and (min-width: 700px) {
         width: clamp(28vw, 30vw, 32vw);
