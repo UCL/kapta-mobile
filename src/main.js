@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import { parseFile } from "./import_whatsapp.js";
 import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
-import InstallDialog from "./install.js";
+import InstallDialog from "./Install.jsx";
 
 import MainMenu from "./MainMenu.jsx";
 
