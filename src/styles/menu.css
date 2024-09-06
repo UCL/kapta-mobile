@@ -2,7 +2,7 @@
     flex: 7;
     display: grid;
     margin-top: 6vh;
-    grid-template-rows: 6vh minmax(35vh, 45vh) auto;
+    grid-template-rows: 6vh minmax(32vh, 36vh) auto;
     justify-content: center;
     justify-items: center;
     align-content: center;

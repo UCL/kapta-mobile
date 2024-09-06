@@ -234,7 +234,11 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
-			<ShareModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+			<ShareModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				currentDataset={data}
+			/>
 			<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
 				{titleValue}
 			</div>

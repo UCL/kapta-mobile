@@ -43,7 +43,9 @@ export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
 export const imageIcn = <FontAwesomeIcon icon={faImage} />;
 export const shareIcn = <FontAwesomeIcon icon={faShareNodes} />;
 export const dataIcn = <FontAwesomeIcon icon={faFileCode} />;
-export const addMetaIcn = <FontAwesomeIcon icon={faFileCirclePlus} />;
+export const addMetaIcn = (
+	<FontAwesomeIcon icon={faFileCirclePlus} style={{ fontSize: "0.75rem" }} />
+);
 export const uploadIcn = <FontAwesomeIcon icon={faCloudArrowUp} />;
 export const GPSIcn = <FontAwesomeIcon icon={faLocationCrosshairs} />;
 export const basemapSatIcon = <FontAwesomeIcon icon={faSun} />;
