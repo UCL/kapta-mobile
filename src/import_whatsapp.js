@@ -2,10 +2,6 @@ import Alpine from "alpinejs";
 import * as JSZip from "jszip";
 import { slugify } from "./utils.js";
 
-var totalcontribmap = 0;
-var username = localStorage.getItem("username");
-var phone = localStorage.getItem("phone");
-
 const colourPalette = [
 	"#d0160f",
 	"#80bf4d",
@@ -18,6 +14,7 @@ const colourPalette = [
 ];
 
 const getTimestamp = () => {
+	// what's this meant to be for?
 	var date = new Date();
 	var year = date.getFullYear();
 	var month = date.getMonth() + 1;
@@ -37,7 +34,7 @@ const setDataDisplayMap = (data, name, dataDisplayProps) => {
 	showMap();
 };
 
-export function parseFile(file, dataDisplayProps) {
+export const parseFile = (file, dataDisplayProps) => {
 	if (file.name.endsWith(".zip")) {
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
@@ -76,14 +73,14 @@ export function parseFile(file, dataDisplayProps) {
 	} else {
 		console.error("Unsupported file format");
 	}
-}
+};
 
-function getSenderColour(senders) {
+const getSenderColour = (senders) => {
 	// Select a colour depending on number of keys in the object provided
 	return colourPalette[Object.keys(senders).length % colourPalette.length];
-}
+};
 
-function formatDateString(date, time) {
+const formatDateString = (date, time) => {
 	// Given strings representing a date (dd/mm/yyyy) and
 	// time (hh:mm) return a datetime object
 	// Check if time includes AM/PM to determine the format
@@ -105,18 +102,18 @@ function formatDateString(date, time) {
 	} else [hour, min] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
-}
+};
 
-function updateMapdata(groupName = null) {
+const updateMapdata = (groupName = null) => {
 	// not sure how much this is utilised atm, may need to better incorporate
 	if (groupName) {
 		Alpine.store("currentDataset").slug = slugify(groupName);
 	} else {
 		Alpine.store("currentDataset").slug = slugify("Kapta");
 	}
-}
+};
 
-function processGeoJson(json) {
+const processGeoJson = (json) => {
 	var mapdata = {
 		type: "FeatureCollection",
 		features: [],
@@ -130,9 +127,9 @@ function processGeoJson(json) {
 		if (geoJSONData.name) groupName = geoJSONData.name;
 	}
 	return [mapdata, groupName];
-}
+};
 
-function processText(text) {
+const processText = (text) => {
 	const groupNameRegex = /"([^"]*)"/;
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
@@ -147,7 +144,7 @@ function processText(text) {
 
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-		/location: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g;
+		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g;
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
@@ -172,15 +169,23 @@ function processText(text) {
 		messages.push(message);
 	});
 	// Sort messages by sender, then by datetime
-	messages.sort((a, b) =>
-		a.sender > b.sender
-			? 1
-			: a.sender === b.sender
-			? a.datetime > b.datetime
-				? 1
-				: -1
-			: -1
-	);
+	messages.sort((a, b) => {
+		// Compare by sender
+		if (a.sender > b.sender) {
+			return 1;
+		} else if (a.sender < b.sender) {
+			return -1;
+		} else {
+			// If sender is the same, compare by datetime
+			if (a.datetime > b.datetime) {
+				return 1;
+			} else if (a.datetime < b.datetime) {
+				return -1;
+			} else {
+				return 0; // Otherwise maintain relative order
+			}
+		}
+	});
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {
@@ -234,4 +239,4 @@ function processText(text) {
 		mapdata.features.push(feature);
 	}
 	return [mapdata, groupName];
-}
+};
