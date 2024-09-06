@@ -102,7 +102,7 @@ function formatDateString(date, time) {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min] = time.split(":"); // 24hr format used already
+	} else[hour, min] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 }
@@ -176,10 +176,10 @@ function processText(text) {
 		a.sender > b.sender
 			? 1
 			: a.sender === b.sender
-			? a.datetime > b.datetime
-				? 1
+				? a.datetime > b.datetime
+					? 1
+					: -1
 				: -1
-			: -1
 	);
 
 	// Now loop through messages to create geojson for each location
@@ -231,7 +231,12 @@ function processText(text) {
 	});
 	// Push the last message to mapdata
 	if (feature) {
-		mapdata.features.push(feature);
+		// Reject feature if it doesn't have geometry
+		if (feature.geometry) {
+			mapdata.features.push(feature);
+		} else {
+			feature = null;
+		}
 	}
 	return [mapdata, groupName];
 }
