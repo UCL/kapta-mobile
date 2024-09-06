@@ -103,7 +103,7 @@ export function MapActionArea({ setTitle, setPulse, showMenu, setModalOpen }) {
 }
 
 // Modal stuff
-export function ShareModal({ isOpen }) {
+export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
@@ -227,7 +227,6 @@ export function ShareModal({ isOpen }) {
 	const handleUploadClick = async () => {
 		setIsDialogOpen(true).then(
 			function () {
-				let currentDataset = Alpine.store("currentDataset");
 				let idToken = Alpine.store("user").idToken;
 				submitData(currentDataset.geoJSON, idToken);
 			},
@@ -247,7 +246,9 @@ export function ShareModal({ isOpen }) {
 		<>
 			<MetaDataDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
 			<div id="sharing-modal">
-				<button className="modal-close btn">{closeIcon}</button>
+				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
+					{closeIcon}
+				</button>
 				<div className="modal-title">{t("sharingTitle")}</div>
 				<div className="option-button-container">
 					<button className="btn" onClick={handleShareImgClick}>
@@ -278,70 +279,9 @@ export function ShareModal({ isOpen }) {
 		</>
 	);
 }
-// export function closeModal(setIsOpen) {
-// 	//might not need this
-// 	return setIsOpen(false);
-// }
-// export function closeModal(modal) {
-// 	var main = document.getElementById("main");
-// 	modal.innerHTML = "";
-// 	modal.classList.remove("visible");
-// 	main.onclick = null;
-// 	if (modal.id == "sharing-modal") {
-// 		switchToShareBtn(document.getElementById("tray__button"));
-// 	}
-// }
-
-// export function makeModalVisible(modal) {
-// 	var main = document.getElementById("main");
-// 	modal.classList.add("visible");
-// 	modal.classList.remove("invisible");
-
-// 	setTimeout(function () {
-// 		main.onclick = function () {
-// 			closeModal(modal);
-// 		};
-// 	}, 50);
-// }
-
-function addAlpineResizing(elem) {
-	elem.setAttribute(
-		"x-data",
-		"{ resize: () => { $el.style.height = '5px'; $el.style.height = $el.scrollHeight + 'px' } }"
-	);
-	elem.setAttribute("x-init", "resize()");
-	elem.setAttribute("x-on:input", "resize()");
-}
-
-// function addMetadataAction(form) {
-// const header = document.createElement("div");
-// const title = i18next.t("addMetadataTitle");
-// header.innerHTML = `<span>${title} ${addMetaIcn}`;
-// What have you mapped?
-// const inputTopicLbl = document.createElement("label");
-// inputTopicLbl.for = "input-topic";
-// inputTopicLbl.textContent = i18next.t("inputtopiclabel");
-// const inputTopic = document.createElement("textarea");
-// inputTopic.id = "input-topic";
-// inputTopic.name = "input-topic";
-// addAlpineResizing(inputTopic);
-// What do you want to achieve with this map?
-// const inputGoalLbl = document.createElement("label");
-// inputGoalLbl.for = "input-goal";
-// inputGoalLbl.textContent = i18next.t("inputgoallabel");
-// const inputGoal = document.createElement("textarea");
-// inputGoal.id = "input-goal";
-// inputGoal.name = "input-goal";
-// addAlpineResizing(inputGoal);
-// form.appendChild(inputTopicLbl);
-// form.appendChild(inputTopic);
-// form.appendChild(inputGoalLbl);
-// form.appendChild(inputGoal);
-// }
 
 export function MetaDataDialog({ isOpen, setIsOpen }) {
 	if (!isOpen) return null;
-	// will need to add more translations for this
 	const { t } = useTranslation();
 	const [isChecked, setIsChecked] = useState(false);
 
@@ -355,24 +295,18 @@ export function MetaDataDialog({ isOpen, setIsOpen }) {
 		setIsOpen(false);
 	};
 	return (
-		<dialog id="upload-dialog">
+		<dialog id="upload-dialog" open>
 			<form className="upload-form" onSubmit={handleSubmit}>
 				<h3>Upload data to Kapta</h3>
-				<small>Tell us about your data</small>
-				<div>
-					<span>
-						{t("addMetadataTitle")}
-						{addMetaIcn}
-					</span>
-					<label for="input-topic">
-						{t("inputtopiclabel")}
-						<textarea name="input-topic" id="input-topic"></textarea>
-					</label>
-					<label for="input-goal">
-						{t("inputgoallabel")}
-						<textarea name="input-goal" id="input-goal"></textarea>
-					</label>
-				</div>
+				<small>
+					{t("addMetadataTitle")} {addMetaIcn}
+				</small>
+
+				<label for="input-topic">{t("inputtopiclabel")}</label>
+				<textarea name="input-topic" id="input-topic"></textarea>
+
+				<label for="input-goal">{t("inputgoallabel")}</label>
+				<textarea name="input-goal" id="input-goal"></textarea>
 				<label for="data-sov">{t("datasovmessage")}</label>
 				<label for="data-sov" class="toggle">
 					<input
