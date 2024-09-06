@@ -1,4 +1,4 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -49,7 +49,10 @@ export const GPSIcn = <FontAwesomeIcon icon={faLocationCrosshairs} />;
 export const basemapSatIcon = <FontAwesomeIcon icon={faSun} />;
 export const basemapDarkIcon = <FontAwesomeIcon icon={faMoon} />;
 export const exitButtonIcon = <FontAwesomeIcon icon={faArrowLeft} />;
-export const GPSPositionIcn = <FontAwesomeIcon icon={faDotCircle} />;
+export const GPSPositionIcn = icon({
+	prefix: "fas",
+	iconName: "dot-circle",
+}).html;
 export const closeIcon = <FontAwesomeIcon icon={faX} />;
 
 export const thumbsUpIcon = <FontAwesomeIcon icon={faThumbsUp} />;

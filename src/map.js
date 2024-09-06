@@ -204,6 +204,12 @@ export function Map({ isVisible, showMenu, data }) {
 			? navigator.geolocation.getCurrentPosition(success, error, options)
 			: console.error("GPS not available");
 	};
+	const currentPositionIcon = L.divIcon({
+		html: GPSPositionIcn,
+		className: "position-marker-icon",
+		iconSize: [30, 30],
+		iconAnchor: [5, 0],
+	});
 
 	const UpdateMap = () => {
 		// hook to fly to current location when updated
@@ -228,7 +234,7 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
-			<ShareModal isOpen={isModalOpen} />
+			<ShareModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
 			<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
 				{titleValue}
 			</div>
@@ -248,8 +254,8 @@ export function Map({ isVisible, showMenu, data }) {
 					{isSatelliteLayer ? <SatelliteTileLayer /> : <DarkTileLayer />}
 					{/* current position marker */}
 					{currentLocation && (
-						<Marker position={currentLocation}>
-							<Popup>{GPSPositionIcn}</Popup>
+						<Marker position={currentLocation} icon={currentPositionIcon}>
+							<Popup>You're here! {currentLocation}</Popup>
 						</Marker>
 					)}
 					{/* error if currentLocation can't be found */}
