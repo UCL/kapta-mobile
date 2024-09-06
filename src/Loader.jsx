@@ -11,7 +11,7 @@ export default function Loader({ isVisible, setIsVisible }) {
 			} catch (error) {
 				console.error("Error hiding the loader:", error);
 			}
-		}, 2000);
+		}, 1800);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes
 		return () => clearTimeout(timer);
