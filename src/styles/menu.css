@@ -71,6 +71,11 @@
 
 }
 
+#copyright {
+    color: #DBC7C7;
+    position: fixed;
+    bottom: 1vh;
+}
 
 #video-modal {
     position: absolute;
