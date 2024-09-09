@@ -1,6 +1,8 @@
+//import leaflet styling explicitly to avoid errors
+import "../node_modules/leaflet/dist/leaflet.css";
+
 import "leaflet-easybutton";
 import "leaflet-easyprint";
-import "leaflet/dist/leaflet.css";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/map-etc.css";
@@ -85,11 +87,17 @@ function MapDataLayer({ data }) {
 	const map = useMap();
 	const boundsRef = useRef([]);
 
+	if (data.features.length == 0) {
+		// need translation
+		return <ErrorPopup error="No data to display" />;
+	}
+
 	useEffect(() => {
 		if (boundsRef.current.length > 0) {
 			map.fitBounds(boundsRef.current);
 		}
 	}, [data, map]);
+
 	return (
 		<>
 			{data.features.map((feature, index) => {
@@ -142,7 +150,6 @@ var printBtn = L.easyPrint({
  ************************************************************************************************/
 function ErrorPopup({ error }) {
 	const map = useMap();
-
 	// Adjust the map view to a central location (e.g., coordinates [0, 0])
 	useEffect(() => {
 		if (error) {
@@ -151,14 +158,13 @@ function ErrorPopup({ error }) {
 	}, [error, map]);
 
 	return error ? (
-		<Marker position={[0, 0]}>
-			<Popup
-				position={[0, 0]} // Position within the map (centered in this case)
-				autoClose={false}
-			>
-				<div>{error}</div>
-			</Popup>
-		</Marker>
+		<Popup
+			position={[0, 0]} // Position within the map (centered in this case)
+			autoPan={true}
+			autoClose={false}
+		>
+			<div>{error}</div>
+		</Popup>
 	) : null;
 }
 
