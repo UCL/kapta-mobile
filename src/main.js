@@ -13,7 +13,7 @@ import { Map } from "./map.js";
 
 window.Alpine = Alpine;
 
-function isMobileOrTablet() {
+const isMobileOrTablet = () => {
 	return (
 		/iPad|iPhone|iPod|android|Mobile|mini|Fennec|Symbian|Windows Phone|BlackBerry|IEMobile/i.test(
 			navigator.userAgent
@@ -21,9 +21,9 @@ function isMobileOrTablet() {
 		(window.innerWidth <= 1024 &&
 			("ontouchstart" in window || navigator.maxTouchPoints > 0))
 	);
-}
+};
 function initAlpine() {
-	//may want to entirely convert to state
+	//may want to entirely convert to state or context
 	Alpine.store("deviceInfo", {
 		init() {
 			this.isMobile = isMobileOrTablet();
@@ -122,7 +122,6 @@ function initServiceWorker() {
 					console.info("SW registration failed: ", registrationError);
 				});
 		});
-		if (Alpine.store("deviceInfo").isMobile) initialiseInstallPrompt(); // don't run install prompt on desktop
 
 		var bestOnAndroidMsg =
 			"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
