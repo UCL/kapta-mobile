@@ -9,3 +9,5 @@ dist/
 
 # Config
 src/config.json
+
+.DS_Store
