@@ -127,7 +127,14 @@ function initServiceWorker() {
 
 		if (!Alpine.store("deviceInfo").isMobile || isIOS()) {
 			window.addEventListener("load", function () {
-				alert(i18next.t("desktoporiosPrompt")); // using like this due to hooks
+				const shownWorksBestOnAndroid = localStorage.getItem(
+					"shownWorksBestOnAndroid"
+				);
+
+				if (!shownWorksBestOnAndroid) {
+					alert(i18next.t("desktoporiosPrompt")); // using like this since can't use useTranslation outside a component
+					localStorage.setItem("shownWorksBestOnAndroid", "true");
+				}
 			});
 		}
 	}
