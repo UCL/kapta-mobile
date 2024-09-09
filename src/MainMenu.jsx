@@ -5,6 +5,7 @@ import { FileParser, parseFile } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
+import { isIOS } from "./main.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -146,10 +147,6 @@ function Copyright() {
 	const { t } = useTranslation();
 	return <div id="copyright">{t("copyright")}</div>;
 }
-
-const isIOS = () => {
-	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
-};
 
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;

@@ -1,15 +1,14 @@
 import Alpine from "alpinejs";
 import React, { useEffect, useState } from "react";
+import { i18next } from "./languages.js";
 import ReactDOM from "react-dom/client";
 import { FileParser } from "./import_whatsapp.js";
-import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
-import InstallDialog from "./Install.jsx";
-
-import MainMenu from "./MainMenu.jsx";
-
-import Loader from "./Loader.jsx";
 import { Map } from "./map.js";
+import InstallDialog from "./Install.jsx";
+import MainMenu from "./MainMenu.jsx";
+import Loader from "./Loader.jsx";
+import "./styles/main.css";
 
 window.Alpine = Alpine;
 
@@ -21,6 +20,9 @@ export const isMobileOrTablet = () => {
 		(window.innerWidth <= 1024 &&
 			("ontouchstart" in window || navigator.maxTouchPoints > 0))
 	);
+};
+export const isIOS = () => {
+	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
 };
 function initAlpine() {
 	//may want to entirely convert to state or context
@@ -123,16 +125,9 @@ function initServiceWorker() {
 				});
 		});
 
-		var bestOnAndroidMsg =
-			"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
-		// will need to get a translation done for this
-		if (
-			!Alpine.store("deviceInfo").isMobile ||
-			navigator.userAgent.match(/iPhone/i) ||
-			navigator.userAgent.match(/iPad/i)
-		) {
+		if (!Alpine.store("deviceInfo").isMobile || isIOS()) {
 			window.addEventListener("load", function () {
-				alert(bestOnAndroidMsg);
+				alert(i18next.t("desktoporiosPrompt")); // using like this due to hooks
 			});
 		}
 	}
