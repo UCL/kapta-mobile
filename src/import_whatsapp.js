@@ -26,7 +26,7 @@ const getTimestamp = () => {
 };
 var timestamp = getTimestamp();
 
-const setDataDisplayMap = (data, name, dataDisplayProps) => {
+const setDataDisplayMap = (data, name, imgPromises, dataDisplayProps) => {
 	// common function used after parsing files
 	const { setMapData, showMap } = dataDisplayProps;
 	setMapData(data);
@@ -43,17 +43,35 @@ export const parseFile = (file, dataDisplayProps) => {
 			const arrayBuffer = e.target.result;
 			const zip = new JSZip();
 			zip.loadAsync(arrayBuffer).then(function (contents) {
-				Object.keys(contents.files).forEach(function (filename) {
-					if (filename.endsWith(".txt")) {
-						zip
-							.file(filename)
-							.async("string")
-							.then(function (fileContent) {
-								const [data, name] = processText(fileContent);
-								setDataDisplayMap(data, name, dataDisplayProps);
-							});
+				filenames = Object.keys(contents.files)
+				chatFilename = filenames.filter(filename => filename.match(/.*\.txt/));
+				imgFilenames = filenames.filter(filename => filename.match(/.*\.(jpg|jpeg|png|gif)/));
+				// if there is a chat file, process it and any images
+				if (chatFilename.length > 0) {
+					// if there are image files, unzip them and add them to an array
+					if (imgFilenames.length > 0) {
+						let imgPromises = imgFilenames.map((imgFilename) => {
+							return zip
+								.file(imgFilename)
+								.async("blob")
+								.then((blob) => {
+									return {
+										filename: imgFilename,
+										blob: blob,
+									};
+								});
+						});
 					}
-				});
+					// process the chat file and pass along any images
+					zip
+						.file(chatFilename[0])
+						.async("string")
+						.then(function (fileContent) {
+							const [data, name] = processText(fileContent);
+							setDataDisplayMap(data, name, imgPromises, dataDisplayProps);
+						});
+				}
+
 			});
 		};
 	} else if (file.name.endsWith(".txt")) {
@@ -99,7 +117,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min] = time.split(":"); // 24hr format used already
+	} else[hour, min] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 };
