@@ -26,54 +26,62 @@ const getTimestamp = () => {
 };
 var timestamp = getTimestamp();
 
-const setDataDisplayMap = (data, name, dataDisplayProps) => {
-	// common function used after parsing files
+export function FileParser({ file, ...dataDisplayProps }) {
+	console.log("fileparser", file, dataDisplayProps);
 	const { setMapData, showMap } = dataDisplayProps;
-	setMapData(data);
-	updateMapdata(name);
-	showMap();
-};
+	const setDataDisplayMap = (data, name, dataDisplayProps) => {
+		// common function used after parsing files
+		console.log(dataDisplayProps);
+		setMapData(data);
+		updateMapdata(name);
+		showMap();
+	};
 
-export const parseFile = (file, dataDisplayProps) => {
-	if (file.name.endsWith(".zip")) {
-		const reader = new FileReader();
-		reader.readAsArrayBuffer(file);
+	// parse the file
+	if (file instanceof File) {
+		if (file.name.endsWith(".zip")) {
+			const reader = new FileReader();
+			reader.readAsArrayBuffer(file);
 
-		reader.onload = function (e) {
-			const arrayBuffer = e.target.result;
-			const zip = new JSZip();
-			zip.loadAsync(arrayBuffer).then(function (contents) {
-				Object.keys(contents.files).forEach(function (filename) {
-					if (filename.endsWith(".txt")) {
-						zip
-							.file(filename)
-							.async("string")
-							.then(function (fileContent) {
-								const [data, name] = processText(fileContent);
-								setDataDisplayMap(data, name, dataDisplayProps);
-							});
-					}
+			reader.onload = function (e) {
+				const arrayBuffer = e.target.result;
+				const zip = new JSZip();
+				zip.loadAsync(arrayBuffer).then(function (contents) {
+					Object.keys(contents.files).forEach(function (filename) {
+						if (filename.endsWith(".txt")) {
+							zip
+								.file(filename)
+								.async("string")
+								.then(function (fileContent) {
+									const [data, name] = processText(fileContent);
+									setDataDisplayMap(data, name, dataDisplayProps);
+								});
+						}
+					});
 				});
-			});
-		};
-	} else if (file.name.endsWith(".txt")) {
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processText(e.target.result);
-			setDataDisplayMap(data, name, dataDisplayProps);
-		};
-	} else if (file.name.endsWith(".geojson")) {
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processGeoJson(e.target.result);
-			setDataDisplayMap(data, name, dataDisplayProps);
-		};
-	} else {
-		console.error("Unsupported file format");
+			};
+		} else if (file.name.endsWith(".txt")) {
+			console.log("file is a txt");
+			// TODO: add a check to see if it's actually geojson
+			const reader = new FileReader();
+			reader.readAsText(file);
+			reader.onloadend = function (e) {
+				const [data, name] = processText(e.target.result);
+				setDataDisplayMap(data, name, dataDisplayProps);
+			};
+		} else if (file.name.endsWith(".geojson")) {
+			const reader = new FileReader();
+			reader.readAsText(file);
+			reader.onloadend = function (e) {
+				const [data, name] = processGeoJson(e.target.result);
+				setDataDisplayMap(data, name, dataDisplayProps);
+			};
+		} else {
+			console.error("Unsupported file format");
+		}
 	}
-};
+	return null; //don't render anything
+}
 
 const getSenderColour = (senders) => {
 	// Select a colour depending on number of keys in the object provided
@@ -133,6 +141,7 @@ const processText = (text) => {
 	const groupNameRegex = /"([^"]*)"/;
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
+	// TODO: update regex for the date-time part as on iOS there are [] surrounding it
 
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends

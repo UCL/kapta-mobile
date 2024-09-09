@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
-import { parseFile } from "./import_whatsapp.js";
+import { FileParser, parseFile } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
@@ -82,19 +82,31 @@ function RecentMapButton({ showMap }) {
 }
 
 function FilePicker(dataDisplayProps) {
+	const [selectedFile, setSelectedFile] = useState(null);
+
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
-		parseFile(file, dataDisplayProps);
+		file && setSelectedFile(file);
+		// parseFile(file, dataDisplayProps);
 		event.target.value = null; // Clear the input value
 	};
 	var filedisplayed = false;
 	return (
-		<input
-			type="file"
-			accept=".txt,.zip,.geojson"
-			className="file-input"
-			onChange={handleFileChange}
-		/>
+		<>
+			<input
+				type="file"
+				accept=".txt,.zip,.geojson"
+				className="file-input"
+				onChange={handleFileChange}
+			/>
+			{selectedFile && (
+				<FileParser
+					file={selectedFile}
+					{...dataDisplayProps}
+					onComplete={() => setSelectedFile(null)}
+				/>
+			)}
+		</>
 	);
 }
 
@@ -139,7 +151,8 @@ const isIOS = () => {
 	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
 };
 
-export default function MainMenu({ isVisible, showMap, dataset, setMapData }) {
+export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
+	const { setMapData, showMap } = dataDisplayProps;
 	const [isSBVisible, setIsSBVisible] = useState(false);
 
 	// set status bar visibility based on if cognito in config
@@ -156,10 +169,6 @@ export default function MainMenu({ isVisible, showMap, dataset, setMapData }) {
 	if (!isVisible) return null;
 	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
-	const dataDisplayProps = {
-		setMapData,
-		showMap,
-	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
 			<StatusBar isVisible={isSBVisible} />

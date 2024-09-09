@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { parseFile } from "./import_whatsapp.js";
+import { FileParser } from "./import_whatsapp.js";
 import "./styles/main.css";
 import { signOut, initiateAuthRefresh } from "./auth.js";
 import InstallDialog from "./Install.jsx";
@@ -139,22 +139,24 @@ function initServiceWorker() {
 
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data.action !== "load-map") return;
-		parseFile(event.data.file);
+		// parseFile(event.data.file);
+		setFileToParse(event.data.file);
 	});
 
 	navigator.serviceWorker.controller?.postMessage("share-ready");
 }
 
 function App() {
+	const [fileToParse, setFileToParse] = useState(null);
+
 	useEffect(() => {
 		// Initialize Alpine and SW
 		document.addEventListener("alpine:init", () => {
 			initAlpine();
 		});
 		Alpine.start();
-		initServiceWorker();
+		initServiceWorker(setFileToParse);
 	}, []); // Empty dependency array ensures this effect runs once on mount
-
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
@@ -170,6 +172,10 @@ function App() {
 		setIsMapVisible(false);
 		setIsMenuVisible(true);
 	};
+	const dataDisplayProps = {
+		setMapData,
+		showMap,
+	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
 			<InstallDialog />
@@ -177,12 +183,11 @@ function App() {
 
 			<MainMenu
 				isVisible={isMenuVisible}
-				showMap={showMap}
 				setLoaderVisible={setIsLoaderVisible}
 				dataset={mapData}
-				setMapData={setMapData}
+				{...dataDisplayProps}
 			/>
-
+			{fileToParse && <FileParser file={fileToParse} {...dataDisplayProps} />}
 			<Map isVisible={isMapVisible} showMenu={showMenu} data={mapData} />
 		</>
 	);
