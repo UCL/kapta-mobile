@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import KaptaLogo from "./images/icons/kapta-white.png";
+import { isMobileOrTablet } from "./main";
 
 export default function InstallDialog() {
-	if (!Alpine.store("deviceInfo").isMobile) return null; // don't run install prompt on desktop
+	if (!isMobileOrTablet()) return null; // don't run install prompt on desktop
 
 	const { t } = useTranslation();
 	const [installPrompt, setInstallPrompt] = useState(null);

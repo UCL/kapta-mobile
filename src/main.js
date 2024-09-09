@@ -13,7 +13,7 @@ import { Map } from "./map.js";
 
 window.Alpine = Alpine;
 
-const isMobileOrTablet = () => {
+export const isMobileOrTablet = () => {
 	return (
 		/iPad|iPhone|iPod|android|Mobile|mini|Fennec|Symbian|Windows Phone|BlackBerry|IEMobile/i.test(
 			navigator.userAgent
