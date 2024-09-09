@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import KaptaLogo from "./images/icons/kapta-white.png";
 
 export default function InstallDialog() {
+	if (!Alpine.store("deviceInfo").isMobile) return null; // don't run install prompt on desktop
+
 	const { t } = useTranslation();
 	const [installPrompt, setInstallPrompt] = useState(null);
 	const [isVisible, setIsVisible] = useState(true);
