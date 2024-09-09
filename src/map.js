@@ -86,7 +86,7 @@ function MapDataLayer({ data }) {
 	const { t } = useTranslation();
 	const map = useMap();
 	const boundsRef = useRef([]);
-
+	console.log(data.features.length);
 	if (data.features.length == 0) {
 		// need translation
 		return <ErrorPopup error="No data to display" />;
@@ -163,7 +163,9 @@ function ErrorPopup({ error }) {
 			autoPan={true}
 			autoClose={false}
 		>
-			<div>{error}</div>
+			<div>
+				<h2 className="error-popup">{error}</h2>
+			</div>
 		</Popup>
 	) : null;
 }
