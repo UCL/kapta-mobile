@@ -135,13 +135,11 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-export default function MainMenu({
-	isVisible,
-	showMap,
-	setLoaderVisible,
-	dataset,
-	setMapData,
-}) {
+const isIOS = () => {
+	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
+};
+
+export default function MainMenu({ isVisible, showMap, dataset, setMapData }) {
 	const [isSBVisible, setIsSBVisible] = useState(false);
 
 	// set status bar visibility based on if cognito in config
@@ -171,7 +169,7 @@ export default function MainMenu({
 				<Instructions />
 				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
 				{/* File picker (web only) */}
-				{!isMobile && <FilePicker {...dataDisplayProps} />}
+				{(!isMobile || isIOS()) && <FilePicker {...dataDisplayProps} />}
 				<Copyright />
 			</div>
 		</>
