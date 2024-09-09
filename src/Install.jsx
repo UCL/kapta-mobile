@@ -31,14 +31,17 @@ export default function InstallDialog() {
 		console.log("install clicked");
 		const result = await installPrompt.prompt();
 		console.log(result);
-		if (result.outcome === "dismissed") {
+		// if (result.outcome === "dismissed") {
+		// 	setIsVisible(false);
+		// } else {
+		// 	setTimeout(() => {
+		// 		setIsVisible(false);
+		// 	}, 3000);
+		// }
+		if (result) {
 			setIsVisible(false);
-		} else {
-			setTimeout(() => {
-				setIsVisible(false);
-			}, 5000);
+			setInstallPrompt(null);
 		}
-		setInstallPrompt(null);
 	};
 
 	const handleCloseClick = () => {
