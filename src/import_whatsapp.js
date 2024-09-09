@@ -107,7 +107,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min] = time.split(":"); // 24hr format used already
+	} else[hour, min] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:00`;
 };
@@ -147,13 +147,13 @@ const processText = (text) => {
 	// stopping when new line starts with date or text ends
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	const messageRegex =
-		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):\s((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
 
 	let messageMatches = [...text.matchAll(messageRegex)];
-
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g;
+
+		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
@@ -177,6 +177,7 @@ const processText = (text) => {
 		}
 		messages.push(message);
 	});
+
 	// Sort messages by sender, then by datetime
 	messages.sort((a, b) => {
 		// Compare by sender
@@ -195,6 +196,7 @@ const processText = (text) => {
 			}
 		}
 	});
+
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {

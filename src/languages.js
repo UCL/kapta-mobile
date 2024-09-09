@@ -11,6 +11,7 @@ const supportedLanguages = {
 };
 export const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 i18next.use(initReactI18next).init({
+
 	lng: savedLanguage,
 	fallbackLng: ["en", "es", "fr", "pt", "am", "yo"],
 	supportedLngs: Object.keys(supportedLanguages),
@@ -23,7 +24,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">Create WhatsApp Maps with Kapta </span><hr> 1 - Share locations in a WhatsApp group<br> 2 - Export chat to Kapta<br> 3 - Share your WhatsApp Map`,
 				watchtutorial: "Watch tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/PDOVl8smi2Q?si=CiIkw6_rm1TzmZgF",
+					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
 				observer: "Observer",
@@ -60,7 +61,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">Crea WhatsApp Maps con Kapta</span><hr>1 - Comparte ubicaciones en un grupo de WhatsApp<br>2 - Exporta el chat a Kapta<br>3 - Comparte tu WhatsApp Map`,
 				watchtutorial: "Ver tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/qG1_91fmszQ?si=Btu5p83Do2IaFRzs",
+					"https://youtube.com/embed/hq2h8Ou2BOE" + youtubeOpts,
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -98,7 +99,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">Créer des WhatsApp Maps avec Kapta</span><hr>1 - Partagez des localisations dans un groupe WhatsApp<br>2 - Exportez la discussion dans Kapta<br>3 - Partagez votre WhatsApp Map`,
 				watchtutorial: "Regarder le tutoriel",
 				tutorialUrl:
-					"https://www.youtube.com/embed/Dd4dFC-J_Bo?si=CvzkDasZX-ocN-K2",
+					"https://youtube.com/embed/3KrsKgFHYMs" + youtubeOpts,
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
 				observer: "Observateur",
@@ -135,7 +136,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">በካፕታ መተግብሪያ ዋትስ አፕ ካርታን ይስሩ</span><hr>1 - አከባቢውን ያጋሩ<br>2 - ምልልሱን ወደካፕታ ይላኩ<br>3 - የዋትስ አፕ ካርታዎን ያጋሩ`,
 				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
 				tutorialUrl:
-					"https://www.youtube.com/embed/PDOVl8smi2Q?si=CiIkw6_rm1TzmZgF",
+					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
 				observer: "ተመልካች",
@@ -171,7 +172,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">Crie Mapas do WhatsApp com o Kapta</span><hr>1 - Partilhe locais num grupo do WhatsApp<br> 2 - Exporte o chat para o Kapta<br> 3 - Compartilhe seu WhatsApp Map`,
 				watchtutorial: "Assistir tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/PDOVl8smi2Q?si=CiIkw6_rm1TzmZgF",
+					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
 				observer: "Observador",
@@ -208,7 +209,7 @@ i18next.use(initReactI18next).init({
 				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>3 - Pín tàbí tà átààwá àwáàrí rẹ`,
 				watchtutorial: "Aago Tutorial",
 				tutorialUrl:
-					"https://www.youtube.com/embed/PDOVl8smi2Q?si=CiIkw6_rm1TzmZgF",
+					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
 				observer: "Olùtọ́jú",
