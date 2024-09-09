@@ -5,6 +5,8 @@ import { isMobileOrTablet } from "./main";
 
 export default function InstallDialog() {
 	if (!isMobileOrTablet()) return null; // don't run install prompt on desktop
+	const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+	if (isStandalone) return null; // don't run install prompt if already installed
 
 	const { t } = useTranslation();
 	const [installPrompt, setInstallPrompt] = useState(null);
