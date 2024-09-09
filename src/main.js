@@ -112,7 +112,7 @@ function initAlpine() {
 	});
 }
 
-function initServiceWorker() {
+function initServiceWorker(setFileToParse) {
 	if ("serviceWorker" in navigator) {
 		window.addEventListener("load", () => {
 			navigator.serviceWorker
