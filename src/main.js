@@ -142,7 +142,7 @@ function initServiceWorker(setFileToParse) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data.action !== "load-map") return;
 		// parseFile(event.data.file);
-		setFileToParse(event.data.file);
+		return setFileToParse(event.data.file);
 	});
 
 	navigator.serviceWorker.controller?.postMessage("share-ready");
