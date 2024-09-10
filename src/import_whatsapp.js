@@ -27,14 +27,14 @@ const getTimestamp = () => {
 var timestamp = getTimestamp();
 
 export function FileParser({ file, ...dataDisplayProps }) {
-	console.log("fileparser", file, dataDisplayProps);
 	const { setMapData, showMap } = dataDisplayProps;
-	const setDataDisplayMap = (data, name, dataDisplayProps) => {
+	const setDataDisplayMap = (data, name) => {
+		console.log("setting data display map", data, name);
 		// common function used after parsing files
-		console.log(dataDisplayProps);
 		setMapData(data);
 		updateMapdata(name);
 		showMap();
+		setFileToParse(null);
 	};
 
 	// parse the file
@@ -54,7 +54,7 @@ export function FileParser({ file, ...dataDisplayProps }) {
 								.async("string")
 								.then(function (fileContent) {
 									const [data, name] = processText(fileContent);
-									setDataDisplayMap(data, name, dataDisplayProps);
+									setDataDisplayMap(data, name);
 								});
 						}
 					});
@@ -67,14 +67,14 @@ export function FileParser({ file, ...dataDisplayProps }) {
 			reader.readAsText(file);
 			reader.onloadend = function (e) {
 				const [data, name] = processText(e.target.result);
-				setDataDisplayMap(data, name, dataDisplayProps);
+				setDataDisplayMap(data, name);
 			};
 		} else if (file.name.endsWith(".geojson")) {
 			const reader = new FileReader();
 			reader.readAsText(file);
 			reader.onloadend = function (e) {
 				const [data, name] = processGeoJson(e.target.result);
-				setDataDisplayMap(data, name, dataDisplayProps);
+				setDataDisplayMap(data, name);
 			};
 		} else {
 			console.error("Unsupported file format");
@@ -94,12 +94,12 @@ const formatDateString = (date, time) => {
 	// Check if time includes AM/PM to determine the format
 	const is12HourFormat =
 		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
-	let hour, min;
+	let hour, min, sec;
 	let [day, month, year] = date.split("/");
 	if (is12HourFormat) {
 		// Handle 12-hour format
 		let [timePart, meridiem] = time.toLowerCase().split(" ");
-		[hour, min] = timePart.split(":");
+		[hour, min, sec = "00"] = timePart.split(":");
 
 		// Convert 12-hour to 24-hour format
 		if (meridiem === "pm" && hour !== "12") {
@@ -107,9 +107,9 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else[hour, min] = time.split(":"); // 24hr format used already
+	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
-	return `${year}-${month}-${day}T${hour}:${min}:00`;
+	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
 
 const updateMapdata = (groupName = null) => {
@@ -138,21 +138,22 @@ const processGeoJson = (json) => {
 };
 
 const processText = (text) => {
+	console.log("processing text", text);
 	const groupNameRegex = /"([^"]*)"/;
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
-	// TODO: update regex for the date-time part as on iOS there are [] surrounding it
-
+	console.log("groupName", groupName);
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends
+	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	const messageRegex =
-		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+		/\[?(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2}(?::\d{2})?(?:\s?(?:AM|PM|am|pm))?)\]?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\[?\d{2}\/\d{2}\/\d{4})|$)/g;
 
 	let messageMatches = [...text.matchAll(messageRegex)];
+	console.log("messageMatches", messageMatches);
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-
 		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
 
 	// Convert messageMatches to array of JSON objects
@@ -196,7 +197,6 @@ const processText = (text) => {
 			}
 		}
 	});
-
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {
