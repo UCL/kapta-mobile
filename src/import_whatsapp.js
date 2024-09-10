@@ -27,14 +27,16 @@ const getTimestamp = () => {
 var timestamp = getTimestamp();
 
 export function FileParser({ file, ...dataDisplayProps }) {
-	const { setMapData, showMap } = dataDisplayProps;
+	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
 	const setDataDisplayMap = (data, name) => {
 		console.log("setting data display map", data, name);
 		// common function used after parsing files
-		setMapData(data);
-		updateMapdata(name);
-		showMap();
-		setFileToParse(null);
+		{
+			setMapData(data);
+			updateMapdata(name);
+			showMap();
+			setFileToParse(null);
+		}
 	};
 
 	// parse the file
@@ -90,7 +92,7 @@ const getSenderColour = (senders) => {
 
 const formatDateString = (date, time) => {
 	// Given strings representing a date (dd/mm/yyyy) and
-	// time (hh:mm) return a datetime object
+	// time (hh:mm:ss) return a datetime object
 	// Check if time includes AM/PM to determine the format
 	const is12HourFormat =
 		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
@@ -143,12 +145,30 @@ const processText = (text) => {
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
 	console.log("groupName", groupName);
+
+	// Check the first 3 characters to determine the format; iOS and Android
+	const fileType = text.substring(0, 3);
+	let messageRegex;
+
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends
 	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
-	const messageRegex =
-		/\[?(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2}(?::\d{2})?(?:\s?(?:AM|PM|am|pm))?)\]?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\[?\d{2}\/\d{2}\/\d{4})|$)/g;
+	// this has been tweaked for each format but gives the same output
+	if (fileType.match(/\[\d{2}/)) {
+		console.log("ios format");
+		// iOS format
+		messageRegex =
+			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+	} else if (fileType.match(/\d{2}\//)) {
+		console.log("android format");
+		// Android format
+		messageRegex =
+			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+	} else {
+		console.error("Unknown file format");
+		return [null, groupName];
+	}
 
 	let messageMatches = [...text.matchAll(messageRegex)];
 	console.log("messageMatches", messageMatches);
@@ -160,6 +180,8 @@ const processText = (text) => {
 	let messages = [];
 	let senders = {};
 	messageMatches.forEach((match) => {
+		// const [message, date, time, sender, content] = match;
+
 		let message = {
 			datetime: formatDateString(match[1], match[2]),
 			sender: match[3],
