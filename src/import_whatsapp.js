@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import * as JSZip from "jszip";
 import { slugify } from "./utils.js";
+import React, { useEffect, useCallback } from "react";
 
 const colourPalette = [
 	"#d0160f",
@@ -28,62 +29,71 @@ var timestamp = getTimestamp();
 
 export function FileParser({ file, ...dataDisplayProps }) {
 	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
-	const setDataDisplayMap = (data, name) => {
-		console.log("setting data display map", data, name);
-		// common function used after parsing files
-		{
+
+	const setDataDisplayMap = useCallback(
+		(data, name) => {
+			console.log("setting data display map", data, name);
 			setMapData(data);
 			updateMapdata(name);
 			showMap();
 			setFileToParse(null);
-		}
-	};
+		},
+		[setMapData, showMap, setFileToParse]
+	);
 
-	// parse the file
-	if (file instanceof File) {
-		if (file.name.endsWith(".zip")) {
-			const reader = new FileReader();
-			reader.readAsArrayBuffer(file);
-
-			reader.onload = function (e) {
-				const arrayBuffer = e.target.result;
-				const zip = new JSZip();
-				zip.loadAsync(arrayBuffer).then(function (contents) {
-					Object.keys(contents.files).forEach(function (filename) {
-						if (filename.endsWith(".txt")) {
-							zip
-								.file(filename)
-								.async("string")
-								.then(function (fileContent) {
-									const [data, name] = processText(fileContent);
-									setDataDisplayMap(data, name);
-								});
-						}
-					});
-				});
-			};
-		} else if (file.name.endsWith(".txt")) {
-			console.log("file is a txt");
-			// TODO: add a check to see if it's actually geojson
-			const reader = new FileReader();
-			reader.readAsText(file);
-			reader.onloadend = function (e) {
-				const [data, name] = processText(e.target.result);
-				setDataDisplayMap(data, name);
-			};
-		} else if (file.name.endsWith(".geojson")) {
-			const reader = new FileReader();
-			reader.readAsText(file);
-			reader.onloadend = function (e) {
-				const [data, name] = processGeoJson(e.target.result);
-				setDataDisplayMap(data, name);
-			};
-		} else {
-			console.error("Unsupported file format");
+	useEffect(() => {
+		if (file) {
+			processFile(file, setDataDisplayMap);
 		}
-	}
+	}, [file]); // run when file changes
+
 	return null; //don't render anything
 }
+
+const processFile = (file, setDataDisplayMap) => {
+	// process the file then call setDataDisplayMap
+
+	if (file.name.endsWith(".zip")) {
+		const reader = new FileReader();
+		reader.readAsArrayBuffer(file);
+
+		reader.onload = function (e) {
+			const arrayBuffer = e.target.result;
+			const zip = new JSZip();
+			zip.loadAsync(arrayBuffer).then(function (contents) {
+				Object.keys(contents.files).forEach(function (filename) {
+					if (filename.endsWith(".txt")) {
+						zip
+							.file(filename)
+							.async("string")
+							.then(function (fileContent) {
+								const [data, name] = processText(fileContent);
+								setDataDisplayMap(data, name);
+							});
+					}
+				});
+			});
+		};
+	} else if (file.name.endsWith(".txt")) {
+		console.log("file is a txt");
+		// TODO: add a check to see if it's actually geojson
+		const reader = new FileReader();
+		reader.readAsText(file);
+		reader.onloadend = function (e) {
+			const [data, name] = processText(e.target.result);
+			setDataDisplayMap(data, name);
+		};
+	} else if (file.name.endsWith(".geojson")) {
+		const reader = new FileReader();
+		reader.readAsText(file);
+		reader.onloadend = function (e) {
+			const [data, name] = processGeoJson(e.target.result);
+			setDataDisplayMap(data, name);
+		};
+	} else {
+		console.error("Unsupported file format");
+	}
+};
 
 const getSenderColour = (senders) => {
 	// Select a colour depending on number of keys in the object provided
@@ -140,11 +150,9 @@ const processGeoJson = (json) => {
 };
 
 const processText = (text) => {
-	console.log("processing text", text);
 	const groupNameRegex = /"([^"]*)"/;
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
-	console.log("groupName", groupName);
 
 	// Check the first 3 characters to determine the format; iOS and Android
 	const fileType = text.substring(0, 3);
