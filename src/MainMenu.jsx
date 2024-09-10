@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
-import { FileParser, parseFile } from "./import_whatsapp.js";
+import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
@@ -88,7 +88,6 @@ function FilePicker(dataDisplayProps) {
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
 		file && setSelectedFile(file);
-		// parseFile(file, dataDisplayProps);
 		event.target.value = null; // Clear the input value
 	};
 	var filedisplayed = false;
@@ -96,7 +95,7 @@ function FilePicker(dataDisplayProps) {
 		<>
 			<input
 				type="file"
-				accept=".txt,.zip,.geojson"
+				accept={allowedExtensions.join(",")}
 				className="file-input"
 				onChange={handleFileChange}
 			/>

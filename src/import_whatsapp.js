@@ -50,48 +50,61 @@ export function FileParser({ file, ...dataDisplayProps }) {
 	return null; //don't render anything
 }
 
+export const allowedExtensions = [".zip", ".txt", ".geojson"];
+
 const processFile = (file, setDataDisplayMap) => {
 	// process the file then call setDataDisplayMap
 
-	if (file.name.endsWith(".zip")) {
-		const reader = new FileReader();
-		reader.readAsArrayBuffer(file);
+	if (
+		file instanceof File &&
+		allowedExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))
+	) {
+		try {
+			const reader = new FileReader();
 
-		reader.onload = function (e) {
-			const arrayBuffer = e.target.result;
-			const zip = new JSZip();
-			zip.loadAsync(arrayBuffer).then(function (contents) {
-				Object.keys(contents.files).forEach(function (filename) {
-					if (filename.endsWith(".txt")) {
-						zip
-							.file(filename)
-							.async("string")
-							.then(function (fileContent) {
-								const [data, name] = processText(fileContent);
-								setDataDisplayMap(data, name);
-							});
+			if (file.name.endsWith(".zip")) {
+				reader.readAsArrayBuffer(file);
+
+				reader.onload = function (e) {
+					const arrayBuffer = e.target.result;
+					const zip = new JSZip();
+					zip.loadAsync(arrayBuffer).then(function (contents) {
+						Object.keys(contents.files).forEach(function (filename) {
+							if (filename.endsWith(".txt")) {
+								zip
+									.file(filename)
+									.async("string")
+									.then(function (fileContent) {
+										const [data, name] = processText(fileContent);
+										setDataDisplayMap(data, name);
+									});
+							}
+						});
+					});
+				};
+			} else {
+				// text or geojson
+				reader.readAsText(file);
+				reader.onloadend = function (e) {
+					const content = e.target.result;
+					const geoJSONRegex = /^\s*{\s*"type"/;
+
+					if (file.name.endsWith(".geojson") || geoJSONRegex.test(content)) {
+						try {
+							const [data, name] = processGeoJson(content);
+							setDataDisplayMap(data, name);
+						} catch (error) {
+							console.error("Error parsing GeoJSON:", error);
+						}
+					} else {
+						const [data, name] = processText(e.target.result);
+						setDataDisplayMap(data, name);
 					}
-				});
-			});
-		};
-	} else if (file.name.endsWith(".txt")) {
-		console.log("file is a txt");
-		// TODO: add a check to see if it's actually geojson
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processText(e.target.result);
-			setDataDisplayMap(data, name);
-		};
-	} else if (file.name.endsWith(".geojson")) {
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processGeoJson(e.target.result);
-			setDataDisplayMap(data, name);
-		};
-	} else {
-		console.error("Unsupported file format");
+				};
+			}
+		} catch (error) {
+			console.error("Unsupported file or format", error);
+		}
 	}
 };
 
@@ -140,6 +153,7 @@ const processGeoJson = (json) => {
 	};
 	let groupName;
 	var geoJSONData = JSON.parse(json);
+	console.log("geoJSONData", geoJSONData, geoJSONData.type);
 
 	if (geoJSONData.type === "FeatureCollection") {
 		mapdata.features = mapdata.features.concat(geoJSONData.features);
@@ -164,12 +178,12 @@ const processText = (text) => {
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	// this has been tweaked for each format but gives the same output
 	if (fileType.match(/\[\d{2}/)) {
-		console.log("ios format");
+		console.info("ios format");
 		// iOS format
 		messageRegex =
 			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
 	} else if (fileType.match(/\d{2}\//)) {
-		console.log("android format");
+		console.info("android format");
 		// Android format
 		messageRegex =
 			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
@@ -179,7 +193,6 @@ const processText = (text) => {
 	}
 
 	let messageMatches = [...text.matchAll(messageRegex)];
-	console.log("messageMatches", messageMatches);
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
 		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
@@ -188,8 +201,6 @@ const processText = (text) => {
 	let messages = [];
 	let senders = {};
 	messageMatches.forEach((match) => {
-		// const [message, date, time, sender, content] = match;
-
 		let message = {
 			datetime: formatDateString(match[1], match[2]),
 			sender: match[3],
