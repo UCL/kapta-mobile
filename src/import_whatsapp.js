@@ -3,7 +3,7 @@ import * as JSZip from "jszip";
 import { slugify } from "./utils.js";
 import React, { useEffect, useCallback } from "react";
 
-const colourPalette = [
+export const colourPalette = [
 	"#d0160f",
 	"#80bf4d",
 	"#b38300",
@@ -153,7 +153,6 @@ const processGeoJson = (json) => {
 	};
 	let groupName;
 	var geoJSONData = JSON.parse(json);
-	console.log("geoJSONData", geoJSONData, geoJSONData.type);
 
 	if (geoJSONData.type === "FeatureCollection") {
 		mapdata.features = mapdata.features.concat(geoJSONData.features);

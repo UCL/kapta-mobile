@@ -30,9 +30,7 @@ export default function InstallDialog() {
 
 	const handleInstallClick = async () => {
 		if (!installPrompt) return;
-		console.log("install clicked");
 		const result = await installPrompt.prompt();
-		console.log(result);
 		// if (result.outcome === "dismissed") {
 		// 	setIsVisible(false);
 		// } else {
