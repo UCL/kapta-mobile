@@ -66,10 +66,8 @@ function SatelliteTileLayer() {
 /************************************************************************************************
  * Display Data
  ***********************************************************************************************/
-var geojsonMarkerOptions = {
+var markerOptions = {
 	radius: 5,
-	fillColor: "red",
-	color: "red",
 	weight: 0,
 	opacity: 1,
 	fillOpacity: 0.8,
@@ -103,11 +101,18 @@ function MapDataLayer({ data }) {
 					);
 					boundsRef.current.push([latlng.lat, latlng.lng]);
 
+					const markerColour = feature.properties.markerColour
+						? feature.properties.markerColour
+						: "red";
 					return (
 						<CircleMarker
 							key={index}
 							center={latlng}
-							pathOptions={geojsonMarkerOptions}
+							pathOptions={{
+								color: markerColour,
+								fillColor: markerColour,
+								...markerOptions,
+							}}
 						>
 							<Popup>
 								<div className="map-popup-body">
@@ -138,7 +143,7 @@ var printBtn = L.easyPrint({
 });
 
 /************************************************************************************************
- *  Display Map
+ *  Error Popup
  ************************************************************************************************/
 function ErrorPopup({ error }) {
 	const map = useMap();
@@ -161,6 +166,29 @@ function ErrorPopup({ error }) {
 		</Marker>
 	) : null;
 }
+
+/************************************************************************************************
+ *  Map
+ ************************************************************************************************/
+
+var southWest = L.latLng(-70, -180);
+var northEast = L.latLng(80, 180);
+const mapConfig = {
+	center: [0, 0],
+	zoom: 2,
+	minZoom: 2,
+	maxZoom: 21,
+	zoomControl: false,
+	attributionControl: true,
+	style: { height: "100vh", width: "100%" },
+	maxBounds: L.latLngBounds(southWest, northEast),
+};
+const currentPositionIcon = L.divIcon({
+	html: GPSPositionIcn,
+	className: "position-marker-icon",
+	iconSize: [30, 30],
+	iconAnchor: [5, 0],
+});
 
 export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
@@ -204,12 +232,6 @@ export function Map({ isVisible, showMenu, data }) {
 			? navigator.geolocation.getCurrentPosition(success, error, options)
 			: console.error("GPS not available");
 	};
-	const currentPositionIcon = L.divIcon({
-		html: GPSPositionIcn,
-		className: "position-marker-icon",
-		iconSize: [30, 30],
-		iconAnchor: [5, 0],
-	});
 
 	const UpdateMap = () => {
 		// hook to fly to current location when updated
@@ -218,18 +240,6 @@ export function Map({ isVisible, showMenu, data }) {
 			map.flyTo(currentLocation, map.getZoom());
 		}
 		return null;
-	};
-	var southWest = L.latLng(-70, -180);
-	var northEast = L.latLng(80, 180);
-	const mapConfig = {
-		center: [0, 0],
-		zoom: 2,
-		minZoom: 2,
-		maxZoom: 21,
-		zoomControl: false,
-		attributionControl: true,
-		style: { height: "100vh", width: "100%" },
-		maxBounds: L.latLngBounds(southWest, northEast),
 	};
 
 	return (
