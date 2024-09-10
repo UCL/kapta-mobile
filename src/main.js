@@ -177,6 +177,7 @@ function App() {
 	const dataDisplayProps = {
 		setMapData,
 		showMap,
+		setFileToParse,
 	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
