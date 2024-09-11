@@ -191,6 +191,20 @@ const currentPositionIcon = L.divIcon({
 	iconAnchor: [5, 0],
 });
 
+function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
+	// this is a functional component, it doesn't render anything
+	// hook to fly to current location when updated
+	const map = useMap();
+	useEffect(() => {
+		if (currentLocation && flyToLocation) {
+			map.flyTo(currentLocation, map.getZoom());
+			setFlyToLocation(false);
+		}
+	}, [currentLocation, flyToLocation]);
+
+	return null;
+}
+
 export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
 
@@ -199,6 +213,7 @@ export function Map({ isVisible, showMenu, data }) {
 	const [shouldPulse, setShouldPulse] = useState(false);
 	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
 	const [currentLocation, setCurrentLocation] = useState(null);
+	const [flyToLocation, setFlyToLocation] = useState(false);
 	const [error, setError] = useState(null);
 
 	// pulse effect on title update
@@ -221,6 +236,7 @@ export function Map({ isVisible, showMenu, data }) {
 			const lat = pos.coords.latitude;
 			const lng = pos.coords.longitude;
 			setCurrentLocation([lat, lng]);
+			setFlyToLocation(true);
 		}
 		function error(err) {
 			console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -228,19 +244,10 @@ export function Map({ isVisible, showMenu, data }) {
 				"Unable to retrieve location. Please check your device settings."
 			);
 		}
-
+		// call the above if the browser supports it
 		navigator.geolocation
 			? navigator.geolocation.getCurrentPosition(success, error, options)
 			: console.error("GPS not available");
-	};
-
-	const UpdateMap = () => {
-		// hook to fly to current location when updated
-		const map = useMap();
-		if (currentLocation) {
-			map.flyTo(currentLocation, map.getZoom());
-		}
-		return null;
 	};
 
 	return (
@@ -277,7 +284,11 @@ export function Map({ isVisible, showMenu, data }) {
 					{/* error if currentLocation can't be found */}
 					{error && <ErrorPopup />}
 					{data && <MapDataLayer data={data} />}
-					<UpdateMap />
+					<UpdateMap
+						currentLocation={currentLocation}
+						flyToLocation={flyToLocation}
+						setFlyToLocation={setFlyToLocation}
+					/>
 					<ScaleControl position="bottomleft" />
 				</MapContainer>
 				<MapActionArea
