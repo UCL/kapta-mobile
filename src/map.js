@@ -250,10 +250,11 @@ export function Map({ isVisible, showMenu, data }) {
 				setIsOpen={setIsModalOpen}
 				currentDataset={data}
 			/>
-			<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
-				{titleValue}
-			</div>
+
 			<div id="map">
+				<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
+					{titleValue}
+				</div>
 				<button
 					id="base-map--toggle"
 					className="map-button"

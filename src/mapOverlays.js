@@ -112,6 +112,11 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	console.log("currentDataset slug", Alpine.store("currentDataset").slug);
 	console.log("currentDataset", currentDataset);
+	const shareContent = {
+		title: "#MadeWithKapta",
+		text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
+		url: "https://kapta.earth/",
+	};
 	const handleShareImgClick = () => {
 		let errorMsg;
 		console.log("share img clicked");
@@ -128,6 +133,9 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					return true;
 				}
 				if (element.classList.contains("buttons")) {
+					return true;
+				}
+				if (element.id === "map-actions-container") {
 					return true;
 				}
 			},
@@ -148,9 +156,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				navigator
 					.share({
 						files: filesArray,
-						title: "#MadeWithKapta",
-						text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
-						url: "https://kapta.earth/",
+						...shareContent,
 					})
 					.then(() => {
 						errorMsg = "Failed to share map image";
@@ -216,9 +222,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			navigator
 				.share({
 					files: filesArray,
-					title: "#MadeWithKapta",
-					text: "#MadeWithKapta",
-					url: "https://kapta.earth/",
+					...shareContent,
 				})
 				.then(
 					() => console.info("Data shared"),
