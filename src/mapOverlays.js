@@ -110,8 +110,11 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	let hasCognito = Alpine.store("appData")?.hasCognito;
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	console.log("currentDataset slug", Alpine.store("currentDataset").slug);
+	console.log("currentDataset", currentDataset);
 	const handleShareImgClick = () => {
 		let errorMsg;
+		console.log("share img clicked");
 		html2canvas(document.querySelector("#map"), {
 			allowTaint: true,
 			useCORS: true,
@@ -166,6 +169,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				}
 			}
 			if (errorMsg) {
+				// TODO: replace with error popup?
 				const dialog = document.createElement("dialog");
 				dialog.textContent = errorMsg;
 				dialog.classList.add("error-dialog");
@@ -192,7 +196,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 		URL.revokeObjectURL(url);
 	};
 	const handleShareDataClick = () => {
-		const currentDataset = Alpine.store("currentDataset").geoJSON;
+		console.log("share data clicked");
 		const filename = `${
 			Alpine.store("currentDataset").slug
 		}-${new Date().toDateString()}.txt`;
