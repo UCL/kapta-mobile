@@ -36,7 +36,6 @@ export function FileParser({ file, ...dataDisplayProps }) {
 			setMapData(data);
 			updateMapdata(name);
 			showMap();
-			setFileToParse(null);
 		},
 		[setMapData, showMap, setFileToParse]
 	);
