@@ -141,7 +141,6 @@ function initServiceWorker(setFileToParse) {
 
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data.action !== "load-map") return;
-		// parseFile(event.data.file);
 		return setFileToParse(event.data.file);
 	});
 

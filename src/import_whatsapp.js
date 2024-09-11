@@ -87,7 +87,7 @@ const processFile = (file, setDataDisplayMap) => {
 				reader.onloadend = function (e) {
 					const content = e.target.result;
 					const geoJSONRegex = /^\s*{\s*"type"/;
-
+					// will process as geojson if extension is .geojson or if content starts with { "type"
 					if (file.name.endsWith(".geojson") || geoJSONRegex.test(content)) {
 						try {
 							const [data, name] = processGeoJson(content);
