@@ -182,6 +182,7 @@ const mapConfig = {
 	attributionControl: true,
 	style: { height: "100vh", width: "100%" },
 	maxBounds: L.latLngBounds(southWest, northEast),
+	preferCanvas: true,
 };
 const currentPositionIcon = L.divIcon({
 	html: GPSPositionIcn,
