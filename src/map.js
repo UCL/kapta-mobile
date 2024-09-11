@@ -232,18 +232,18 @@ export function Map({ isVisible, showMenu, data }) {
 			timeout: 5000,
 			maximumAge: 0,
 		};
-		function success(pos) {
+		const success = (pos) => {
 			const lat = pos.coords.latitude;
 			const lng = pos.coords.longitude;
 			setCurrentLocation([lat, lng]);
 			setFlyToLocation(true);
-		}
-		function error(err) {
+		};
+		const error = (err) => {
 			console.warn(`ERROR(${err.code}): ${err.message}`);
 			setError(
 				"Unable to retrieve location. Please check your device settings."
 			);
-		}
+		};
 		// call the above if the browser supports it
 		navigator.geolocation
 			? navigator.geolocation.getCurrentPosition(success, error, options)
