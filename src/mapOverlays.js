@@ -110,8 +110,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	let hasCognito = Alpine.store("appData")?.hasCognito;
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	console.log("currentDataset slug", Alpine.store("currentDataset").slug);
-	console.log("currentDataset", currentDataset);
+	const filenameSlug = Alpine.store("currentDataset").slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
 		text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
@@ -119,7 +118,6 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	};
 	const handleShareImgClick = () => {
 		let errorMsg;
-		console.log("share img clicked");
 		html2canvas(document.querySelector("#map"), {
 			allowTaint: true,
 			useCORS: true,
@@ -141,7 +139,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 		}).then(async function (canvas) {
 			const dataURL = canvas.toDataURL();
 			const blob = await (await fetch(dataURL)).blob();
-			const filename = `${Alpine.store("currentDataset").slug}.png`;
+			const filename = `${filenameSlug}.png`;
 			const filesArray = [
 				new File([blob], filename, {
 					type: blob.type,
@@ -201,10 +199,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 		URL.revokeObjectURL(url);
 	};
 	const handleShareDataClick = () => {
-		console.log("share data clicked");
-		const filename = `${
-			Alpine.store("currentDataset").slug
-		}-${new Date().toDateString()}.txt`;
+		const filename = `${filenameSlug}-${new Date().toDateString()}.txt`;
 		const blob = new Blob([JSON.stringify(currentDataset, null, 2)], {
 			type: "text/plain",
 		});
