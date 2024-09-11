@@ -125,10 +125,9 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			useCORS: true,
 			imageTimeout: 5000,
 			removeContainer: true,
-			logging: true,
+			logging: false,
 			foreignObjectRendering: false,
 			ignoreElements: function (element) {
-				var src = element.src;
 				if ("button" == element.type || "submit" == element.type) {
 					return true;
 				}
