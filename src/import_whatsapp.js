@@ -32,7 +32,6 @@ export function FileParser({ file, ...dataDisplayProps }) {
 
 	const setDataDisplayMap = useCallback(
 		(data, name) => {
-			console.log("setting data display map", data, name);
 			setMapData(data);
 			updateMapdata(name);
 			showMap();
