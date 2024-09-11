@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
@@ -84,21 +84,32 @@ function RecentMapButton({ showMap }) {
 
 function FilePicker(dataDisplayProps) {
 	const [selectedFile, setSelectedFile] = useState(null);
+	const fileInputRef = useRef(null);
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
 		file && setSelectedFile(file);
 		event.target.value = null; // Clear the input value
 	};
-	var filedisplayed = false;
+
+	const handleButtonClick = () => {
+		fileInputRef.current.click();
+	};
+
+	const { t } = useTranslation();
+
 	return (
 		<>
 			<input
 				type="file"
 				accept={allowedExtensions.join(",")}
-				className="file-input"
+				ref={fileInputRef}
+				style={{ display: "none" }}
 				onChange={handleFileChange}
 			/>
+			<button onClick={handleButtonClick} className="btn menu-btn file-input">
+				{t("selectFile")}
+			</button>
 			{selectedFile && (
 				<FileParser
 					file={selectedFile}

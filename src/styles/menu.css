@@ -13,6 +13,12 @@
         border-radius: 60px;
         min-width: 60vw;
         padding: 0.8rem;
+        font-size: 145%;
+        text-align: center;
+        font-weight: 600;
+        color: var(--mid-red);
+        margin-top: 2vh;
+        margin-bottom: 1vh;
     }
 
     .button-area {
@@ -25,16 +31,6 @@
         bottom: 1vh;
     }
 
-    #helpBtn,
-    #tutorialBtn,
-    #recentBtn {
-        font-size: 145%;
-        text-align: center;
-        font-weight: 600;
-        color: var(--mid-red);
-        margin-top: 2vh;
-        margin-bottom: 1vh;
-    }
 
     #languageSelector {
         background-color: transparent;
@@ -65,8 +61,8 @@
 
 
     .file-input {
-        color: white;
-        font-size: 110%;
+        font-size: 140%;
+        background-color: #e3e3e3;
     }
 
 }
