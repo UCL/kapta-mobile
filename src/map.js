@@ -13,6 +13,7 @@ import {
 	CircleMarker,
 	useMap,
 	ScaleControl,
+	AttributionControl,
 } from "react-leaflet";
 
 import { MapActionArea, ShareModal } from "./mapOverlays.js";
@@ -172,7 +173,7 @@ const mapConfig = {
 	minZoom: 2,
 	maxZoom: 21,
 	zoomControl: false,
-	attributionControl: true,
+	attributionControl: false,
 	style: { height: "100vh", width: "100%" },
 	maxBounds: L.latLngBounds(southWest, northEast),
 	preferCanvas: true,
@@ -289,7 +290,12 @@ export function Map({ isVisible, showMenu, data }) {
 						flyToLocation={flyToLocation}
 						setFlyToLocation={setFlyToLocation}
 					/>
-					<ScaleControl position="bottomleft" />
+					<ScaleControl position="bottomleft" metric={true} imperial={false} />
+					<AttributionControl
+						position="bottomright"
+						prefix="Leaflet"
+						attribution="Mapbox | OSM Contributors"
+					/>
 				</MapContainer>
 				<MapActionArea
 					setTitle={setTitleValue}
