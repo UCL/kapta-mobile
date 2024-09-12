@@ -6,6 +6,7 @@ import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
 import { isIOS } from "./main.js";
+import ReactGA from "react-ga4";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
