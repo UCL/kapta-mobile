@@ -1,15 +1,15 @@
 import Alpine from "alpinejs";
 import React, { useEffect, useState } from "react";
+import { i18next } from "./languages.js";
 import ReactDOM from "react-dom/client";
-import { parseFile } from "./import_whatsapp.js";
-import "./styles/main.css";
+import { FileParser } from "./import_whatsapp.js";
 import { signOut, initiateAuthRefresh } from "./auth.js";
-import InstallDialog from "./Install.jsx";
-
-import MainMenu from "./MainMenu.jsx";
-
-import Loader from "./Loader.jsx";
 import { Map } from "./map.js";
+import InstallDialog from "./Install.jsx";
+import MainMenu from "./MainMenu.jsx";
+import Loader from "./Loader.jsx";
+import "./styles/main.css";
+import ReactGA from "react-ga4";
 
 window.Alpine = Alpine;
 
@@ -21,6 +21,9 @@ export const isMobileOrTablet = () => {
 		(window.innerWidth <= 1024 &&
 			("ontouchstart" in window || navigator.maxTouchPoints > 0))
 	);
+};
+export const isIOS = () => {
+	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
 };
 function initAlpine() {
 	//may want to entirely convert to state or context
@@ -110,7 +113,7 @@ function initAlpine() {
 	});
 }
 
-function initServiceWorker() {
+function initServiceWorker(setFileToParse) {
 	if ("serviceWorker" in navigator) {
 		window.addEventListener("load", () => {
 			navigator.serviceWorker
@@ -123,38 +126,40 @@ function initServiceWorker() {
 				});
 		});
 
-		var bestOnAndroidMsg =
-			"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.";
-		// will need to get a translation done for this
-		if (
-			!Alpine.store("deviceInfo").isMobile ||
-			navigator.userAgent.match(/iPhone/i) ||
-			navigator.userAgent.match(/iPad/i)
-		) {
+		if (!Alpine.store("deviceInfo").isMobile || isIOS()) {
 			window.addEventListener("load", function () {
-				alert(bestOnAndroidMsg);
+				const shownWorksBestOnAndroid = localStorage.getItem(
+					"shownWorksBestOnAndroid"
+				);
+
+				if (!shownWorksBestOnAndroid) {
+					alert(i18next.t("desktoporiosPrompt")); // using like this since can't use useTranslation outside a component
+					localStorage.setItem("shownWorksBestOnAndroid", "true");
+				}
 			});
 		}
 	}
 
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data.action !== "load-map") return;
-		parseFile(event.data.file);
+		return setFileToParse(event.data.file);
 	});
 
 	navigator.serviceWorker.controller?.postMessage("share-ready");
 }
 
 function App() {
+	const [fileToParse, setFileToParse] = useState(null);
+
 	useEffect(() => {
 		// Initialize Alpine and SW
 		document.addEventListener("alpine:init", () => {
 			initAlpine();
 		});
 		Alpine.start();
-		initServiceWorker();
+		initServiceWorker(setFileToParse);
+		ReactGA.initialize("G-LEP1Y0FVCD");
 	}, []); // Empty dependency array ensures this effect runs once on mount
-
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
@@ -170,6 +175,11 @@ function App() {
 		setIsMapVisible(false);
 		setIsMenuVisible(true);
 	};
+	const dataDisplayProps = {
+		setMapData,
+		showMap,
+		setFileToParse,
+	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
 			<InstallDialog />
@@ -177,12 +187,11 @@ function App() {
 
 			<MainMenu
 				isVisible={isMenuVisible}
-				showMap={showMap}
 				setLoaderVisible={setIsLoaderVisible}
 				dataset={mapData}
-				setMapData={setMapData}
+				{...dataDisplayProps}
 			/>
-
+			{fileToParse && <FileParser file={fileToParse} {...dataDisplayProps} />}
 			<Map isVisible={isMapVisible} showMenu={showMenu} data={mapData} />
 		</>
 	);

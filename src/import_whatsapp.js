@@ -1,8 +1,9 @@
 import Alpine from "alpinejs";
 import * as JSZip from "jszip";
 import { slugify } from "./utils.js";
+import React, { useEffect, useCallback } from "react";
 
-const colourPalette = [
+export const colourPalette = [
 	"#d0160f",
 	"#80bf4d",
 	"#b38300",
@@ -26,70 +27,100 @@ const getTimestamp = () => {
 };
 var timestamp = getTimestamp();
 
-const setDataDisplayMap = (data, name, imgPromises, dataDisplayProps) => {
-	// common function used after parsing files
-	const { setMapData, showMap } = dataDisplayProps;
-	setMapData(data);
-	updateMapdata(name);
-	showMap();
-};
+export function FileParser({ file, ...dataDisplayProps }) {
+	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
 
-export const parseFile = (file, dataDisplayProps) => {
-	if (file.name.endsWith(".zip")) {
-		const reader = new FileReader();
-		reader.readAsArrayBuffer(file);
+	const setDataDisplayMap = useCallback(
+		(data, name) => {
+			setMapData(data);
+			updateMapdata(name);
+			showMap();
+		},
+		[setMapData, showMap, setFileToParse]
+	);
 
-		reader.onload = function (e) {
-			const arrayBuffer = e.target.result;
-			const zip = new JSZip();
-			zip.loadAsync(arrayBuffer).then(function (contents) {
-				filenames = Object.keys(contents.files)
-				chatFilename = filenames.filter(filename => filename.match(/.*\.txt/));
-				imgFilenames = filenames.filter(filename => filename.match(/.*\.(jpg|jpeg|png|gif)/));
-				// if there is a chat file, process it and any images
-				if (chatFilename.length > 0) {
-					// if there are image files, unzip them and add them to an array
-					if (imgFilenames.length > 0) {
-						let imgPromises = imgFilenames.map((imgFilename) => {
-							return zip
-								.file(imgFilename)
-								.async("blob")
-								.then((blob) => {
-									return {
-										filename: imgFilename,
-										blob: blob,
-									};
-								});
-						});
+	useEffect(() => {
+		if (file) {
+			processFile(file, setDataDisplayMap);
+		}
+	}, [file]); // run when file changes
+
+	return null; //don't render anything
+}
+
+export const allowedExtensions = [".zip", ".txt", ".geojson"];
+
+const processFile = (file, setDataDisplayMap) => {
+	// process the file then call setDataDisplayMap
+
+	if (
+		file instanceof File &&
+		allowedExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))
+	) {
+		try {
+			const reader = new FileReader();
+
+			if (file.name.endsWith(".zip")) {
+				const arrayBuffer = e.target.result;
+				const zip = new JSZip();
+				zip.loadAsync(arrayBuffer).then(function (contents) {
+					filenames = Object.keys(contents.files);
+					chatFilename = filenames.filter((filename) =>
+						filename.match(/.*\.txt/)
+					);
+					imgFilenames = filenames.filter((filename) =>
+						filename.match(/.*\.(jpg|jpeg|png|gif)/)
+					);
+					// if there is a chat file, process it and any images
+					if (chatFilename.length > 0) {
+						// if there are image files, unzip them and add them to an array
+						// TODO: move this to the map to save loading all the images into memory
+						if (imgFilenames.length > 0) {
+							let imgPromises = imgFilenames.map((imgFilename) => {
+								return zip
+									.file(imgFilename)
+									.async("blob")
+									.then((blob) => {
+										return {
+											filename: imgFilename,
+											blob: blob,
+										};
+									});
+							});
+						}
+						// process the chat file and pass along any images
+						zip
+							.file(chatFilename[0])
+							.async("string")
+							.then(function (fileContent) {
+								const [data, name] = processText(fileContent);
+								setDataDisplayMap(data, name, imgPromises, dataDisplayProps);
+							});
 					}
-					// process the chat file and pass along any images
-					zip
-						.file(chatFilename[0])
-						.async("string")
-						.then(function (fileContent) {
-							const [data, name] = processText(fileContent);
-							setDataDisplayMap(data, name, imgPromises, dataDisplayProps);
-						});
-				}
-
-			});
-		};
-	} else if (file.name.endsWith(".txt")) {
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processText(e.target.result);
-			setDataDisplayMap(data, name, dataDisplayProps);
-		};
-	} else if (file.name.endsWith(".geojson")) {
-		const reader = new FileReader();
-		reader.readAsText(file);
-		reader.onloadend = function (e) {
-			const [data, name] = processGeoJson(e.target.result);
-			setDataDisplayMap(data, name, dataDisplayProps);
-		};
-	} else {
-		console.error("Unsupported file format");
+				});
+			} else {
+				// text or geojson
+				reader.readAsText(file);
+				reader.onloadend = function (e) {
+					const content = e.target.result;
+					const geoJSONRegex = /^\s*{\s*"type"/;
+					// will process as geojson if extension is .geojson or if content starts with { "type"
+					if (file.name.endsWith(".geojson") || geoJSONRegex.test(content)) {
+						try {
+							const [data, name] = processGeoJson(content);
+							setDataDisplayMap(data, name);
+						} catch (error) {
+							console.error("Error parsing GeoJSON:", error);
+						}
+					} else {
+						const [data, name] = processText(e.target.result);
+						setDataDisplayMap(data, name);
+					}
+				};
+			}
+		} catch (error) {
+			console.error("Unsupported file or format", error);
+		}
 	}
 };
 
@@ -100,16 +131,16 @@ const getSenderColour = (senders) => {
 
 const formatDateString = (date, time) => {
 	// Given strings representing a date (dd/mm/yyyy) and
-	// time (hh:mm) return a datetime object
+	// time (hh:mm:ss) return a datetime object
 	// Check if time includes AM/PM to determine the format
 	const is12HourFormat =
 		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
-	let hour, min;
+	let hour, min, sec;
 	let [day, month, year] = date.split("/");
 	if (is12HourFormat) {
 		// Handle 12-hour format
 		let [timePart, meridiem] = time.toLowerCase().split(" ");
-		[hour, min] = timePart.split(":");
+		[hour, min, sec = "00"] = timePart.split(":");
 
 		// Convert 12-hour to 24-hour format
 		if (meridiem === "pm" && hour !== "12") {
@@ -117,9 +148,9 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else[hour, min] = time.split(":"); // 24hr format used already
+	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
-	return `${year}-${month}-${day}T${hour}:${min}:00`;
+	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
 
 const updateMapdata = (groupName = null) => {
@@ -152,17 +183,34 @@ const processText = (text) => {
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
 
+	// Check the first 3 characters to determine the format; iOS and Android
+	const fileType = text.substring(0, 3);
+	let messageRegex;
+
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends
+	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
-	const messageRegex =
-		/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):\s((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+	// this has been tweaked for each format but gives the same output
+	if (fileType.match(/\[\d{2}/)) {
+		console.info("ios format");
+		// iOS format
+		messageRegex =
+			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+	} else if (fileType.match(/\d{2}\//)) {
+		console.info("android format");
+		// Android format
+		messageRegex =
+			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+	} else {
+		console.error("Unknown file format");
+		return [null, groupName];
+	}
 
 	let messageMatches = [...text.matchAll(messageRegex)];
-
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g;
+		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
@@ -186,6 +234,7 @@ const processText = (text) => {
 		}
 		messages.push(message);
 	});
+
 	// Sort messages by sender, then by datetime
 	messages.sort((a, b) => {
 		// Compare by sender

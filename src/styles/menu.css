@@ -13,6 +13,12 @@
         border-radius: 60px;
         min-width: 60vw;
         padding: 0.8rem;
+        font-size: 145%;
+        text-align: center;
+        font-weight: 600;
+        color: var(--mid-red);
+        margin-top: 2vh;
+        margin-bottom: 1vh;
     }
 
     .button-area {
@@ -25,16 +31,6 @@
         bottom: 1vh;
     }
 
-    #helpBtn,
-    #tutorialBtn,
-    #recentBtn {
-        font-size: 145%;
-        text-align: center;
-        font-weight: 600;
-        color: var(--mid-red);
-        margin-top: 2vh;
-        margin-bottom: 1vh;
-    }
 
     #languageSelector {
         background-color: transparent;
@@ -65,20 +61,28 @@
 
 
     .file-input {
-        color: white;
-        font-size: 110%;
+        font-size: 140%;
+        background-color: #e3e3e3;
     }
 
 }
 
+#copyright {
+    color: #DBC7C7;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    bottom: 1vh;
+}
 
 #video-modal {
     position: absolute;
-    /* top: 10vh; */
     display: flex;
     width: 95%;
     background-color: #eee;
     border-radius: 6px;
+    z-index: 100;
+    top: 10vh;
 
     .video-modal__inner {
         width: 100%;
@@ -88,9 +92,5 @@
         float: right;
         border-color: lightgray;
         font-size: 150%;
-
-        &.btn {
-            width: 5% !important;
-        }
     }
 }
