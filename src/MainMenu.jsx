@@ -61,7 +61,6 @@ function VideoModal({ isOpen, setIsOpen }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	const modalRef = useRef(null);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -70,16 +69,19 @@ function VideoModal({ isOpen, setIsOpen }) {
 				action: "Tutorial Opened",
 			});
 
-			const handleClickOutside = (event) => {
-				if (modalRef.current && !modalRef.current.contains(event.target)) {
-					setIsOpen(false);
-				}
+			const handleMainClick = () => {
+				setIsOpen(false);
+				document
+					.querySelector("#main")
+					.removeEventListener("click", handleMainClick);
 			};
-
-			// listen for clicks outside of the modal
-			document.addEventListener("click", handleClickOutside);
+			document
+				.querySelector("#main")
+				.addEventListener("click", handleMainClick);
 			return () => {
-				document.removeEventListener("click", handleClickOutside);
+				document
+					.querySelector("#main")
+					.removeEventListener("click", handleMainClick);
 			};
 		}
 	}, [isOpen, setIsOpen]);
@@ -88,13 +90,13 @@ function VideoModal({ isOpen, setIsOpen }) {
 
 	return (
 		<div id="video-modal">
-			<div className="video-modal__inner" ref={modalRef}>
+			<div className="video-modal__inner">
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					&times;
 				</button>
 				<iframe
 					id="videoElement"
-					width="100%"
+					width="99%"
 					height="500px"
 					src={t("tutorialUrl")}
 					allow="autoplay; encrypted-media;"
@@ -159,33 +161,35 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 	const { t } = useTranslation();
 
 	return (
-		<div className="button-area">
-			<button
-				id="tutorialBtn"
-				onClick={() => setIsVideoOpen(true)}
-				className="btn menu-btn"
-			>
-				{t("watchtutorial")}
-			</button>
+		<>
 			<VideoModal isOpen={isOpen} setIsOpen={setIsVideoOpen} />
+			<div className="button-area">
+				<button
+					id="tutorialBtn"
+					onClick={() => setIsVideoOpen(true)}
+					className="btn menu-btn"
+				>
+					{t("watchtutorial")}
+				</button>
 
-			<button
-				id="helpBtn"
-				className="btn menu-btn"
-				onClick={() => {
-					ReactGA.event({
-						category: "Help",
-						action: "Help Button Clicked",
-					});
-					window.location.href = config.kapta.askTheTeamURL;
-				}}
-			>
-				{t("asktheteam")}
-			</button>
+				<button
+					id="helpBtn"
+					className="btn menu-btn"
+					onClick={() => {
+						ReactGA.event({
+							category: "Help",
+							action: "Help Button Clicked",
+						});
+						window.location.href = config.kapta.askTheTeamURL;
+					}}
+				>
+					{t("asktheteam")}
+				</button>
 
-			{/* show recent map */}
-			{hasCurrentDataset && <RecentMapButton showMap={showMap} />}
-		</div>
+				{/* show recent map */}
+				{hasCurrentDataset && <RecentMapButton showMap={showMap} />}
+			</div>
+		</>
 	);
 }
 
@@ -200,7 +204,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
 	const [isSBVisible, setIsSBVisible] = useState(false);
 
-	// set status bar visibility based on if cognito in config, doesn't need to update beyond initial load
+	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
 	useEffect(() => {
 		setIsSBVisible(hasCognito);
 	}, []);
