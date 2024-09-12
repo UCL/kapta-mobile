@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/map-etc.css";
 import L from "leaflet";
+import * as JSZip from "jszip";
 import {
 	MapContainer,
 	TileLayer,
@@ -78,20 +79,66 @@ function getFriendlyDatetime(datetime) {
 	// Convert the datetime string into a more readable form
 	return datetime.split("T").join(" ").replaceAll("-", "/");
 }
+const getImageFromZip = async (zip, imgFilename) => {
+	// TODO: do we need to give it ios/android formats?
+	try {
+		console.log(`Attempting to extract file: ${imgFilename}`);
+		const file = zip.file(imgFilename);
+		if (!file) {
+			console.error(`File not found in ZIP: ${imgFilename}`);
+			return null;
+		}
+		const blob = await file.async("blob");
+		console.log(`Successfully extracted file: ${imgFilename}`);
+		return {
+			filename: imgFilename,
+			blob: blob,
+		};
+	} catch (error) {
+		console.error(`Error extracting file ${imgFilename}:`, error);
+		return null;
+	}
+};
 
-function MapDataLayer({ data }) {
+function MapDataLayer({ data, imgData = null }) {
 	const { t } = useTranslation();
 	const map = useMap();
 	const boundsRef = useRef([]);
+	const { imgZip, imgFilenames } = imgData;
 
 	useEffect(() => {
 		if (boundsRef.current.length > 0) {
 			map.fitBounds(boundsRef.current);
 		}
 	}, [data, map]);
+
+	useEffect(() => {
+		// Load ZIP file when component mounts - unsure if we should do this here
+		const loadZip = async () => {
+			const zip = new JSZip();
+			try {
+				await zip.loadAsync(mapdata);
+			} catch (error) {
+				console.error("Error loading ZIP file:", error);
+			}
+		};
+		loadZip();
+	}, [imgData]);
+
+	const [selectedFeature, setSelectedFeature] = useState(null);
+	const [imageUrl, setImageUrl] = useState(null);
+
+	const handleMarkerClick = async (feature) => {
+		// set the selected feature and set the image url, it will rerender due to state change
+		setSelectedFeature(feature);
+		if (zip && feature.properties.imgFilename) {
+			const url = await getImageFromZip(zip, feature.properties.imgFilename);
+			setImageUrl(url);
+		}
+	};
 	return (
 		<>
-			{data.features.map((feature, index) => {
+			{mapdata.features.map((feature, index) => {
 				if (feature.geometry?.coordinates) {
 					const { coordinates } = feature.geometry;
 					const latlng = { lat: coordinates[1], lng: coordinates[0] };
@@ -114,20 +161,32 @@ function MapDataLayer({ data }) {
 								fillColor: markerColour,
 								...markerOptions,
 							}}
+							eventHandlers={{
+								click: () => handleMarkerClick(feature),
+							}}
 						>
-							<Popup>
-								<div className="map-popup-body">
-									{observations.split("\n").map((o, index) => (
-										<p key={index}>{o}</p>
-									))}
-								</div>
-								<div className="map-popup-footer">
-									{t("date")}:{" "}
-									{getFriendlyDatetime(feature.properties.datetime)}
-									<br />
-									{t("observer")}: {feature.properties.observer}
-								</div>
-							</Popup>
+							{selectedFeature === feature && (
+								<Popup>
+									<div className="map-popup-body">
+										{imageUrl && (
+											<img
+												src={imageUrl}
+												alt="Feature image"
+												style={{ maxWidth: "100%", maxHeight: "200px" }}
+											/>
+										)}
+										{observations.split("\n").map((o, index) => (
+											<p key={index}>{o}</p>
+										))}
+									</div>
+									<div className="map-popup-footer">
+										{t("date")}:{" "}
+										{getFriendlyDatetime(feature.properties.datetime)}
+										<br />
+										{t("observer")}: {feature.properties.observer}
+									</div>
+								</Popup>
+							)}
 						</CircleMarker>
 					);
 				}

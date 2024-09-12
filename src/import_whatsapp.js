@@ -31,8 +31,12 @@ export function FileParser({ file, ...dataDisplayProps }) {
 	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
 
 	const setDataDisplayMap = useCallback(
-		(data, name) => {
-			setMapData(data);
+		(data, name, imgFilenames = null) => {
+			if (imgFilenames) {
+				imgData = { imgZip: imgzip, imgFilenames: imgFilenames };
+			}
+			console.log("data", data);
+			setMapData(data, imgData);
 			updateMapdata(name);
 			showMap();
 		},
@@ -61,40 +65,28 @@ const processFile = (file, setDataDisplayMap) => {
 			const reader = new FileReader();
 
 			if (file.name.endsWith(".zip")) {
-				const arrayBuffer = e.target.result;
 				const zip = new JSZip();
-				zip.loadAsync(arrayBuffer).then(function (contents) {
-					filenames = Object.keys(contents.files);
-					chatFilename = filenames.filter((filename) =>
+				zip.loadAsync(file).then(function (contents) {
+					const filenames = Object.keys(contents.files);
+					const chatFilename = filenames.filter((filename) =>
 						filename.match(/.*\.txt/)
-					);
-					imgFilenames = filenames.filter((filename) =>
+					)[0];
+					const imgFilenames = filenames.filter((filename) =>
 						filename.match(/.*\.(jpg|jpeg|png|gif)/)
 					);
+					// create a new zip file with the images
+					if (imgFilenames.length > 0) {
+						console.log("images found");
+					}
 					// if there is a chat file, process it and any images
-					if (chatFilename.length > 0) {
-						// if there are image files, unzip them and add them to an array
-						// TODO: move this to the map to save loading all the images into memory
-						if (imgFilenames.length > 0) {
-							let imgPromises = imgFilenames.map((imgFilename) => {
-								return zip
-									.file(imgFilename)
-									.async("blob")
-									.then((blob) => {
-										return {
-											filename: imgFilename,
-											blob: blob,
-										};
-									});
-							});
-						}
+					if (chatFilename) {
 						// process the chat file and pass along any images
 						zip
-							.file(chatFilename[0])
+							.file(chatFilename)
 							.async("string")
 							.then(function (fileContent) {
 								const [data, name] = processText(fileContent);
-								setDataDisplayMap(data, name, imgPromises, dataDisplayProps);
+								setDataDisplayMap(data, name, imgFilenames);
 							});
 					}
 				});
@@ -192,6 +184,7 @@ const processText = (text) => {
 	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	// this has been tweaked for each format but gives the same output
+	// TODO: pass along which format to the map so it knows how to find images
 	if (fileType.match(/\[\d{2}/)) {
 		console.info("ios format");
 		// iOS format
@@ -294,8 +287,11 @@ const processText = (text) => {
 				};
 			}
 		} else if (feature) {
-			// Append message content to observations unless it's media omitted
-			if (!message.content.includes("<Media omitted>")) {
+			// Append message content to observations unless it's media omitted or message deleted
+			if (
+				!message.content.includes("<Media omitted>") &&
+				!message.content.includes("This message was deleted")
+			) {
 				feature.properties.observations += message.content + "\n";
 			}
 		}
