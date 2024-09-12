@@ -29,6 +29,10 @@ export default function InstallDialog() {
 	}, []);
 
 	const handleInstallClick = async () => {
+		ReactGA.event({
+			category: "Install",
+			action: "Install Clicked",
+		});
 		if (!installPrompt) return;
 		const result = await installPrompt.prompt();
 		// if (result.outcome === "dismissed") {
