@@ -191,7 +191,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 
 	return (
 		<>
-			<StatusBar isVisible={isSBVisible} />
+			{/* <StatusBar isVisible={isSBVisible} /> */}
 
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
