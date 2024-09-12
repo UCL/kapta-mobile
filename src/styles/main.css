@@ -164,6 +164,7 @@ body {
     }
 
     img {
+        object-fit: cover;
         margin-inline: 12%;
         border-radius: 6px;
     }
