@@ -271,7 +271,14 @@ export function Map({ isVisible, showMenu, data }) {
 					{/* current position marker */}
 					{currentLocation && (
 						<Marker position={currentLocation} icon={currentPositionIcon}>
-							<Popup>You're here! {currentLocation}</Popup>
+							<Popup>
+								<p style={{ textAlign: "center", fontWeight: 600 }}>
+									You're here!
+								</p>
+								<p style={{ textAlign: "center" }}>
+									{currentLocation.join(", ")}
+								</p>
+							</Popup>
 						</Marker>
 					)}
 					{/* error if currentLocation can't be found */}
