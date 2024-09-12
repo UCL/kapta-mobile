@@ -1,3 +1,4 @@
+import Alpine from "alpinejs";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
@@ -56,15 +57,38 @@ function Instructions() {
 	);
 }
 
-function VideoModal({ setIsOpen }) {
+function VideoModal({ isOpen, setIsOpen }) {
+	if (!isOpen) return null;
+
 	const { t } = useTranslation();
-	ReactGA.event({
-		category: "Tutorial",
-		action: "Tutorial Opened",
-	});
+	const modalRef = useRef(null);
+
+	useEffect(() => {
+		if (isOpen) {
+			ReactGA.event({
+				category: "Tutorial",
+				action: "Tutorial Opened",
+			});
+
+			const handleClickOutside = (event) => {
+				if (modalRef.current && !modalRef.current.contains(event.target)) {
+					setIsOpen(false);
+				}
+			};
+
+			// listen for clicks outside of the modal
+			document.addEventListener("click", handleClickOutside);
+			return () => {
+				document.removeEventListener("click", handleClickOutside);
+			};
+		}
+	}, [isOpen, setIsOpen]);
+
+	if (!isOpen) return null;
+
 	return (
 		<div id="video-modal">
-			<div className="video-modal__inner">
+			<div className="video-modal__inner" ref={modalRef}>
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					&times;
 				</button>
@@ -73,9 +97,8 @@ function VideoModal({ setIsOpen }) {
 					width="100%"
 					height="500px"
 					src={t("tutorialUrl")}
-					frameborder="0"
 					allow="autoplay; encrypted-media;"
-					allowfullscreen
+					allowFullScreen
 				></iframe>
 			</div>
 		</div>
@@ -131,7 +154,7 @@ function FilePicker(dataDisplayProps) {
 }
 
 function ButtonArea({ hasCurrentDataset, showMap }) {
-	const [isOpen, setVideoIsOpen] = useState(false);
+	const [isOpen, setIsVideoOpen] = useState(false);
 
 	const { t } = useTranslation();
 
@@ -139,12 +162,12 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 		<div className="button-area">
 			<button
 				id="tutorialBtn"
-				onClick={() => setVideoIsOpen(true)}
+				onClick={() => setIsVideoOpen(true)}
 				className="btn menu-btn"
 			>
 				{t("watchtutorial")}
 			</button>
-			{isOpen && <VideoModal setIsOpen={setVideoIsOpen} />}
+			<VideoModal isOpen={isOpen} setIsOpen={setIsVideoOpen} />
 
 			<button
 				id="helpBtn"
@@ -171,15 +194,16 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
+const hasCognito = Alpine.store("appData")?.hasCognito;
+
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
 	const [isSBVisible, setIsSBVisible] = useState(false);
 
-	// set status bar visibility based on if cognito in config
+	// set status bar visibility based on if cognito in config, doesn't need to update beyond initial load
 	useEffect(() => {
-		const hasCognito = Alpine.store("appData")?.hasCognito;
 		setIsSBVisible(hasCognito);
-	});
+	}, []);
 
 	// if menu not visible, nor should status bar be
 	useEffect(() => {
@@ -191,7 +215,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 
 	return (
 		<>
-			{/* <StatusBar isVisible={isSBVisible} /> */}
+			<StatusBar isVisible={isSBVisible} />
 
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
