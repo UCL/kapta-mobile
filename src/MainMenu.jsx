@@ -21,6 +21,11 @@ function LanguageSelector({ supportedLanguages }) {
 		i18next.changeLanguage(newLanguage).catch((error) => {
 			console.error("Error changing language", error);
 		});
+		ReactGA.event({
+			category: "Language",
+			action: "Language Changed",
+			label: newLanguage,
+		});
 		// Update the state to trigger a re-render
 		setSelectedLanguage(newLanguage);
 	};
@@ -52,7 +57,10 @@ function Instructions() {
 
 function VideoModal({ setIsOpen }) {
 	const { t } = useTranslation();
-
+	ReactGA.event({
+		category: "Tutorial",
+		action: "Tutorial Opened",
+	});
 	return (
 		<div id="video-modal">
 			<div className="video-modal__inner">
@@ -141,6 +149,10 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 				id="helpBtn"
 				className="btn menu-btn"
 				onClick={() => {
+					ReactGA.event({
+						category: "Help",
+						action: "Help Button Clicked",
+					});
 					window.location.href = config.kapta.askTheTeamURL;
 				}}
 			>
