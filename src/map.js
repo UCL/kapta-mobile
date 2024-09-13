@@ -79,7 +79,7 @@ function getFriendlyDatetime(datetime) {
 	// Convert the datetime string into a more readable form
 	return datetime.split("T").join(" ").replaceAll("-", "/");
 }
-const getImageFromZip = async (zip, imgFilename) => {
+const getImageURLFromZip = async (zip, imgFilename) => {
 	// TODO: do we need to give it ios/android formats?
 	try {
 		console.log(`Attempting to extract file: ${imgFilename}`);
@@ -90,40 +90,40 @@ const getImageFromZip = async (zip, imgFilename) => {
 		}
 		const blob = await file.async("blob");
 		console.log(`Successfully extracted file: ${imgFilename}`);
-		return {
-			filename: imgFilename,
-			blob: blob,
-		};
+		let urlCreator = window.URL || window.webkitURL;
+		let url = urlCreator.createObjectURL(blob);
+		return url;
 	} catch (error) {
 		console.error(`Error extracting file ${imgFilename}:`, error);
 		return null;
 	}
 };
 
-function MapDataLayer({ data, imgData = null }) {
+function MapDataLayer({ data }) {
 	const { t } = useTranslation();
 	const map = useMap();
 	const boundsRef = useRef([]);
-	const { imgZip, imgFilenames } = imgData;
+	console.log(data);
+	const { data: geoJSON, imgZip } = data;
 
 	useEffect(() => {
 		if (boundsRef.current.length > 0) {
 			map.fitBounds(boundsRef.current);
 		}
-	}, [data, map]);
+	}, [geoJSON, map]);
 
-	useEffect(() => {
-		// Load ZIP file when component mounts - unsure if we should do this here
-		const loadZip = async () => {
-			const zip = new JSZip();
-			try {
-				await zip.loadAsync(mapdata);
-			} catch (error) {
-				console.error("Error loading ZIP file:", error);
-			}
-		};
-		loadZip();
-	}, [imgData]);
+	// useEffect(() => {
+	// 	// Load ZIP file when component mounts - unsure if we should do this here
+	// 	const loadZip = async () => {
+	// 		const zip = new JSZip();
+	// 		try {
+	// 			await zip.loadAsync(data);
+	// 		} catch (error) {
+	// 			console.error("Error loading ZIP file:", error);
+	// 		}
+	// 	};
+	// 	loadZip();
+	// }, [imgData]);
 
 	const [selectedFeature, setSelectedFeature] = useState(null);
 	const [imageUrl, setImageUrl] = useState(null);
@@ -131,14 +131,16 @@ function MapDataLayer({ data, imgData = null }) {
 	const handleMarkerClick = async (feature) => {
 		// set the selected feature and set the image url, it will rerender due to state change
 		setSelectedFeature(feature);
-		if (zip && feature.properties.imgFilename) {
-			const url = await getImageFromZip(zip, feature.properties.imgFilename);
+		if (imgZip && feature.properties.imgFilenames) {
+			console.log("Getting image url...");
+			const url = await getImageURLFromZip(imgZip, feature.properties.imgFilenames[0]);
+			console.log(url);
 			setImageUrl(url);
 		}
 	};
 	return (
 		<>
-			{mapdata.features.map((feature, index) => {
+			{geoJSON.features.map((feature, index) => {
 				if (feature.geometry?.coordinates) {
 					const { coordinates } = feature.geometry;
 					const latlng = { lat: coordinates[1], lng: coordinates[0] };

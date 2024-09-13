@@ -31,12 +31,10 @@ export function FileParser({ file, ...dataDisplayProps }) {
 	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
 
 	const setDataDisplayMap = useCallback(
-		(data, name, imgFilenames = null) => {
-			if (imgFilenames) {
-				imgData = { imgZip: imgzip, imgFilenames: imgFilenames };
-			}
+		(data, name, imgZip = null) => {
 			console.log("data", data);
-			setMapData(data, imgData);
+			console.log("imgZip", imgZip);
+			setMapData({ data: data, imgZip: imgZip });
 			updateMapdata(name);
 			showMap();
 		},
@@ -86,7 +84,7 @@ const processFile = (file, setDataDisplayMap) => {
 							.async("string")
 							.then(function (fileContent) {
 								const [data, name] = processText(fileContent);
-								setDataDisplayMap(data, name, imgFilenames);
+								setDataDisplayMap(data, name, zip);
 							});
 					}
 				});
@@ -140,7 +138,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
+	} else[hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
@@ -203,7 +201,9 @@ const processText = (text) => {
 	let messageMatches = [...text.matchAll(messageRegex)];
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
-		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
+		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/; //Without 'location' to be universal - the word in the export file changes based on WA language
+	// Regex to match and capture image filenames in messages
+	const imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/;
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
@@ -224,6 +224,10 @@ const processText = (text) => {
 				lat: parseFloat(location[1]),
 				long: parseFloat(location[2]),
 			};
+		}
+		let imgFileMatch = imgFileRegex.exec(message.content);
+		if (imgFileMatch) {
+			message.imgFilename = imgFileMatch[1];
 		}
 		messages.push(message);
 	});
@@ -278,6 +282,7 @@ const processText = (text) => {
 					observer: message.sender,
 					datetime: message.datetime,
 					markerColour: senders[message.sender],
+					imgFilenames: [],
 				},
 			};
 			if (message.location) {
@@ -287,8 +292,10 @@ const processText = (text) => {
 				};
 			}
 		} else if (feature) {
-			// Append message content to observations unless it's media omitted or message deleted
-			if (
+			// if message contains an image filename add it to feature imageFilenames property
+			if (message.imgFilename) {
+				feature.properties.imgFilenames.push(message.imgFilename)
+			} else if (  // Append message content to observations unless it's media omitted or message deleted
 				!message.content.includes("<Media omitted>") &&
 				!message.content.includes("This message was deleted")
 			) {
