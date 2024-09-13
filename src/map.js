@@ -131,7 +131,7 @@ function MapDataLayer({ data }) {
 	const handleMarkerClick = async (feature) => {
 		// set the selected feature and set the image url, it will rerender due to state change
 		setSelectedFeature(feature);
-		if (imgZip && feature.properties.imgFilenames) {
+		if (imgZip && feature.properties.imgFilenames.length > 0) {
 			console.log("Getting image url...");
 			const url = await getImageURLFromZip(imgZip, feature.properties.imgFilenames[0]);
 			console.log(url);
