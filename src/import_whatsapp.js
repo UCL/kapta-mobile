@@ -32,8 +32,6 @@ export function FileParser({ file, ...dataDisplayProps }) {
 
 	const setDataDisplayMap = useCallback(
 		(data, name, imgZip = null) => {
-			console.log("data", data);
-			console.log("imgZip", imgZip);
 			setMapData({ data: data, imgZip: imgZip });
 			updateMapdata(name);
 			showMap();
@@ -70,9 +68,8 @@ const processFile = (file, setDataDisplayMap) => {
 						filename.match(/.*\.txt/)
 					)[0];
 					const imgFilenames = filenames.filter((filename) =>
-						filename.match(/.*\.(jpg|jpeg|png|gif)/)
+						filename.match(/.*\.(jpg|jpeg|png|gif)$/i)
 					);
-					// create a new zip file with the images
 					if (imgFilenames.length > 0) {
 						console.log("images found");
 					}
@@ -138,7 +135,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else[hour, min, sec = "00"] = time.split(":"); // 24hr format used already
+	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
@@ -176,6 +173,7 @@ const processText = (text) => {
 	// Check the first 3 characters to determine the format; iOS and Android
 	const fileType = text.substring(0, 3);
 	let messageRegex;
+	let imgFileRegex;
 
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends
@@ -188,11 +186,15 @@ const processText = (text) => {
 		// iOS format
 		messageRegex =
 			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+		imgFileRegex =
+			/(?:\(file attached\)|‎<attached: )([\w\-_]+\.(jpg|jpeg|png|gif))/i;
 	} else if (fileType.match(/\d{2}\//)) {
 		console.info("android format");
 		// Android format
 		messageRegex =
 			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+		// Regex to match and capture image filenames in messages
+		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/;
 	} else {
 		console.error("Unknown file format");
 		return [null, groupName];
@@ -202,8 +204,6 @@ const processText = (text) => {
 	// Regex to match google maps location and capture lat (group 1) and long (group 2)
 	const locationRegex =
 		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/; //Without 'location' to be universal - the word in the export file changes based on WA language
-	// Regex to match and capture image filenames in messages
-	const imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/;
 
 	// Convert messageMatches to array of JSON objects
 	let messages = [];
@@ -294,8 +294,9 @@ const processText = (text) => {
 		} else if (feature) {
 			// if message contains an image filename add it to feature imageFilenames property
 			if (message.imgFilename) {
-				feature.properties.imgFilenames.push(message.imgFilename)
-			} else if (  // Append message content to observations unless it's media omitted or message deleted
+				feature.properties.imgFilenames.push(message.imgFilename);
+			} else if (
+				// Append message content to observations unless it's media omitted or message deleted
 				!message.content.includes("<Media omitted>") &&
 				!message.content.includes("This message was deleted")
 			) {
