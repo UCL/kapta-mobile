@@ -80,7 +80,6 @@ function getFriendlyDatetime(datetime) {
 }
 const getImageURLFromZip = async (zip, imgFilename) => {
 	try {
-		console.log(`Attempting to extract file: ${imgFilename}`);
 		const file = zip.file(imgFilename);
 		if (!file) {
 			console.error(`File not found in ZIP: ${imgFilename}`);
@@ -113,17 +112,20 @@ function MapDataLayer({ data }) {
 
 	const handleMarkerClick = useCallback(
 		async (feature) => {
-			if (imgZip && feature.properties.imgFilenames) {
+			if (imgZip && feature.properties.imgFilenames.length > 0) {
 				// will want to map over imgFilenames when we support multiple
-				const filename = feature.properties.imgFilenames[0];
-				// check the image isn't already loaded
-				if (filename && !featureImages[filename]) {
-					const url = await getImageURLFromZip(imgZip, filename);
-					setFeatureImages((prev) => ({
-						...prev,
-						[filename]: url,
-					}));
-				}
+				feature.properties.imgFilenames.map(async (filename) =>
+					// check the image isn't already loaded
+					{
+						if (filename && !featureImages[filename]) {
+							const url = await getImageURLFromZip(imgZip, filename);
+							setFeatureImages((prev) => ({
+								...prev,
+								[filename]: url,
+							}));
+						}
+					}
+				);
 			}
 		},
 		[imgZip, featureImages]
@@ -162,12 +164,24 @@ function MapDataLayer({ data }) {
 						>
 							<Popup>
 								<div className="map-popup-body">
-									{imgFilenames && featureImages[imgFilenames[0]] && (
-										<img
-											src={featureImages[imgFilenames[0]]}
-											alt="Feature image"
-											style={{ maxWidth: "100%", maxHeight: "200px" }}
-										/>
+									{imgFilenames && imgFilenames.length > 0 && (
+										<div className="feature-images">
+											{imgFilenames.map(
+												(filename, index) =>
+													featureImages[filename] && (
+														<img
+															key={index}
+															src={featureImages[filename]}
+															alt={`Feature image ${index + 1}`}
+															style={{
+																maxWidth: "100%",
+																maxHeight: "200px",
+																marginBottom: "10px",
+															}}
+														/>
+													)
+											)}
+										</div>
 									)}
 									{observations.split("\n").map((o, index) => (
 										<p key={index}>{o}</p>
