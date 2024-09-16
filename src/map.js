@@ -2,10 +2,9 @@ import "leaflet-easybutton";
 import "leaflet-easyprint";
 import "leaflet/dist/leaflet.css";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./styles/map-etc.css";
 import L from "leaflet";
-import * as JSZip from "jszip";
 import {
 	MapContainer,
 	TileLayer,
@@ -80,7 +79,6 @@ function getFriendlyDatetime(datetime) {
 	return datetime.split("T").join(" ").replaceAll("-", "/");
 }
 const getImageURLFromZip = async (zip, imgFilename) => {
-	// TODO: do we need to give it ios/android formats?
 	try {
 		console.log(`Attempting to extract file: ${imgFilename}`);
 		const file = zip.file(imgFilename);
@@ -103,41 +101,34 @@ function MapDataLayer({ data }) {
 	const { t } = useTranslation();
 	const map = useMap();
 	const boundsRef = useRef([]);
-	console.log(data);
 	const { data: geoJSON, imgZip } = data;
+	const [featureImages, setFeatureImages] = useState({}); // this is basically a cache
 
 	useEffect(() => {
+		// fit map to bounds
 		if (boundsRef.current.length > 0) {
 			map.fitBounds(boundsRef.current);
 		}
 	}, [geoJSON, map]);
 
-	// useEffect(() => {
-	// 	// Load ZIP file when component mounts - unsure if we should do this here
-	// 	const loadZip = async () => {
-	// 		const zip = new JSZip();
-	// 		try {
-	// 			await zip.loadAsync(data);
-	// 		} catch (error) {
-	// 			console.error("Error loading ZIP file:", error);
-	// 		}
-	// 	};
-	// 	loadZip();
-	// }, [imgData]);
+	const handleMarkerClick = useCallback(
+		async (feature) => {
+			if (imgZip && feature.properties.imgFilenames) {
+				// will want to map over imgFilenames when we support multiple
+				const filename = feature.properties.imgFilenames[0];
+				// check the image isn't already loaded
+				if (filename && !featureImages[filename]) {
+					const url = await getImageURLFromZip(imgZip, filename);
+					setFeatureImages((prev) => ({
+						...prev,
+						[filename]: url,
+					}));
+				}
+			}
+		},
+		[imgZip, featureImages]
+	);
 
-	const [selectedFeature, setSelectedFeature] = useState(null);
-	const [imageUrl, setImageUrl] = useState(null);
-
-	const handleMarkerClick = async (feature) => {
-		// set the selected feature and set the image url, it will rerender due to state change
-		setSelectedFeature(feature);
-		if (imgZip && feature.properties.imgFilenames.length > 0) {
-			console.log("Getting image url...");
-			const url = await getImageURLFromZip(imgZip, feature.properties.imgFilenames[0]);
-			console.log(url);
-			setImageUrl(url);
-		}
-	};
 	return (
 		<>
 			{geoJSON.features.map((feature, index) => {
@@ -154,6 +145,8 @@ function MapDataLayer({ data }) {
 					const markerColour = feature.properties.markerColour
 						? feature.properties.markerColour
 						: "red";
+
+					const imgFilenames = feature.properties.imgFilenames;
 					return (
 						<CircleMarker
 							key={index}
@@ -167,28 +160,26 @@ function MapDataLayer({ data }) {
 								click: () => handleMarkerClick(feature),
 							}}
 						>
-							{selectedFeature === feature && (
-								<Popup>
-									<div className="map-popup-body">
-										{imageUrl && (
-											<img
-												src={imageUrl}
-												alt="Feature image"
-												style={{ maxWidth: "100%", maxHeight: "200px" }}
-											/>
-										)}
-										{observations.split("\n").map((o, index) => (
-											<p key={index}>{o}</p>
-										))}
-									</div>
-									<div className="map-popup-footer">
-										{t("date")}:{" "}
-										{getFriendlyDatetime(feature.properties.datetime)}
-										<br />
-										{t("observer")}: {feature.properties.observer}
-									</div>
-								</Popup>
-							)}
+							<Popup>
+								<div className="map-popup-body">
+									{imgFilenames && featureImages[imgFilenames[0]] && (
+										<img
+											src={featureImages[imgFilenames[0]]}
+											alt="Feature image"
+											style={{ maxWidth: "100%", maxHeight: "200px" }}
+										/>
+									)}
+									{observations.split("\n").map((o, index) => (
+										<p key={index}>{o}</p>
+									))}
+								</div>
+								<div className="map-popup-footer">
+									{t("date")}:{" "}
+									{getFriendlyDatetime(feature.properties.datetime)}
+									<br />
+									{t("observer")}: {feature.properties.observer}
+								</div>
+							</Popup>
 						</CircleMarker>
 					);
 				}
