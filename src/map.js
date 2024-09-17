@@ -80,12 +80,14 @@ function getFriendlyDatetime(datetime) {
 }
 const getImageURLFromZip = async (zip, imgFilename) => {
 	try {
-		const file = zip.file(imgFilename);
+		const file = zip.file(
+			new RegExp(imgFilename.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") + "$")
+		);
 		if (!file) {
 			console.error(`File not found in ZIP: ${imgFilename}`);
 			return null;
 		}
-		const blob = await file.async("blob");
+		const blob = await file[0].async("blob");
 		console.log(`Successfully extracted file: ${imgFilename}`);
 		let urlCreator = window.URL || window.webkitURL;
 		let url = urlCreator.createObjectURL(blob);
@@ -112,11 +114,13 @@ function MapDataLayer({ data }) {
 
 	const handleMarkerClick = useCallback(
 		async (feature) => {
+			console.log("feature", feature);
 			if (imgZip && feature.properties.imgFilenames.length > 0) {
 				// will want to map over imgFilenames when we support multiple
 				feature.properties.imgFilenames.map(async (filename) =>
 					// check the image isn't already loaded
 					{
+						console.log("filename", filename);
 						if (filename && !featureImages[filename]) {
 							const url = await getImageURLFromZip(imgZip, filename);
 							setFeatureImages((prev) => ({
