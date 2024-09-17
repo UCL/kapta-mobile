@@ -72,6 +72,7 @@ const processFile = (file, setDataDisplayMap) => {
 					);
 					if (imgFilenames.length > 0) {
 						console.log("images found");
+						console.log(imgFilenames);
 					}
 					// if there is a chat file, process it and any images
 					if (chatFilename) {
@@ -186,8 +187,7 @@ const processText = (text) => {
 		// iOS format
 		messageRegex =
 			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
-		imgFileRegex =
-			/(?:\(file attached\)|‎<attached: )([\w\-_]+\.(jpg|jpeg|png|gif))/i;
+		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
 		console.info("android format");
 		// Android format
@@ -220,15 +220,40 @@ const processText = (text) => {
 		}
 		let location = locationRegex.exec(message.content);
 		if (location) {
+			console.log("location", location);
 			message.location = {
 				lat: parseFloat(location[1]),
 				long: parseFloat(location[2]),
 			};
+			// message.content = message.content.replace(
+			// 	location[0],
+			// 	"remove_this_location"
+			// );
 		}
-		let imgFileMatch = imgFileRegex.exec(message.content);
-		if (imgFileMatch) {
-			message.imgFilename = imgFileMatch[1];
+		let imgFileMatches = [...message.content.matchAll(imgFileRegex)];
+		if (imgFileMatches.length > 0) {
+			let imgMatches = [];
+			for (const match of imgFileMatches) {
+				imgMatches.push(match[1]);
+				message.content = message.content.replace(imgFileRegex, "");
+			}
+			message.imgFilenames = imgMatches;
 		}
+
+		// Clean remaining content
+		message.content = message.content
+			.split("\n")
+			.map((line) => line.trim())
+			.filter(
+				(line) =>
+					line &&
+					!line.includes("remove_this_location") &&
+					!line.includes(message.sender) &&
+					!line.includes("<Media omitted>") &&
+					!line.includes("This message was deleted") &&
+					!line.includes("You deleted this message")
+			)
+			.join("\n");
 		messages.push(message);
 	});
 
@@ -256,58 +281,118 @@ const processText = (text) => {
 		type: "FeatureCollection",
 		features: [],
 	};
-	let feature = null;
+	let currentFeature = null;
 	let currentSender = null;
 
+	const createFeature = (message, groupName) => {
+		return {
+			type: "Feature",
+			properties: {
+				contributionid: crypto.randomUUID(),
+				mainattribute: groupName,
+				observations: "",
+				observer: message.sender,
+				datetime: message.datetime,
+				markerColour: senders[message.sender],
+				imgFilenames: [],
+			},
+			geometry: message.location
+				? {
+						type: "Point",
+						coordinates: [message.location.long, message.location.lat],
+				  }
+				: null,
+		};
+	};
+
+	const isValidContent = (content) => {
+		content = content.replace(
+			"Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.",
+			""
+		);
+		content = content.replace("<This message was edited>", "");
+		return content
+			.split("\n")
+			.map((line) => line.trim())
+			.filter(Boolean)
+			.join("\n");
+	};
+
 	messages.forEach((message) => {
-		// Sometimes sender changes but there's no location so add any features in progress
-		if (message.sender != currentSender || message.location) {
-			// Push any existing features to mapdata
-			if (feature) {
-				// Reject feature if it doesn't have geometry
-				if (feature.geometry) {
-					mapdata.features.push(feature);
-				} else {
-					feature = null;
+		console.log("message", message, "feature", currentFeature);
+		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
+		if (isValidContent(message.content)) {
+			if (message.location || message.sender !== currentSender) {
+				if (currentFeature && currentFeature.geometry) {
+					mapdata.features.push(currentFeature);
 				}
+				currentFeature = createFeature(message, groupName);
+				currentSender = message.sender;
 			}
-			// Create new feature
-			var contributionid = crypto.randomUUID();
-			feature = {
-				type: "Feature",
-				properties: {
-					contributionid: contributionid,
-					mainattribute: groupName,
-					observations: "",
-					observer: message.sender,
-					datetime: message.datetime,
-					markerColour: senders[message.sender],
-					imgFilenames: [],
-				},
-			};
-			if (message.location) {
-				feature.geometry = {
-					type: "Point",
-					coordinates: [message.location.long, message.location.lat], // GeoJSON uses [long, lat] order
-				};
-			}
-		} else if (feature) {
-			// if message contains an image filename add it to feature imageFilenames property
-			if (message.imgFilename) {
-				feature.properties.imgFilenames.push(message.imgFilename);
-			} else if (
-				// Append message content to observations unless it's media omitted or message deleted
-				!message.content.includes("<Media omitted>") &&
-				!message.content.includes("This message was deleted")
-			) {
-				feature.properties.observations += message.content + "\n";
+
+			if (currentFeature) {
+				if (message.imgFilenames) {
+					currentFeature.properties.imgFilenames.push(...message.imgFilenames);
+				}
+				currentFeature.properties.observations += message.content + "\n";
 			}
 		}
-		currentSender = message.sender;
+		// Sometimes sender changes but there's no location so add any features in progress
+		// if (message.location || message.sender != currentSender) {
+		// 	// Push any existing features to mapdata
+		// 	if (feature) {
+		// 		// Reject feature if it doesn't have geometry
+		// 		if (feature.geometry) {
+		// 			mapdata.features.push(feature);
+		// 		} else {
+		// 			feature = null;
+		// 		}
+		// 	}
+		// 	// Create new feature
+		// 	var contributionid = crypto.randomUUID();
+		// 	feature = {
+		// 		type: "Feature",
+		// 		properties: {
+		// 			contributionid: contributionid,
+		// 			mainattribute: groupName,
+		// 			observations: "",
+		// 			observer: message.sender,
+		// 			datetime: message.datetime,
+		// 			markerColour: senders[message.sender],
+		// 			imgFilenames: [],
+		// 		},
+		// 	};
+		// 	if (message.location) {
+		// 		feature.geometry = {
+		// 			type: "Point",
+		// 			coordinates: [message.location.long, message.location.lat], // GeoJSON uses [long, lat] order
+		// 		};
+		// 	}
+		// } else if (feature) {
+		// 	console.log("feature", feature);
+		// 	// if message contains an image filename add it to feature imageFilenames property
+		// 	if (message.imgFilenames) {
+		// 		console.log(
+		// 			"message.imgFilenames feature lvl",
+		// 			message.imgFilenames,
+		// 			...message.imgFilenames
+		// 		);
+		// 		feature.properties.imgFilenames.push(...message.imgFilenames);
+		// 	} else
+		// 	if (
+		// 		// Append message content to observations unless it's media omitted or message deleted
+		// 		!message.content.includes("<Media omitted>") &&
+		// 		!message.content.includes("This message was deleted") &&
+		// 		!message.content.includes("You deleted this message")
+		// 	) {
+		// 		feature.properties.observations += message.content + "\n";
+		// 	}
+		// }
+		// currentSender = message.sender;
 	});
 	// Push the last message to mapdata
-	if (feature) {
-		mapdata.features.push(feature);
+	if (currentFeature) {
+		mapdata.features.push(currentFeature);
 	}
 	return [mapdata, groupName];
 };
