@@ -114,7 +114,6 @@ function MapDataLayer({ data }) {
 
 	const handleMarkerClick = useCallback(
 		async (feature) => {
-			console.log("feature", feature);
 			if (imgZip && feature.properties.imgFilenames.length > 0) {
 				// will want to map over imgFilenames when we support multiple
 				feature.properties.imgFilenames.map(async (filename) =>
@@ -290,6 +289,7 @@ export function Map({ isVisible, showMenu, data }) {
 	}, [shouldPulse]);
 
 	const getCurrentPosition = () => {
+		currentLocation && setFlyToLocation(true);
 		const options = {
 			enableHighAccuracy: true,
 			timeout: 5000,
