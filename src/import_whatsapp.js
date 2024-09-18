@@ -34,7 +34,7 @@ export function FileParser({ file, ...dataDisplayProps }) {
 		(data, name, imgZip = null) => {
 			setMapData({ data: data, imgZip: imgZip });
 			updateMapdata(name);
-			showMap();
+			showMap(true);
 		},
 		[setMapData, showMap, setFileToParse]
 	);

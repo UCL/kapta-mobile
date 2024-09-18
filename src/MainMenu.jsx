@@ -110,7 +110,11 @@ function VideoModal({ isOpen, setIsOpen }) {
 function RecentMapButton({ showMap }) {
 	const { t } = useTranslation();
 	return (
-		<button id="recentBtn" className="btn menu-btn" onClick={showMap}>
+		<button
+			id="recentBtn"
+			className="btn menu-btn"
+			onClick={() => showMap(false)}
+		>
 			{t("viewrecentmap")}
 		</button>
 	);
