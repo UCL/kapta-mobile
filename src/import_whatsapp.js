@@ -135,7 +135,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
+	} else[hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
@@ -250,7 +250,7 @@ const setImgMsgRegex = (fileType) => {
 		messageRegex =
 			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
 		// Regex to match and capture image filenames in messages
-		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/;
+		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
 		console.error("Unknown file format");
 		return [null, groupName];
@@ -317,9 +317,9 @@ const processText = (text) => {
 			},
 			geometry: message.location
 				? {
-						type: "Point",
-						coordinates: [message.location.long, message.location.lat],
-				  }
+					type: "Point",
+					coordinates: [message.location.long, message.location.lat],
+				}
 				: null,
 		};
 	};

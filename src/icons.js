@@ -9,6 +9,7 @@ import {
 	faShareNodes,
 	faFileCode,
 	faFileCirclePlus,
+	faForwardStep,
 	faCloudArrowUp,
 	faLocationCrosshairs,
 	faSun,
@@ -28,6 +29,7 @@ library.add(
 	faShareNodes,
 	faFileCode,
 	faFileCirclePlus,
+	faForwardStep,
 	faCloudArrowUp,
 	faLocationCrosshairs,
 	faSun,
@@ -40,6 +42,7 @@ library.add(
 );
 export const chevronDown = <FontAwesomeIcon icon={faChevronDown} />;
 export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
+export const nextIcn = <FontAwesomeIcon icon={faForwardStep} />;
 export const imageIcn = <FontAwesomeIcon icon={faImage} />;
 export const shareIcn = <FontAwesomeIcon icon={faShareNodes} />;
 export const dataIcn = <FontAwesomeIcon icon={faFileCode} />;

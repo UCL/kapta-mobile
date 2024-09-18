@@ -22,6 +22,7 @@ import {
 	basemapSatIcon,
 	GPSPositionIcn,
 	GPSIcn,
+	nextIcn,
 } from "./icons.js";
 
 const config = require("./config.json");
@@ -118,17 +119,17 @@ function MapDataLayer({ data }) {
 			if (imgZip && feature.properties.imgFilenames.length > 0) {
 				// will want to map over imgFilenames when we support multiple
 				feature.properties.imgFilenames.map(async (filename) =>
-					// check the image isn't already loaded
-					{
-						console.log("filename", filename);
-						if (filename && !featureImages[filename]) {
-							const url = await getImageURLFromZip(imgZip, filename);
-							setFeatureImages((prev) => ({
-								...prev,
-								[filename]: url,
-							}));
-						}
+				// check the image isn't already loaded
+				{
+					console.log("filename", filename);
+					if (filename && !featureImages[filename]) {
+						const url = await getImageURLFromZip(imgZip, filename);
+						setFeatureImages((prev) => ({
+							...prev,
+							[filename]: url,
+						}));
 					}
+				}
 				);
 			}
 		},
@@ -168,7 +169,19 @@ function MapDataLayer({ data }) {
 							<Popup>
 								<div className="map-popup-body">
 									{imgFilenames && imgFilenames.length > 0 && (
-										<div className="feature-images">
+										<div className="feature-images"
+											onClick={(e) => {
+												e.stopPropagation();
+												const images = document.querySelectorAll(
+													".feature-images img"
+												);
+												const currentIndex = [...images].findIndex(img => img.style.display === "block");
+												for (let i = 0; i < images.length; i++) {
+													images[i].style.display = "none"; // Hide all images
+												}
+												const nextIndex = (currentIndex + 1) % images.length; // Loop back to the first image
+												images[nextIndex].style.display = "block"; // Show the next image
+											}}>
 											{imgFilenames.map(
 												(filename, index) =>
 													featureImages[filename] && (
@@ -177,12 +190,15 @@ function MapDataLayer({ data }) {
 															src={featureImages[filename]}
 															alt={`Feature image ${index + 1}`}
 															style={{
-																maxWidth: "100%",
-																maxHeight: "200px",
-																marginBottom: "10px",
+																display: index > 0 ? "none" : "block",
 															}}
 														/>
 													)
+											)}
+											{imgFilenames.length > 1 && (
+												<div className="next-image">
+													{nextIcn}
+												</div>
 											)}
 										</div>
 									)}
