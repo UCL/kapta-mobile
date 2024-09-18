@@ -1,0 +1,327 @@
+.map-title {
+    position: absolute;
+    top: 1rem;
+    text-align: center;
+    color: #efedec;
+    z-index: 900;
+    font-size: 190%;
+    width: 100%;
+}
+
+.pulse-shadow {
+    animation: pulseShadow 3s ease 2;
+}
+
+
+@keyframes pulseShadow {
+
+    0% {
+        box-shadow: inset 0 0 0 0px rgba(255, 255, 255, 0.2), 0 0 0 0px rgba(255, 255, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: inset 0 0 0 20px rgba(255, 255, 255, 0), 0 0 0 40px rgba(255, 255, 255, 0);
+
+    }
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+
+    .map-button {
+        position: absolute;
+        top: 2rem;
+        z-index: 900;
+        height: 45px;
+        border-radius: 50%;
+        transition-duration: .3s;
+        background-color: var(--black-grey);
+        border: 1px solid var(--black-grey);
+        color: white;
+        padding: 0.5rem;
+        backdrop-filter: blur(1px);
+
+        svg {
+            height: 100%;
+        }
+
+        &:has(.fa-moon) {
+            width: 45px;
+        }
+    }
+
+    #gps {
+        right: 0.5rem;
+    }
+
+    #base-map--toggle {
+        left: 0.5rem;
+    }
+
+    #gps:active {
+        background-color: rgb(175, 175, 175);
+    }
+
+    .position-marker-icon {
+        color: var(--bright-green);
+
+        svg {
+            height: 15px;
+            width: 15px;
+        }
+    }
+
+    .leaflet-div-icon {
+        border: none;
+        background-color: transparent;
+    }
+
+    .leaflet-control-scale-line {
+        background-color: transparent;
+        color: var(--light-grey);
+        border-color: var(--light-grey);
+        border-radius: 5px;
+        font-size: 105%;
+        min-width: fit-content;
+        text-shadow: none;
+    }
+
+    .leaflet-control-attribution {
+        background-color: transparent;
+        color: var(--light-grey);
+    }
+}
+
+
+#map-actions-container {
+    color: #f0f0f0;
+    background-color: transparent;
+    z-index: 900;
+    height: 12vh;
+    width: 100%;
+    position: fixed;
+    bottom: 2.8vh;
+
+    .map-actions__wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+
+
+        .map-actions__body {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            margin-inline: 0.3rem;
+            margin-inline-start: 1rem;
+
+            @media screen and (min-width: 600px) {
+                padding-inline: 16vw;
+            }
+
+            #exit-map {
+                background-color: var(--mid-red);
+                border-radius: 50%;
+                border-color: var(--mid-red--translucent);
+            }
+
+
+            .filter__form {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+                align-items: center;
+            }
+
+            .filter__wrapper {
+                width: 80%;
+                border-radius: 30px;
+                background-color: white;
+                min-height: 3rem;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+
+                >textarea {
+                    width: 80%;
+                    align-content: center;
+                    border: none;
+                    resize: none;
+                    font-size: 105%;
+
+                    &:active,
+                    &:focus,
+                    &:focus-visible {
+                        border: none;
+                        outline: none;
+                    }
+                }
+            }
+
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 3rem;
+                height: 3rem;
+                background-color: var(--mid-red);
+                border-radius: 50%;
+                border: 1px solid var(--mid-red--translucent);
+
+                >svg {
+                    height: 1.5rem;
+                    color: white;
+                    padding: 0.3rem;
+                }
+
+            }
+
+
+        }
+    }
+}
+
+
+#sharing-modal {
+    display: flex;
+    flex: 7;
+    min-width: 50vw;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 901;
+    position: absolute;
+    top: 16vh;
+    margin-inline: 20%;
+    background-color: var(--mid-red--translucent);
+    backdrop-filter: blur(2px);
+    padding: 1rem;
+
+    padding-bottom: 2rem;
+    border-radius: 8px;
+    color: #eee;
+    box-shadow: 9px 9px 17px #140202,
+        -9px -9px 17px #1b0e0e;
+
+
+    .modal-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 0.5rem;
+    }
+
+    .modal-title {
+        font-size: 105%;
+        font-weight: 600;
+    }
+
+    .option-button-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.6rem;
+        align-items: center;
+        margin-top: 2vh;
+
+
+        .btn {
+            width: 96%;
+            height: 10vh;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            font-size: medium;
+            font-weight: 600;
+            padding: 0.5rem;
+            color: var(--black-blue);
+
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+
+            svg {
+                height: 95%;
+                margin-right: 0.4rem;
+                transition: color 0.3s ease
+            }
+
+
+            .disabled,
+            &[disabled]>svg {
+                color: var(--mid-grey);
+            }
+
+            &:active,
+            :focus {
+                background-color: #9f1203;
+                color: #eee;
+                border-color: #031927;
+
+                svg {
+                    color: #eee;
+                }
+            }
+        }
+
+
+    }
+}
+
+#upload-dialog {
+    background-color: #ffffffea;
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    border: 1px solid white;
+    z-index: 902;
+    top: 16vh;
+
+    .upload-form {
+        width: 60vw;
+        min-height: 50vh;
+        display: flex;
+        flex-direction: column;
+        margin-inline: 1.4rem;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        h3 {
+            color: var(--mid-red);
+            margin: 0 auto;
+        }
+
+        small {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            margin-bottom: 0.4rem;
+        }
+
+        textarea {
+            margin-bottom: 0.8rem;
+            min-width: 70%;
+        }
+
+        .btn-area {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            justify-content: space-around;
+        }
+
+        .btn {
+            padding: 0.4rem;
+
+        }
+    }
+
+}

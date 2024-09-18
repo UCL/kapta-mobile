@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
 
 const supportedLanguages = {
 	en: "🇬🇧 English",
@@ -8,11 +9,10 @@ const supportedLanguages = {
 	am: "🇪🇹 አማርኛ",
 	yo: "🇳🇬 Yorùbá",
 };
-const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
-
+export const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 const youtubeOpts = "?rel=0&autoplay=1";
 
-i18next.init({
+i18next.use(initReactI18next).init({
 	lng: savedLanguage,
 	fallbackLng: ["en", "es", "fr", "pt", "am", "yo"],
 	supportedLngs: Object.keys(supportedLanguages),
@@ -24,10 +24,10 @@ i18next.init({
 				asktheteam: "Ask us anything",
 				instructions: `<span class="title">Create WhatsApp Maps with Kapta </span><hr> 1 - Share locations in a WhatsApp group<br> 2 - Export chat to Kapta<br> 3 - Share your WhatsApp Map`,
 				watchtutorial: "Watch tutorial",
-				tutorialUrl:
-					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "View recent map",
 				showmap: "Show map",
+				selectFile: "Convert WhatsApp chat to map",
 				observer: "Observer",
 				date: "Date",
 				inputtopiclabel: "What have you mapped in this WhatsApp group?",
@@ -47,7 +47,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Get support to improve your map",
 				installPrompt: "Install Kapta to create WhatsApp Maps",
-				installClickMessage: "Kapta is now being added to your home screen. This might take a few seconds",
+				installClickMessage:
+					"Kapta is now being added to your home screen. This might take a few seconds",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on an Android mobile device to use the app.",
 				install: "Install",
@@ -60,10 +61,10 @@ i18next.init({
 				asktheteam: "Pregúntanos lo que quieras",
 				instructions: `<span class="title">Crea WhatsApp Maps con Kapta</span><hr>1 - Comparte ubicaciones en un grupo de WhatsApp<br>2 - Exporta el chat a Kapta<br>3 - Comparte tu WhatsApp Map`,
 				watchtutorial: "Ver tutorial",
-				tutorialUrl:
-					"https://youtube.com/embed/hq2h8Ou2BOE" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/hq2h8Ou2BOE" + youtubeOpts,
 				viewrecentmap: "Ver mapa reciente",
 				showmap: "Mostrar mapa",
+				selectFile: "Convertir chat de WhatsApp a mapa",
 				observer: "Observador",
 				date: "Fecha",
 				datasovmessage:
@@ -84,7 +85,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Ayuda para mejorar el mapa?",
 				installPrompt: "Instalar Kapta para crear WhatsApp Maps",
-				installClickMessage: "Kapta se está añadiendo a tu pantalla de inicio. Esto puede tardar unos segundos.",
+				installClickMessage:
+					"Kapta se está añadiendo a tu pantalla de inicio. Esto puede tardar unos segundos.",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Instalar",
@@ -97,10 +99,10 @@ i18next.init({
 				asktheteam: "Demandez-nous ce que vous voulez",
 				instructions: `<span class="title">Créer des WhatsApp Maps avec Kapta</span><hr>1 - Partagez des localisations dans un groupe WhatsApp<br>2 - Exportez la discussion dans Kapta<br>3 - Partagez votre WhatsApp Map`,
 				watchtutorial: "Regarder le tutoriel",
-				tutorialUrl:
-					"https://youtube.com/embed/3KrsKgFHYMs" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/3KrsKgFHYMs" + youtubeOpts,
 				viewrecentmap: "Voir la carte récente",
 				showmap: "Afficher la carte",
+				selectFile: "Convertir la discussion WhatsApp en carte",
 				observer: "Observateur",
 				date: "Date",
 				inputtopiclabel: "Qu’avez-vous cartographié dans ce groupe WhatsApp?",
@@ -120,7 +122,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Aide pour améliorer votre carte",
 				installPrompt: "Installez Kapta pour créer WhatsApp Maps",
-				installClickMessage: "Kapta est maintenant ajouté à votre écran d'accueil. Cela peut prendre quelques secondes",
+				installClickMessage:
+					"Kapta est maintenant ajouté à votre écran d'accueil. Cela peut prendre quelques secondes",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Installer",
@@ -133,10 +136,10 @@ i18next.init({
 				asktheteam: "ምንም ጥያቄ ጠይቁን",
 				instructions: `<span class="title">በካፕታ መተግብሪያ ዋትስ አፕ ካርታን ይስሩ</span><hr>1 - አከባቢውን ያጋሩ<br>2 - ምልልሱን ወደካፕታ ይላኩ<br>3 - የዋትስ አፕ ካርታዎን ያጋሩ`,
 				watchtutorial: "አጋዥ ስልጠናን ይመልከቱ",
-				tutorialUrl:
-					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "የቅርብ ጊዜ ካርታ ይመልከቱ",
 				showmap: "ካርታ አሳይ",
+				selectFile: "የዋትስአፕ ውይይትን ወደ ካርታ ለውጥ",
 				observer: "ተመልካች",
 				date: "ቀን",
 				inputtopiclabel: "በዚህ ዋትስአፕ ቡድን ምን አሳፍረክ?",
@@ -155,7 +158,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "ካርታዎን ለማሻሻል ድጋፍ አማራጭ",
 				installPrompt: "ካፕታ በሞባይል መሳሪያ ላይ ሲጫኑ በተሻለ ሁኔታ ይሰራል. አሁን ይጫኑ?",
-				installClickMessage: "ካፕታ አሁን ወደ መነሻ ስክሪንዎ እየታከለ ነው። ይሄ ጥቂት ሰከንዶች ሊወስድ ይችላል።",
+				installClickMessage:
+					"ካፕታ አሁን ወደ መነሻ ስክሪንዎ እየታከለ ነው። ይሄ ጥቂት ሰከንዶች ሊወስድ ይችላል።",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "ጫን",
@@ -168,10 +172,10 @@ i18next.init({
 				asktheteam: "Pergunte-nos qualquer coisa",
 				instructions: `<span class="title">Crie Mapas do WhatsApp com o Kapta</span><hr>1 - Partilhe locais num grupo do WhatsApp<br> 2 - Exporte o chat para o Kapta<br> 3 - Compartilhe seu WhatsApp Map`,
 				watchtutorial: "Assistir tutorial",
-				tutorialUrl:
-					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "Ver mapa recente",
 				showmap: "Mostrar mapa",
+				selectFile: "Converter conversa do WhatsApp em mapa",
 				observer: "Observador",
 				date: "Data",
 				inputtopiclabel: "O que você mapeou neste grupo de WhatsApp?",
@@ -191,7 +195,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Obtenha suporte para melhorar seu mapa",
 				installPrompt: "Instale o Kapta para criar WhatsApp Maps",
-				installClickMessage: "Kapta está agora a ser adicionado à sua tela inicial. Isto pode levar alguns segundos",
+				installClickMessage:
+					"Kapta está agora a ser adicionado à sua tela inicial. Isto pode levar alguns segundos",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Instalar",
@@ -204,10 +209,10 @@ i18next.init({
 				asktheteam: "Béèrè ohunkóhun lọ́wọ́ wa",
 				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>3 - Pín tàbí tà átààwá àwáàrí rẹ`,
 				watchtutorial: "Aago Tutorial",
-				tutorialUrl:
-					"https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
+				tutorialUrl: "https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
 				showmap: "Fíhàn àwáàrí",
+				selectFile: "Yí ìfọ̀rọ̀wérọ̀ WhatsApp padà sí àwòrán",
 				observer: "Olùtọ́jú",
 				date: "Ọjọ́",
 				inputtopiclabel: "Kí ni o ti ṣe àwáàrí ní àpàdé WhatsApp yìí?",
@@ -227,7 +232,8 @@ i18next.init({
 				copyright: "Kapta by UCL",
 				supportOption: "Gba ìtìlẹ́yìn láti mú àwáàrí rẹ dàra sí",
 				installPrompt: "Install Kapta to create WhatsApp Maps",
-				installClickMessage: "Kapta ti wa ni afikun si iboju ile rẹ. Eyi le gba iṣẹju diẹ",
+				installClickMessage:
+					"Kapta ti wa ni afikun si iboju ile rẹ. Eyi le gba iṣẹju diẹ",
 				desktoporiosPrompt:
 					"Kapta works best on Android mobile devices. Please visit this page on a mobile device to use the app.",
 				install: "Ìgbele",

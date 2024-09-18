@@ -10,7 +10,6 @@ module.exports = {
 	// Specify the entry point for our app.
 	entry: {
 		main: "./src/main.js",
-		status: "./src/status.js",
 	},
 	devServer: {
 		static: "./dist",
@@ -44,6 +43,16 @@ module.exports = {
 			{
 				test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
 				type: "asset/resource",
+			},
+			{
+				test: /\.jsx?$/, // This will handle both .js and .jsx files
+				exclude: /node_modules/,
+				use: {
+					loader: "babel-loader",
+					options: {
+						presets: ["@babel/preset-env", "@babel/preset-react"],
+					},
+				},
 			},
 		],
 	},
@@ -96,7 +105,7 @@ module.exports = {
 					content: "249",
 				},
 			},
-			appMountIds: ["main", "sharing-modal", "video-modal"],
+			appMountIds: ["main"],
 			manifest: "src/manifest.webmanifest",
 		}),
 		new WorkboxPlugin.InjectManifest({

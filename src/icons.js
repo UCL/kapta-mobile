@@ -1,4 +1,7 @@
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import React from "react";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faChevronDown,
 	faChevronUp,
@@ -35,41 +38,25 @@ library.add(
 	faThumbsUp,
 	faMessage
 );
-export const chevronDown = icon({
-	prefix: "fas",
-	iconName: "chevron-down",
-}).html;
-export const chevronUp = icon({ prefix: "fas", iconName: "chevron-up" }).html;
-export const imageIcn = icon({ prefix: "fas", iconName: "image" }).html;
-export const shareIcn = icon({
-	prefix: "fas",
-	iconName: "share-nodes",
-}).html;
-export const dataIcn = icon({ prefix: "fas", iconName: "file-code" }).html;
-export const addMetaIcn = icon({
-	prefix: "fas",
-	iconName: "file-circle-plus",
-}).html;
-export const uploadIcn = icon({
-	prefix: "fas",
-	iconName: "cloud-arrow-up",
-}).html;
-export const GPSIcn = icon({
-	prefix: "fas",
-	iconName: "location-crosshairs",
-}).html;
-export const basemapSatIcon = icon({ prefix: "fas", iconName: "sun" }).html;
-export const basemapDarkIcon = icon({ prefix: "fas", iconName: "moon" }).html;
-export const exitButtonIcon = icon({
-	prefix: "fas",
-	iconName: "arrow-left",
-}).html;
+export const chevronDown = <FontAwesomeIcon icon={faChevronDown} />;
+export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
+export const imageIcn = <FontAwesomeIcon icon={faImage} />;
+export const shareIcn = <FontAwesomeIcon icon={faShareNodes} />;
+export const dataIcn = <FontAwesomeIcon icon={faFileCode} />;
+export const addMetaIcn = (
+	<FontAwesomeIcon icon={faFileCirclePlus} style={{ fontSize: "0.75rem" }} />
+);
+export const uploadIcn = <FontAwesomeIcon icon={faCloudArrowUp} />;
+export const GPSIcn = <FontAwesomeIcon icon={faLocationCrosshairs} />;
+export const basemapSatIcon = <FontAwesomeIcon icon={faSun} />;
+export const basemapDarkIcon = <FontAwesomeIcon icon={faMoon} />;
+export const exitButtonIcon = <FontAwesomeIcon icon={faArrowLeft} />;
 export const GPSPositionIcn = icon({
 	prefix: "fas",
 	iconName: "dot-circle",
 }).html;
-export const closeIcon = icon({ prefix: "fas", iconName: "x" }).html;
+export const closeIcon = <FontAwesomeIcon icon={faX} />;
 
-export const thumbsUpIcon = icon({ prefix: "fas", iconName: "thumbs-up" }).html;
+export const thumbsUpIcon = <FontAwesomeIcon icon={faThumbsUp} />;
 
-export const msgIcon = icon({ prefix: "fas", iconName: "message" }).html;
+export const msgIcon = <FontAwesomeIcon icon={faMessage} />;
