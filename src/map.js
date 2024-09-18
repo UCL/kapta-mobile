@@ -142,10 +142,9 @@ function MapDataLayer({ data }) {
 					const { coordinates } = feature.geometry;
 					const latlng = { lat: coordinates[1], lng: coordinates[0] };
 
-					const observations = feature.properties.observations.replace(
-						/<br\s*\/?>/gi,
-						"\n"
-					);
+					const observations = feature.properties.observations
+						.replace(/remove_this_msg/g, "")
+						.replace(/<br\s*\/?>/gi, "\n");
 					boundsRef.current.push([latlng.lat, latlng.lng]);
 
 					const markerColour = feature.properties.markerColour

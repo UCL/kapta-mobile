@@ -72,7 +72,6 @@ const processFile = (file, setDataDisplayMap) => {
 					);
 					if (imgFilenames.length > 0) {
 						console.log("images found");
-						console.log(imgFilenames);
 					}
 					// if there is a chat file, process it and any images
 					if (chatFilename) {
@@ -168,11 +167,9 @@ const processGeoJson = (json) => {
 
 const cleanMsgContent = (content, location, imgFileRegex) => {
 	// Clean remaining content
-	// console.log("content", content);
 	content = content
 		.split("\n")
 		.map((line) => {
-			// console.log("line", line);
 			line = line.trim();
 			if (location && line.includes(location[0])) {
 				return (location[0] = "\nremove_this_msg\n"); // setting this up for removal later
@@ -191,7 +188,6 @@ const cleanMsgContent = (content, location, imgFileRegex) => {
 				!line.includes("You deleted this message")
 		)
 		.join("\n");
-	// console.log("message content", content);
 	return content;
 };
 
@@ -204,7 +200,6 @@ const processMsgMatches = (messageMatches, imgFileRegex) => {
 			sender: match[3],
 			content: match[4],
 		};
-		console.log("message", message);
 		// If sender hasn't been seen before, select a colour for them
 		if (!Object.keys(senders).includes(message.sender)) {
 			senders[message.sender] = getSenderColour(senders);
@@ -221,7 +216,6 @@ const processMsgMatches = (messageMatches, imgFileRegex) => {
 			let imgMatches = [];
 			for (const match of imgFileMatches) {
 				imgMatches.push(match[1]);
-				// message.content = message.content.replace(imgFileRegex, "");
 			}
 			message.imgFilenames = imgMatches;
 		}
@@ -336,7 +330,7 @@ const processText = (text) => {
 			""
 		);
 		content = content.replace("<This message was edited>", "");
-		// content = content.replace("remove_this_msg", "");
+
 		return content
 			.split("\n")
 			.map((line) => line.trim())
@@ -345,7 +339,6 @@ const processText = (text) => {
 	};
 
 	messages.forEach((message) => {
-		// console.log("message", message, "feature", currentFeature);
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
 		if (isValidContent(message.content)) {
 			if (message.location || message.sender !== currentSender) {
@@ -363,58 +356,6 @@ const processText = (text) => {
 				currentFeature.properties.observations += message.content + "\n";
 			}
 		}
-		// Sometimes sender changes but there's no location so add any features in progress
-		// if (message.location || message.sender != currentSender) {
-		// 	// Push any existing features to mapdata
-		// 	if (feature) {
-		// 		// Reject feature if it doesn't have geometry
-		// 		if (feature.geometry) {
-		// 			mapdata.features.push(feature);
-		// 		} else {
-		// 			feature = null;
-		// 		}
-		// 	}
-		// 	// Create new feature
-		// 	var contributionid = crypto.randomUUID();
-		// 	feature = {
-		// 		type: "Feature",
-		// 		properties: {
-		// 			contributionid: contributionid,
-		// 			mainattribute: groupName,
-		// 			observations: "",
-		// 			observer: message.sender,
-		// 			datetime: message.datetime,
-		// 			markerColour: senders[message.sender],
-		// 			imgFilenames: [],
-		// 		},
-		// 	};
-		// 	if (message.location) {
-		// 		feature.geometry = {
-		// 			type: "Point",
-		// 			coordinates: [message.location.long, message.location.lat], // GeoJSON uses [long, lat] order
-		// 		};
-		// 	}
-		// } else if (feature) {
-		// 	console.log("feature", feature);
-		// 	// if message contains an image filename add it to feature imageFilenames property
-		// 	if (message.imgFilenames) {
-		// 		console.log(
-		// 			"message.imgFilenames feature lvl",
-		// 			message.imgFilenames,
-		// 			...message.imgFilenames
-		// 		);
-		// 		feature.properties.imgFilenames.push(...message.imgFilenames);
-		// 	} else
-		// 	if (
-		// 		// Append message content to observations unless it's media omitted or message deleted
-		// 		!message.content.includes("<Media omitted>") &&
-		// 		!message.content.includes("This message was deleted") &&
-		// 		!message.content.includes("You deleted this message")
-		// 	) {
-		// 		feature.properties.observations += message.content + "\n";
-		// 	}
-		// }
-		// currentSender = message.sender;
 	});
 	// Push the last message to mapdata
 	if (currentFeature) {
