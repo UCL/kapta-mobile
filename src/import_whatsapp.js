@@ -166,16 +166,78 @@ const processGeoJson = (json) => {
 	return [mapdata, groupName];
 };
 
-const processText = (text) => {
-	const groupNameRegex = /"([^"]*)"/;
-	const groupNameMatches = text.match(groupNameRegex);
-	const groupName = groupNameMatches ? groupNameMatches[1] : null;
+const cleanMsgContent = (content, location, imgFileRegex) => {
+	// Clean remaining content
+	// console.log("content", content);
+	content = content
+		.split("\n")
+		.map((line) => {
+			// console.log("line", line);
+			line = line.trim();
+			if (location && line.includes(location[0])) {
+				return (location[0] = "\nremove_this_msg\n"); // setting this up for removal later
+			}
+			if (line.match(imgFileRegex)) {
+				return "\nremove_this_msg\n";
+			}
+			return line;
+		})
+		.filter(
+			(line) =>
+				line &&
+				!line.includes("image omitted") &&
+				!line.includes("<Media omitted>") &&
+				!line.includes("This message was deleted") &&
+				!line.includes("You deleted this message")
+		)
+		.join("\n");
+	// console.log("message content", content);
+	return content;
+};
 
-	// Check the first 3 characters to determine the format; iOS and Android
-	const fileType = text.substring(0, 3);
+const processMsgMatches = (messageMatches, imgFileRegex) => {
+	let messages = [];
+	let senders = {};
+	messageMatches.forEach((match) => {
+		let message = {
+			datetime: formatDateString(match[1], match[2]),
+			sender: match[3],
+			content: match[4],
+		};
+		console.log("message", message);
+		// If sender hasn't been seen before, select a colour for them
+		if (!Object.keys(senders).includes(message.sender)) {
+			senders[message.sender] = getSenderColour(senders);
+		}
+		var location = locationRegex.exec(message.content);
+		if (location) {
+			message.location = {
+				lat: parseFloat(location[1]),
+				long: parseFloat(location[2]),
+			};
+		}
+		let imgFileMatches = [...message.content.matchAll(imgFileRegex)];
+		if (imgFileMatches.length > 0) {
+			let imgMatches = [];
+			for (const match of imgFileMatches) {
+				imgMatches.push(match[1]);
+				// message.content = message.content.replace(imgFileRegex, "");
+			}
+			message.imgFilenames = imgMatches;
+		}
+		message.content = cleanMsgContent(message.content, location, imgFileRegex);
+		messages.push(message);
+	});
+	return [messages, senders];
+};
+
+// Regex to match google maps location and capture lat (group 1) and long (group 2)
+const locationRegex =
+	/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/; //Without 'location' to be universal - the word in the export file changes based on WA language
+
+const setImgMsgRegex = (fileType) => {
 	let messageRegex;
 	let imgFileRegex;
-
 	// Regex matches a single message including newline characters,
 	// stopping when new line starts with date or text ends
 	// also accounts for if the datetime is wrapped in brackets and has s
@@ -199,64 +261,10 @@ const processText = (text) => {
 		console.error("Unknown file format");
 		return [null, groupName];
 	}
+	return [messageRegex, imgFileRegex];
+};
 
-	let messageMatches = [...text.matchAll(messageRegex)];
-	// Regex to match google maps location and capture lat (group 1) and long (group 2)
-	const locationRegex =
-		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/; //Without 'location' to be universal - the word in the export file changes based on WA language
-
-	// Convert messageMatches to array of JSON objects
-	let messages = [];
-	let senders = {};
-	messageMatches.forEach((match) => {
-		let message = {
-			datetime: formatDateString(match[1], match[2]),
-			sender: match[3],
-			content: match[4],
-		};
-		// If sender hasn't been seen before, select a colour for them
-		if (!Object.keys(senders).includes(message.sender)) {
-			senders[message.sender] = getSenderColour(senders);
-		}
-		let location = locationRegex.exec(message.content);
-		if (location) {
-			console.log("location", location);
-			message.location = {
-				lat: parseFloat(location[1]),
-				long: parseFloat(location[2]),
-			};
-			// message.content = message.content.replace(
-			// 	location[0],
-			// 	"remove_this_location"
-			// );
-		}
-		let imgFileMatches = [...message.content.matchAll(imgFileRegex)];
-		if (imgFileMatches.length > 0) {
-			let imgMatches = [];
-			for (const match of imgFileMatches) {
-				imgMatches.push(match[1]);
-				message.content = message.content.replace(imgFileRegex, "");
-			}
-			message.imgFilenames = imgMatches;
-		}
-
-		// Clean remaining content
-		message.content = message.content
-			.split("\n")
-			.map((line) => line.trim())
-			.filter(
-				(line) =>
-					line &&
-					!line.includes("remove_this_location") &&
-					!line.includes(message.sender) &&
-					!line.includes("<Media omitted>") &&
-					!line.includes("This message was deleted") &&
-					!line.includes("You deleted this message")
-			)
-			.join("\n");
-		messages.push(message);
-	});
-
+const sortMessages = (messages) => {
 	// Sort messages by sender, then by datetime
 	messages.sort((a, b) => {
 		// Compare by sender
@@ -275,6 +283,23 @@ const processText = (text) => {
 			}
 		}
 	});
+	return messages;
+};
+
+const processText = (text) => {
+	const groupNameRegex = /"([^"]*)"/;
+	const groupNameMatches = text.match(groupNameRegex);
+	const groupName = groupNameMatches ? groupNameMatches[1] : null;
+
+	// Check the first 3 characters to determine the format; iOS and Android
+	const fileType = text.substring(0, 3);
+	const [messageRegex, imgFileRegex] = setImgMsgRegex(fileType);
+
+	let messageMatches = [...text.matchAll(messageRegex)];
+
+	// Convert messageMatches to array of JSON objects and then sort
+	let [messages, senders] = processMsgMatches(messageMatches, imgFileRegex);
+	messages = sortMessages(messages);
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {
@@ -311,6 +336,7 @@ const processText = (text) => {
 			""
 		);
 		content = content.replace("<This message was edited>", "");
+		// content = content.replace("remove_this_msg", "");
 		return content
 			.split("\n")
 			.map((line) => line.trim())
@@ -319,7 +345,7 @@ const processText = (text) => {
 	};
 
 	messages.forEach((message) => {
-		console.log("message", message, "feature", currentFeature);
+		// console.log("message", message, "feature", currentFeature);
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
 		if (isValidContent(message.content)) {
 			if (message.location || message.sender !== currentSender) {
