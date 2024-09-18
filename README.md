@@ -22,10 +22,10 @@ Kapta: A (de)centralised crowdsourcing system to connect users and producers of 
 Kapta is being developed by the [University College London (UCL)](http://ucl.ac.uk) [Extreme Citizen Science (ExCiteS) research group](http://ucl.ac.uk/excites) and the [Advanced Research Computing Centre (UCL ARC)](https://www.ucl.ac.uk/advanced-research-computing), with help from outside partners & contributors.
 
 Currently the core Kapta team consists of:
-  * [Marcos Moreu](https://www.ucl.ac.uk/geography/marcos-moreu), UCL Geography
+  * [Marcos Moreu](https://www.ucl.ac.uk/geography/people/research-staff/marcos-moreu), UCL Geography
   * [Fabien Moustard](https://www.ucl.ac.uk/geography/fabien-moustard), UCL Geography
   * [Tom Couch](https://www.ucl.ac.uk/advanced-research-computing/people/tom-couch), UCL ARC
-  * [Muki Haklay](http://www.ucl.ac.uk/excites/people/academic-staff/muki-haklay), UCL Geography
+  * [Muki Haklay](https://www.ucl.ac.uk/geography/muki-haklay-facss), UCL Geography
   * [Jonathan Cooper](https://www.ucl.ac.uk/advanced-research-computing/people/jonathan-cooper), UCL ARC
   * [Claire Ellul](https://www.ucl.ac.uk/civil-environmental-geomatic-engineering/people/dr-claire-ellul), UCL CEGE
   * [Amanda Ho-Lyn](https://www.ucl.ac.uk/advanced-research-computing/research-software-engineers-0), UCL ARC
