@@ -350,5 +350,9 @@
         height: 1.5rem;
         align-items: center;
         justify-content: center;
+
+        svg {
+            color: white;
+        }
     }
 }
