@@ -94,6 +94,9 @@
     }
 }
 
+.map-popup-body {
+    overflow-y: scroll;
+}
 
 #map-actions-container {
     color: #f0f0f0;
