@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import Alpine from "alpinejs";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
-import { parseFile } from "./import_whatsapp.js";
+import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
+import { isIOS } from "./main.js";
+import ReactGA from "react-ga4";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -19,6 +22,11 @@ function LanguageSelector({ supportedLanguages }) {
 		localStorage.setItem("preferredLanguage", newLanguage);
 		i18next.changeLanguage(newLanguage).catch((error) => {
 			console.error("Error changing language", error);
+		});
+		ReactGA.event({
+			category: "Language",
+			action: "Language Changed",
+			label: newLanguage,
 		});
 		// Update the state to trigger a re-render
 		setSelectedLanguage(newLanguage);
@@ -49,8 +57,36 @@ function Instructions() {
 	);
 }
 
-function VideoModal({ setIsOpen }) {
+function VideoModal({ isOpen, setIsOpen }) {
+	if (!isOpen) return null;
+
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		if (isOpen) {
+			ReactGA.event({
+				category: "Tutorial",
+				action: "Tutorial Opened",
+			});
+
+			const handleMainClick = () => {
+				setIsOpen(false);
+				document
+					.querySelector("#main")
+					.removeEventListener("click", handleMainClick);
+			};
+			document
+				.querySelector("#main")
+				.addEventListener("click", handleMainClick);
+			return () => {
+				document
+					.querySelector("#main")
+					.removeEventListener("click", handleMainClick);
+			};
+		}
+	}, [isOpen, setIsOpen]);
+
+	if (!isOpen) return null;
 
 	return (
 		<div id="video-modal">
@@ -60,12 +96,11 @@ function VideoModal({ setIsOpen }) {
 				</button>
 				<iframe
 					id="videoElement"
-					width="100%"
+					width="99%"
 					height="500px"
 					src={t("tutorialUrl")}
-					frameborder="0"
 					allow="autoplay; encrypted-media;"
-					allowfullscreen
+					allowFullScreen
 				></iframe>
 			</div>
 		</div>
@@ -82,51 +117,79 @@ function RecentMapButton({ showMap }) {
 }
 
 function FilePicker(dataDisplayProps) {
+	const [selectedFile, setSelectedFile] = useState(null);
+	const fileInputRef = useRef(null);
+
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
-		parseFile(file, dataDisplayProps);
+		file && setSelectedFile(file);
 		event.target.value = null; // Clear the input value
 	};
-	var filedisplayed = false;
-	return (
-		<input
-			type="file"
-			accept=".txt,.zip,.geojson"
-			className="file-input"
-			onChange={handleFileChange}
-		/>
-	);
-}
 
-function ButtonArea({ hasCurrentDataset, showMap }) {
-	const [isOpen, setVideoIsOpen] = useState(false);
+	const handleButtonClick = () => {
+		fileInputRef.current.click();
+	};
 
 	const { t } = useTranslation();
 
 	return (
-		<div className="button-area">
-			<button
-				id="tutorialBtn"
-				onClick={() => setVideoIsOpen(true)}
-				className="btn menu-btn"
-			>
-				{t("watchtutorial")}
+		<>
+			<input
+				type="file"
+				accept={allowedExtensions.join(",")}
+				ref={fileInputRef}
+				style={{ display: "none" }}
+				onChange={handleFileChange}
+			/>
+			<button onClick={handleButtonClick} className="btn menu-btn file-input">
+				{t("selectFile")}
 			</button>
-			{isOpen && <VideoModal setIsOpen={setVideoIsOpen} />}
+			{selectedFile && (
+				<FileParser
+					file={selectedFile}
+					{...dataDisplayProps}
+					onComplete={() => setSelectedFile(null)}
+				/>
+			)}
+		</>
+	);
+}
 
-			<button
-				id="helpBtn"
-				className="btn menu-btn"
-				onClick={() => {
-					window.location.href = config.kapta.askTheTeamURL;
-				}}
-			>
-				{t("asktheteam")}
-			</button>
+function ButtonArea({ hasCurrentDataset, showMap }) {
+	const [isOpen, setIsVideoOpen] = useState(false);
 
-			{/* show recent map */}
-			{hasCurrentDataset && <RecentMapButton showMap={showMap} />}
-		</div>
+	const { t } = useTranslation();
+
+	return (
+		<>
+			<VideoModal isOpen={isOpen} setIsOpen={setIsVideoOpen} />
+			<div className="button-area">
+				<button
+					id="tutorialBtn"
+					onClick={() => setIsVideoOpen(true)}
+					className="btn menu-btn"
+				>
+					{t("watchtutorial")}
+				</button>
+
+				<button
+					id="helpBtn"
+					className="btn menu-btn"
+					onClick={() => {
+						ReactGA.event({
+							category: "Help",
+							action: "Help Button Clicked",
+						});
+						window.location.href = config.kapta.askTheTeamURL;
+					}}
+				>
+					{t("asktheteam")}
+				</button>
+
+				{/* show recent map */}
+				{hasCurrentDataset && <RecentMapButton showMap={showMap} />}
+			</div>
+		</>
 	);
 }
 
@@ -135,20 +198,16 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-export default function MainMenu({
-	isVisible,
-	showMap,
-	setLoaderVisible,
-	dataset,
-	setMapData,
-}) {
+const hasCognito = Alpine.store("appData")?.hasCognito;
+
+export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
+	const { setMapData, showMap } = dataDisplayProps;
 	const [isSBVisible, setIsSBVisible] = useState(false);
 
-	// set status bar visibility based on if cognito in config
+	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
 	useEffect(() => {
-		const hasCognito = Alpine.store("appData")?.hasCognito;
 		setIsSBVisible(hasCognito);
-	});
+	}, []);
 
 	// if menu not visible, nor should status bar be
 	useEffect(() => {
@@ -158,10 +217,6 @@ export default function MainMenu({
 	if (!isVisible) return null;
 	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
-	const dataDisplayProps = {
-		setMapData,
-		showMap,
-	}; // setting these in an object so they're easier to pass and update
 	return (
 		<>
 			<StatusBar isVisible={isSBVisible} />
@@ -171,7 +226,7 @@ export default function MainMenu({
 				<Instructions />
 				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
 				{/* File picker (web only) */}
-				{!isMobile && <FilePicker {...dataDisplayProps} />}
+				{(!isMobile || isIOS()) && <FilePicker {...dataDisplayProps} />}
 				<Copyright />
 			</div>
 		</>

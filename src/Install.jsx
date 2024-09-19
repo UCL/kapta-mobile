@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import KaptaLogo from "./images/icons/kapta-white.png";
+import { isMobileOrTablet } from "./main";
+import ReactGA from "react-ga4";
 
 export default function InstallDialog() {
+	if (!isMobileOrTablet()) return null; // don't run install prompt on desktop
+	const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+	if (isStandalone) return null; // don't run install prompt if already installed
+
 	const { t } = useTranslation();
 	const [installPrompt, setInstallPrompt] = useState(null);
 	const [isVisible, setIsVisible] = useState(true);
@@ -24,18 +30,23 @@ export default function InstallDialog() {
 	}, []);
 
 	const handleInstallClick = async () => {
+		ReactGA.event({
+			category: "Install",
+			action: "Install Clicked",
+		});
 		if (!installPrompt) return;
-		console.log("install clicked");
 		const result = await installPrompt.prompt();
-		console.log(result);
-		if (result.outcome === "dismissed") {
+		// if (result.outcome === "dismissed") {
+		// 	setIsVisible(false);
+		// } else {
+		// 	setTimeout(() => {
+		// 		setIsVisible(false);
+		// 	}, 3000);
+		// }
+		if (result) {
 			setIsVisible(false);
-		} else {
-			setTimeout(() => {
-				setIsVisible(false);
-			}, 5000);
+			setInstallPrompt(null);
 		}
-		setInstallPrompt(null);
 	};
 
 	const handleCloseClick = () => {

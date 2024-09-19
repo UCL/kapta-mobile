@@ -38,11 +38,7 @@ body {
     align-items: center;
     user-select: none;
 
-    #copyright {
-        color: #DBC7C7;
-        position: fixed;
-        bottom: 1vh;
-    }
+
 }
 
 
@@ -168,6 +164,7 @@ body {
     }
 
     img {
+        object-fit: cover;
         margin-inline: 12%;
         border-radius: 6px;
     }

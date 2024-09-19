@@ -2,14 +2,13 @@
 
 ## What? ###
 
-Kapta Mobile is a Progressive Web App enabling users to generate maps from WhatsApp chats.
+Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps:
 
-👉 📱 http://kapta.earth
+  1. Share locations in a WhatsApp group
+  2. Export chat to Kapta
+  3. Share your WhatsApp Map
 
-Create WhatsApp Maps with Kapta:
-  * Share locations in a WhatsApp group
-  * Export chat to Kapta
-  * Share your WhatsApp Map
+👉 📱 https://kapta.earth
 
 ## Why? ###
 To connect users and producers of ground information. See our latest blog and where this started in 2010:
@@ -23,10 +22,10 @@ Kapta: A (de)centralised crowdsourcing system to connect users and producers of 
 Kapta is being developed by the [University College London (UCL)](http://ucl.ac.uk) [Extreme Citizen Science (ExCiteS) research group](http://ucl.ac.uk/excites) and the [Advanced Research Computing Centre (UCL ARC)](https://www.ucl.ac.uk/advanced-research-computing), with help from outside partners & contributors.
 
 Currently the core Kapta team consists of:
-  * [Marcos Moreu](https://www.ucl.ac.uk/geography/marcos-moreu), UCL Geography
+  * [Marcos Moreu](https://www.ucl.ac.uk/geography/people/research-staff/marcos-moreu), UCL Geography
   * [Fabien Moustard](https://www.ucl.ac.uk/geography/fabien-moustard), UCL Geography
   * [Tom Couch](https://www.ucl.ac.uk/advanced-research-computing/people/tom-couch), UCL ARC
-  * [Muki Haklay](http://www.ucl.ac.uk/excites/people/academic-staff/muki-haklay), UCL Geography
+  * [Muki Haklay](https://www.ucl.ac.uk/geography/muki-haklay-facss), UCL Geography
   * [Jonathan Cooper](https://www.ucl.ac.uk/advanced-research-computing/people/jonathan-cooper), UCL ARC
   * [Claire Ellul](https://www.ucl.ac.uk/civil-environmental-geomatic-engineering/people/dr-claire-ellul), UCL CEGE
   * [Amanda Ho-Lyn](https://www.ucl.ac.uk/advanced-research-computing/research-software-engineers-0), UCL ARC
@@ -63,15 +62,6 @@ Kapta requires a configuration file to be created in the src directory. The file
   }
 }
 ```
-
-## Usage
-Visiting the website with a compatible mobile device and browser will prompt you to add the app to your home screen. Once added, you can open the app from your home screen and generate maps from WhatsApp chats.
-
-1. Open WhatsApp and navigate to the chat you want to generate a map from
-2. Tap the three dots in the top right corner and select 'Export chat'
-3. Select Kapta from the list of apps
-4. The app will process the chat and display a map of the locations mentioned in the chat
-
 # Legal disclaimer
 Copyright © 2024 [University College London](http://ucl.ac.uk)
 

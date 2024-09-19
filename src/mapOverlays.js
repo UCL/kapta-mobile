@@ -110,6 +110,12 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	let hasCognito = Alpine.store("appData")?.hasCognito;
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const filenameSlug = Alpine.store("currentDataset").slug;
+	const shareContent = {
+		title: "#MadeWithKapta",
+		text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
+		url: "https://kapta.earth/",
+	};
 	const handleShareImgClick = () => {
 		let errorMsg;
 		html2canvas(document.querySelector("#map"), {
@@ -117,21 +123,23 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			useCORS: true,
 			imageTimeout: 5000,
 			removeContainer: true,
-			logging: true,
+			logging: false,
 			foreignObjectRendering: false,
 			ignoreElements: function (element) {
-				var src = element.src;
 				if ("button" == element.type || "submit" == element.type) {
 					return true;
 				}
 				if (element.classList.contains("buttons")) {
 					return true;
 				}
+				if (element.id === "map-actions-container") {
+					return true;
+				}
 			},
 		}).then(async function (canvas) {
 			const dataURL = canvas.toDataURL();
 			const blob = await (await fetch(dataURL)).blob();
-			const filename = `${Alpine.store("currentDataset").slug}.png`;
+			const filename = `${filenameSlug}.png`;
 			const filesArray = [
 				new File([blob], filename, {
 					type: blob.type,
@@ -145,9 +153,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				navigator
 					.share({
 						files: filesArray,
-						title: "#MadeWithKapta",
-						text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
-						url: "https://kapta.earth/",
+						...shareContent,
 					})
 					.then(() => {
 						errorMsg = "Failed to share map image";
@@ -166,6 +172,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				}
 			}
 			if (errorMsg) {
+				// TODO: replace with error popup?
 				const dialog = document.createElement("dialog");
 				dialog.textContent = errorMsg;
 				dialog.classList.add("error-dialog");
@@ -192,10 +199,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 		URL.revokeObjectURL(url);
 	};
 	const handleShareDataClick = () => {
-		const currentDataset = Alpine.store("currentDataset").geoJSON;
-		const filename = `${
-			Alpine.store("currentDataset").slug
-		}-${new Date().toDateString()}.txt`;
+		const filename = `${filenameSlug}-${new Date().toDateString()}.txt`;
 		const blob = new Blob([JSON.stringify(currentDataset, null, 2)], {
 			type: "text/plain",
 		});
@@ -212,9 +216,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			navigator
 				.share({
 					files: filesArray,
-					title: "#MadeWithKapta",
-					text: "#MadeWithKapta",
-					url: "https://kapta.earth/",
+					...shareContent,
 				})
 				.then(
 					() => console.info("Data shared"),

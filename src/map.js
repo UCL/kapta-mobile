@@ -15,6 +15,7 @@ import {
 	CircleMarker,
 	useMap,
 	ScaleControl,
+	AttributionControl,
 } from "react-leaflet";
 
 import { MapActionArea, ShareModal } from "./mapOverlays.js";
@@ -68,10 +69,8 @@ function SatelliteTileLayer() {
 /************************************************************************************************
  * Display Data
  ***********************************************************************************************/
-var geojsonMarkerOptions = {
+var markerOptions = {
 	radius: 5,
-	fillColor: "red",
-	color: "red",
 	weight: 0,
 	opacity: 1,
 	fillOpacity: 0.8,
@@ -111,11 +110,18 @@ function MapDataLayer({ data }) {
 					);
 					boundsRef.current.push([latlng.lat, latlng.lng]);
 
+					const markerColour = feature.properties.markerColour
+						? feature.properties.markerColour
+						: "red";
 					return (
 						<CircleMarker
 							key={index}
 							center={latlng}
-							pathOptions={geojsonMarkerOptions}
+							pathOptions={{
+								color: markerColour,
+								fillColor: markerColour,
+								...markerOptions,
+							}}
 						>
 							<Popup>
 								<div className="map-popup-body">
@@ -137,16 +143,9 @@ function MapDataLayer({ data }) {
 		</>
 	);
 }
-/************************************************************************************************
- * Share image
- ************************************************************************************************/
-var printBtn = L.easyPrint({
-	hidden: true,
-	sizeModes: ["A4Portrait"],
-});
 
 /************************************************************************************************
- *  Display Map
+ *  Error Popup
  ************************************************************************************************/
 function ErrorPopup({ error }) {
 	const map = useMap();
@@ -170,6 +169,44 @@ function ErrorPopup({ error }) {
 	) : null;
 }
 
+/************************************************************************************************
+ *  Map
+ ************************************************************************************************/
+
+var southWest = L.latLng(-70, -180);
+var northEast = L.latLng(80, 180);
+const mapConfig = {
+	center: [0, 0],
+	zoom: 2,
+	minZoom: 2,
+	maxZoom: 21,
+	zoomControl: false,
+	attributionControl: false,
+	style: { height: "100vh", width: "100%" },
+	maxBounds: L.latLngBounds(southWest, northEast),
+	preferCanvas: true,
+};
+const currentPositionIcon = L.divIcon({
+	html: GPSPositionIcn,
+	className: "position-marker-icon",
+	iconSize: [30, 30],
+	iconAnchor: [5, 0],
+});
+
+function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
+	// this is a functional component, it doesn't render anything
+	// hook to fly to current location when updated
+	const map = useMap();
+	useEffect(() => {
+		if (currentLocation && flyToLocation) {
+			map.flyTo(currentLocation, map.getZoom());
+			setFlyToLocation(false);
+		}
+	}, [currentLocation, flyToLocation]);
+
+	return null;
+}
+
 export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
 
@@ -178,6 +215,7 @@ export function Map({ isVisible, showMenu, data }) {
 	const [shouldPulse, setShouldPulse] = useState(false);
 	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
 	const [currentLocation, setCurrentLocation] = useState(null);
+	const [flyToLocation, setFlyToLocation] = useState(false);
 	const [error, setError] = useState(null);
 
 	// pulse effect on title update
@@ -196,48 +234,22 @@ export function Map({ isVisible, showMenu, data }) {
 			timeout: 5000,
 			maximumAge: 0,
 		};
-		function success(pos) {
+		const success = (pos) => {
 			const lat = pos.coords.latitude;
 			const lng = pos.coords.longitude;
 			setCurrentLocation([lat, lng]);
-		}
-		function error(err) {
+			setFlyToLocation(true);
+		};
+		const error = (err) => {
 			console.warn(`ERROR(${err.code}): ${err.message}`);
 			setError(
 				"Unable to retrieve location. Please check your device settings."
 			);
-		}
-
+		};
+		// call the above if the browser supports it
 		navigator.geolocation
 			? navigator.geolocation.getCurrentPosition(success, error, options)
 			: console.error("GPS not available");
-	};
-	const currentPositionIcon = L.divIcon({
-		html: GPSPositionIcn,
-		className: "position-marker-icon",
-		iconSize: [30, 30],
-		iconAnchor: [5, 0],
-	});
-
-	const UpdateMap = () => {
-		// hook to fly to current location when updated
-		const map = useMap();
-		if (currentLocation) {
-			map.flyTo(currentLocation, map.getZoom());
-		}
-		return null;
-	};
-	var southWest = L.latLng(-70, -180);
-	var northEast = L.latLng(80, 180);
-	const mapConfig = {
-		center: [0, 0],
-		zoom: 2,
-		minZoom: 2,
-		maxZoom: 21,
-		zoomControl: false,
-		attributionControl: true,
-		style: { height: "100vh", width: "100%" },
-		maxBounds: L.latLngBounds(southWest, northEast),
 	};
 
 	return (
@@ -247,10 +259,11 @@ export function Map({ isVisible, showMenu, data }) {
 				setIsOpen={setIsModalOpen}
 				currentDataset={data}
 			/>
-			<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
-				{titleValue}
-			</div>
+
 			<div id="map">
+				<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
+					{titleValue}
+				</div>
 				<button
 					id="base-map--toggle"
 					className="map-button"
@@ -267,14 +280,30 @@ export function Map({ isVisible, showMenu, data }) {
 					{/* current position marker */}
 					{currentLocation && (
 						<Marker position={currentLocation} icon={currentPositionIcon}>
-							<Popup>You're here! {currentLocation}</Popup>
+							<Popup>
+								<p style={{ textAlign: "center", fontWeight: 600 }}>
+									You're here!
+								</p>
+								<p style={{ textAlign: "center" }}>
+									{currentLocation.join(", ")}
+								</p>
+							</Popup>
 						</Marker>
 					)}
 					{/* error if currentLocation can't be found */}
 					{error && <ErrorPopup />}
 					{data && <MapDataLayer data={data} />}
-					<UpdateMap />
-					<ScaleControl position="bottomleft" />
+					<UpdateMap
+						currentLocation={currentLocation}
+						flyToLocation={flyToLocation}
+						setFlyToLocation={setFlyToLocation}
+					/>
+					<ScaleControl position="bottomleft" metric={true} imperial={false} />
+					<AttributionControl
+						position="bottomright"
+						prefix="Leaflet"
+						attribution="Mapbox | OSM Contributors"
+					/>
 				</MapContainer>
 				<MapActionArea
 					setTitle={setTitleValue}
