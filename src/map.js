@@ -4,7 +4,7 @@ import "../node_modules/leaflet/dist/leaflet.css";
 import "leaflet-easybutton";
 import "leaflet-easyprint";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./styles/map-etc.css";
 import L from "leaflet";
 import {
@@ -24,6 +24,7 @@ import {
 	basemapSatIcon,
 	GPSPositionIcn,
 	GPSIcn,
+	nextIcn,
 } from "./icons.js";
 
 const config = require("./config.json");
@@ -80,39 +81,85 @@ function getFriendlyDatetime(datetime) {
 	// Convert the datetime string into a more readable form
 	return datetime.split("T").join(" ").replaceAll("-", "/");
 }
+const getImageURLFromZip = async (zip, imgFilename) => {
+	try {
+		const file = zip.file(
+			new RegExp(imgFilename.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") + "$")
+		);
+		if (!file) {
+			console.error(`File not found in ZIP: ${imgFilename}`);
+			return null;
+		}
+		const blob = await file[0].async("blob");
+		console.log(`Successfully extracted file: ${imgFilename}`);
+		let urlCreator = window.URL || window.webkitURL;
+		let url = urlCreator.createObjectURL(blob);
+		return url;
+	} catch (error) {
+		console.error(`Error extracting file ${imgFilename}:`, error);
+		return null;
+	}
+};
 
 function MapDataLayer({ data }) {
 	const { t } = useTranslation();
 	const map = useMap();
 	const boundsRef = useRef([]);
-	console.log(data.features.length);
-	if (data.features.length == 0) {
+	const { data: geoJSON, imgZip } = data;
+	const [featureImages, setFeatureImages] = useState({}); // this is basically a cache
+
+	if (geoJSON.features.length == 0) {
 		// need translation
 		return <ErrorPopup error="No data to display" />;
 	}
 
 	useEffect(() => {
+		// fit map to bounds
 		if (boundsRef.current.length > 0) {
 			map.fitBounds(boundsRef.current);
 		}
-	}, [data, map]);
+	}, [geoJSON, map]);
+
+	const handleMarkerClick = useCallback(
+		async (feature) => {
+			console.log("feature", feature);
+			if (imgZip && feature.properties.imgFilenames.length > 0) {
+				// will want to map over imgFilenames when we support multiple
+				feature.properties.imgFilenames.map(async (filename) =>
+					// check the image isn't already loaded
+					{
+						console.log("filename", filename);
+						if (filename && !featureImages[filename]) {
+							const url = await getImageURLFromZip(imgZip, filename);
+							setFeatureImages((prev) => ({
+								...prev,
+								[filename]: url,
+							}));
+						}
+					}
+				);
+			}
+		},
+		[imgZip, featureImages]
+	);
 
 	return (
 		<>
-			{data.features.map((feature, index) => {
+			{geoJSON.features.map((feature, index) => {
 				if (feature.geometry?.coordinates) {
 					const { coordinates } = feature.geometry;
 					const latlng = { lat: coordinates[1], lng: coordinates[0] };
 
-					const observations = feature.properties.observations.replace(
-						/<br\s*\/?>/gi,
-						"\n"
-					);
+					const observations = feature.properties.observations
+						.replace(/remove_this_msg/g, "")
+						.replace(/<br\s*\/?>/gi, "\n");
 					boundsRef.current.push([latlng.lat, latlng.lng]);
 
 					const markerColour = feature.properties.markerColour
 						? feature.properties.markerColour
 						: "red";
+
+					const imgFilenames = feature.properties.imgFilenames;
 					return (
 						<CircleMarker
 							key={index}
@@ -122,9 +169,48 @@ function MapDataLayer({ data }) {
 								fillColor: markerColour,
 								...markerOptions,
 							}}
+							eventHandlers={{
+								click: () => handleMarkerClick(feature),
+							}}
 						>
 							<Popup>
 								<div className="map-popup-body">
+									{imgFilenames && imgFilenames.length > 0 && (
+										<div
+											className="feature-images"
+											onClick={(e) => {
+												e.stopPropagation();
+												const images = document.querySelectorAll(
+													".feature-images img"
+												);
+												const currentIndex = [...images].findIndex(
+													(img) => img.style.display === "block"
+												);
+												for (let i = 0; i < images.length; i++) {
+													images[i].style.display = "none"; // Hide all images
+												}
+												const nextIndex = (currentIndex + 1) % images.length; // Loop back to the first image
+												images[nextIndex].style.display = "block"; // Show the next image
+											}}
+										>
+											{imgFilenames.map(
+												(filename, index) =>
+													featureImages[filename] && (
+														<img
+															key={index}
+															src={featureImages[filename]}
+															alt={`Feature image ${index + 1}`}
+															style={{
+																display: index > 0 ? "none" : "block",
+															}}
+														/>
+													)
+											)}
+											{imgFilenames.length > 1 && (
+												<div className="next-image">{nextIcn}</div>
+											)}
+										</div>
+									)}
 									{observations.split("\n").map((o, index) => (
 										<p key={index}>{o}</p>
 									))}

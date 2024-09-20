@@ -31,8 +31,8 @@ export function FileParser({ file, ...dataDisplayProps }) {
 	const { setMapData, showMap, setFileToParse } = dataDisplayProps;
 
 	const setDataDisplayMap = useCallback(
-		(data, name) => {
-			setMapData(data);
+		(data, name, imgZip = null) => {
+			setMapData({ data: data, imgZip: imgZip });
 			updateMapdata(name);
 			showMap();
 		},
@@ -61,25 +61,30 @@ const processFile = (file, setDataDisplayMap) => {
 			const reader = new FileReader();
 
 			if (file.name.endsWith(".zip")) {
-				reader.readAsArrayBuffer(file);
-
-				reader.onload = function (e) {
-					const arrayBuffer = e.target.result;
-					const zip = new JSZip();
-					zip.loadAsync(arrayBuffer).then(function (contents) {
-						Object.keys(contents.files).forEach(function (filename) {
-							if (filename.endsWith(".txt")) {
-								zip
-									.file(filename)
-									.async("string")
-									.then(function (fileContent) {
-										const [data, name] = processText(fileContent);
-										setDataDisplayMap(data, name);
-									});
-							}
-						});
-					});
-				};
+				const zip = new JSZip();
+				zip.loadAsync(file).then(function (contents) {
+					const filenames = Object.keys(contents.files);
+					const chatFilename = filenames.filter((filename) =>
+						filename.match(/.*\.txt/)
+					)[0];
+					const imgFilenames = filenames.filter((filename) =>
+						filename.match(/.*\.(jpg|jpeg|png|gif)$/i)
+					);
+					if (imgFilenames.length > 0) {
+						console.log("images found");
+					}
+					// if there is a chat file, process it and any images
+					if (chatFilename) {
+						// process the chat file and pass along any images
+						zip
+							.file(chatFilename)
+							.async("string")
+							.then(function (fileContent) {
+								const [data, name] = processText(fileContent);
+								setDataDisplayMap(data, name, zip);
+							});
+					}
+				});
 			} else {
 				// text or geojson
 				reader.readAsText(file);
@@ -160,41 +165,46 @@ const processGeoJson = (json) => {
 	return [mapdata, groupName];
 };
 
-const processText = (text) => {
-	const groupNameRegex = /"([^"]*)"/;
-	const groupNameMatches = text.match(groupNameRegex);
-	const groupName = groupNameMatches ? groupNameMatches[1] : null;
+const cleanMsgContent = (content, location, imgFileRegex) => {
+	// replace the edited message marker since it's attached to other content
+	content = content.replace(/<This message was edited>/gi, "").trim();
+	// Clean remaining content by removing images and location references
+	content = content
+		.split("\n")
+		.map((line) => {
+			// go line by line, remove whitespace and remove images and location references, replacing with a placeholder to maintain message structure and organisation
+			// placeholder is used to more easily ignore these messages later on (during the map phase) and serves as a template for future artifacts to remove
+			// if these are removed the message order is messed up and it's hard to match them up with the correct location and content
+			line = line.trim();
+			if (location && line.includes(location[0])) {
+				// if line contains location, replace with placeholder
+				return (location[0] = "\nremove_this_msg\n"); // setting this up for removal later
+			}
+			if (line.match(imgFileRegex)) {
+				// if line contains image reference, replace with placeholder
+				return "\nremove_this_msg\n";
+			}
+			return line;
+		})
+		.filter(
+			(line) =>
+				line && // take only non empty lines
+				// ignore lines with the following, they aren't included with other content
+				!line.includes("image omitted") &&
+				!line.includes("<Media omitted>") &&
+				!line.includes("This message was deleted") &&
+				!line.includes("You deleted this message") &&
+				!line.includes(
+					"Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them."
+				)
+		)
+		.join("\n");
+	return content;
+};
 
-	// Check the first 3 characters to determine the format; iOS and Android
-	const fileType = text.substring(0, 3);
-	let messageRegex;
-
-	// Regex matches a single message including newline characters,
-	// stopping when new line starts with date or text ends
-	// also accounts for if the datetime is wrapped in brackets and has s
-	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
-	// this has been tweaked for each format but gives the same output
-	if (fileType.match(/\[\d{2}/)) {
-		console.info("ios format");
-		// iOS format
-		messageRegex =
-			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
-	} else if (fileType.match(/\d{2}\//)) {
-		console.info("android format");
-		// Android format
-		messageRegex =
-			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
-	} else {
-		console.error("Unknown file format");
-		return [null, groupName];
-	}
-
-	let messageMatches = [...text.matchAll(messageRegex)];
-	// Regex to match google maps location and capture lat (group 1) and long (group 2)
-	const locationRegex =
-		/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/g; //Without 'location' to be universal - the word in the export file changes based on WA language
-
-	// Convert messageMatches to array of JSON objects
+const processMsgMatches = (messageMatches, imgFileRegex) => {
+	// Process each message match, extracting the sender, location and img filenames before cleaning
+	// this returns an array of messages
 	let messages = [];
 	let senders = {};
 	messageMatches.forEach((match) => {
@@ -207,16 +217,60 @@ const processText = (text) => {
 		if (!Object.keys(senders).includes(message.sender)) {
 			senders[message.sender] = getSenderColour(senders);
 		}
-		let location = locationRegex.exec(message.content);
+		var location = locationRegex.exec(message.content);
 		if (location) {
 			message.location = {
 				lat: parseFloat(location[1]),
 				long: parseFloat(location[2]),
 			};
 		}
+		let imgFileMatches = [...message.content.matchAll(imgFileRegex)];
+		if (imgFileMatches.length > 0) {
+			let imgMatches = [];
+			for (const match of imgFileMatches) {
+				imgMatches.push(match[1]);
+			}
+			message.imgFilenames = imgMatches;
+		}
+		message.content = cleanMsgContent(message.content, location, imgFileRegex);
 		messages.push(message);
 	});
+	return [messages, senders];
+};
 
+// Regex to match google maps location and capture lat (group 1) and long (group 2)
+const locationRegex =
+	/: https:\/\/maps\.google\.com\/\?q=(-?\d+\.\d+),(-?\d+\.\d+)/; //Without 'location' to be universal - the word in the export file changes based on WA language
+
+const setImgMsgRegex = (fileType) => {
+	let messageRegex;
+	let imgFileRegex;
+	// Regex matches a single message including newline characters,
+	// stopping when new line starts with date or text ends
+	// also accounts for if the datetime is wrapped in brackets and has s
+	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
+	// this has been tweaked for each format but gives the same output
+	if (fileType.match(/\[\d{2}/)) {
+		// console.info("ios format");
+		// iOS format
+		messageRegex =
+			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
+	} else if (fileType.match(/\d{2}\//)) {
+		// console.info("android format");
+		// Android format
+		messageRegex =
+			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+		// Regex to match and capture image filenames in messages
+		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
+	} else {
+		console.error("Unknown file format");
+		return [null, null];
+	}
+	return [messageRegex, imgFileRegex];
+};
+
+const sortMessages = (messages) => {
 	// Sort messages by sender, then by datetime
 	messages.sort((a, b) => {
 		// Compare by sender
@@ -235,62 +289,78 @@ const processText = (text) => {
 			}
 		}
 	});
+	return messages;
+};
+
+const processText = (text) => {
+	const groupNameRegex = /"([^"]*)"/;
+	const groupNameMatches = text.match(groupNameRegex);
+	const groupName = groupNameMatches ? groupNameMatches[1] : null;
+
+	// Check the first 3 characters to determine the format; iOS and Android
+	const fileType = text.substring(0, 3);
+	const [messageRegex, imgFileRegex] = setImgMsgRegex(fileType);
+
+	let messageMatches = [...text.matchAll(messageRegex)];
+
+	// Convert messageMatches to array of JSON objects and then sort
+	let [messages, senders] = processMsgMatches(messageMatches, imgFileRegex);
+	messages = sortMessages(messages);
 
 	// Now loop through messages to create geojson for each location
 	var mapdata = {
 		type: "FeatureCollection",
 		features: [],
 	};
-	let feature = null;
+	let currentFeature = null;
 	let currentSender = null;
 
+	const createFeature = (message, groupName) => {
+		return {
+			type: "Feature",
+			properties: {
+				contributionid: crypto.randomUUID(),
+				mainattribute: groupName,
+				observations: "",
+				observer: message.sender,
+				datetime: message.datetime,
+				markerColour: senders[message.sender],
+				imgFilenames: [],
+			},
+			geometry: message.location
+				? {
+						type: "Point",
+						coordinates: [message.location.long, message.location.lat],
+				  }
+				: null,
+		};
+	};
+
 	messages.forEach((message) => {
-		// Sometimes sender changes but there's no location so add any features in progress
-		if (message.sender != currentSender || message.location) {
-			// Push any existing features to mapdata
-			if (feature) {
-				// Reject feature if it doesn't have geometry
-				if (feature.geometry) {
-					mapdata.features.push(feature);
-				} else {
-					feature = null;
-				}
+		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
+		// we assign it to a variable to be sure the validated content is used
+
+		if (message.location || message.sender !== currentSender) {
+			if (currentFeature && currentFeature.geometry) {
+				mapdata.features.push(currentFeature);
 			}
-			// Create new feature
-			var contributionid = crypto.randomUUID();
-			feature = {
-				type: "Feature",
-				properties: {
-					contributionid: contributionid,
-					mainattribute: groupName,
-					observations: "",
-					observer: message.sender,
-					datetime: message.datetime,
-					markerColour: senders[message.sender],
-				},
-			};
-			if (message.location) {
-				feature.geometry = {
-					type: "Point",
-					coordinates: [message.location.long, message.location.lat], // GeoJSON uses [long, lat] order
-				};
-			}
-		} else if (feature) {
-			// Append message content to observations unless it's media omitted
-			if (!message.content.includes("<Media omitted>")) {
-				feature.properties.observations += message.content + "\n";
-			}
+			currentFeature = createFeature(message, groupName);
+			currentSender = message.sender;
 		}
-		currentSender = message.sender;
+
+		if (currentFeature) {
+			if (message.imgFilenames) {
+				currentFeature.properties.imgFilenames.push(...message.imgFilenames);
+			}
+			currentFeature.properties.observations += message.content + "\n";
+		}
 	});
 	// Push the last message to mapdata
-	if (feature) {
-		// Reject feature if it doesn't have geometry
-		if (feature.geometry) {
-			mapdata.features.push(feature);
-		} else {
-			feature = null;
-		}
+	if (currentFeature && currentFeature.geometry) {
+		mapdata.features.push(currentFeature);
+	} else {
+		currentFeature = null;
 	}
+
 	return [mapdata, groupName];
 };

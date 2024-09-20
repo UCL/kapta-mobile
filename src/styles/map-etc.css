@@ -98,6 +98,9 @@
     }
 }
 
+.map-popup-body {
+    overflow-y: scroll;
+}
 
 #map-actions-container {
     color: #f0f0f0;
@@ -328,4 +331,35 @@
         }
     }
 
+}
+
+.feature-images {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+
+    img {
+        width: 100%;
+        max-width: 200px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .next-image {
+        display: flex;
+        background-color: var(--mid-red);
+        border-radius: 50%;
+        width: 1.5rem;
+        height: 1.5rem;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: white;
+        }
+    }
 }
