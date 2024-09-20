@@ -333,8 +333,7 @@ const processText = (text) => {
 
 	const isValidContent = (content) => {
 		// replace the edited message marker since it's attached to other content
-		content = content.replace("<This message was edited>", "");
-
+		content = content.replace(/<This message was edited>/gi, "").trim();
 		// return content that is not empty and has trimmed whitespace
 		return content
 			.split("\n")
@@ -345,7 +344,10 @@ const processText = (text) => {
 
 	messages.forEach((message) => {
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
-		if (isValidContent(message.content)) {
+		// we assign it to a variable to be sure the validated content is used
+		const validContent = isValidContent(message.content);
+
+		if (validContent) {
 			if (message.location || message.sender !== currentSender) {
 				if (currentFeature && currentFeature.geometry) {
 					mapdata.features.push(currentFeature);
@@ -358,7 +360,7 @@ const processText = (text) => {
 				if (message.imgFilenames) {
 					currentFeature.properties.imgFilenames.push(...message.imgFilenames);
 				}
-				currentFeature.properties.observations += message.content + "\n";
+				currentFeature.properties.observations += validContent + "\n";
 			}
 		}
 	});
