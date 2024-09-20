@@ -207,7 +207,7 @@ i18next.use(initReactI18next).init({
 			translation: {
 				key: "báwo ni ayé",
 				asktheteam: "Béèrè ohunkóhun lọ́wọ́ wa",
-				instructions: `<span class="title">Báwo ni láti lò Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - Gbé àjùmọ̀ṣepọ̀ sórí Kapta<br>3 - Pín tàbí tà átààwá àwáàrí rẹ`,
+				instructions: `<span class="title">Ṣẹda Awọn maapu WhatsApp pẹlu Kapta</span><hr>1 - Pin awọn ipo ni ẹgbẹ WhatsApp kan<br>2 - okeere iwiregbe si Kapta<br>3 - Pin maapu WhatsApp rẹ`,
 				watchtutorial: "Aago Tutorial",
 				tutorialUrl: "https://youtube.com/embed/vaPHy8S-OpA" + youtubeOpts,
 				viewrecentmap: "Wo àwáàrí tó ṣẹṣẹ",
