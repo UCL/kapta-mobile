@@ -135,7 +135,7 @@ const formatDateString = (date, time) => {
 		} else if (meridiem === "am" && hour === "12") {
 			hour = "00";
 		}
-	} else[hour, min, sec = "00"] = time.split(":"); // 24hr format used already
+	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
@@ -166,10 +166,12 @@ const processGeoJson = (json) => {
 };
 
 const cleanMsgContent = (content, location, imgFileRegex) => {
-	// Clean remaining content
+	// Clean remaining content by removing images and location references
 	content = content
 		.split("\n")
 		.map((line) => {
+			// go line by line, remove whitespace and remove images and location references, replacing with a placeholder to maintain message structure and organisation
+			// if these are removed the message order is messed up and it's hard to match them up with the correct location and content
 			line = line.trim();
 			if (location && line.includes(location[0])) {
 				return (location[0] = "\nremove_this_msg\n"); // setting this up for removal later
@@ -182,16 +184,22 @@ const cleanMsgContent = (content, location, imgFileRegex) => {
 		.filter(
 			(line) =>
 				line &&
+				// ignore lines with the following content, they aren't included with other content
 				!line.includes("image omitted") &&
 				!line.includes("<Media omitted>") &&
 				!line.includes("This message was deleted") &&
-				!line.includes("You deleted this message")
+				!line.includes("You deleted this message") &&
+				!line.includes(
+					"Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them."
+				)
 		)
 		.join("\n");
 	return content;
 };
 
 const processMsgMatches = (messageMatches, imgFileRegex) => {
+	// Process each message match, extracting the sender, location and img filenames before cleaning
+	// this returns an array of messages
 	let messages = [];
 	let senders = {};
 	messageMatches.forEach((match) => {
@@ -237,15 +245,14 @@ const setImgMsgRegex = (fileType) => {
 	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	// this has been tweaked for each format but gives the same output
-	// TODO: pass along which format to the map so it knows how to find images
 	if (fileType.match(/\[\d{2}/)) {
-		console.info("ios format");
+		// console.info("ios format");
 		// iOS format
 		messageRegex =
 			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
 		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
-		console.info("android format");
+		// console.info("android format");
 		// Android format
 		messageRegex =
 			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
@@ -317,20 +324,18 @@ const processText = (text) => {
 			},
 			geometry: message.location
 				? {
-					type: "Point",
-					coordinates: [message.location.long, message.location.lat],
-				}
+						type: "Point",
+						coordinates: [message.location.long, message.location.lat],
+				  }
 				: null,
 		};
 	};
 
 	const isValidContent = (content) => {
-		content = content.replace(
-			"Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.",
-			""
-		);
+		// replace the edited message marker since it's attached to other content
 		content = content.replace("<This message was edited>", "");
 
+		// return content that is not empty and has trimmed whitespace
 		return content
 			.split("\n")
 			.map((line) => line.trim())
