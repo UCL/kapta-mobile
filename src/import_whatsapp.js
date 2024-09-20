@@ -365,8 +365,11 @@ const processText = (text) => {
 		}
 	});
 	// Push the last message to mapdata
-	if (currentFeature) {
+	if (currentFeature && currentFeature.geometry) {
 		mapdata.features.push(currentFeature);
+		} else {
+			currentFeature = null;
+		}
 	}
 	return [mapdata, groupName];
 };

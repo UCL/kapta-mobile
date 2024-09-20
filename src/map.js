@@ -1,6 +1,8 @@
+//import leaflet styling explicitly to avoid errors
+import "../node_modules/leaflet/dist/leaflet.css";
+
 import "leaflet-easybutton";
 import "leaflet-easyprint";
-import "leaflet/dist/leaflet.css";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./styles/map-etc.css";
@@ -106,6 +108,12 @@ function MapDataLayer({ data }) {
 	const { data: geoJSON, imgZip } = data;
 	const [featureImages, setFeatureImages] = useState({}); // this is basically a cache
 
+  if (data.features.length == 0) {
+		// need translation
+		return <ErrorPopup error="No data to display" />;
+	}
+
+
 	useEffect(() => {
 		// fit map to bounds
 		if (boundsRef.current.length > 0) {
@@ -135,6 +143,7 @@ function MapDataLayer({ data }) {
 		},
 		[imgZip, featureImages]
 	);
+
 
 	return (
 		<>
@@ -226,7 +235,6 @@ function MapDataLayer({ data }) {
  ************************************************************************************************/
 function ErrorPopup({ error }) {
 	const map = useMap();
-
 	// Adjust the map view to a central location (e.g., coordinates [0, 0])
 	useEffect(() => {
 		if (error) {
@@ -235,14 +243,15 @@ function ErrorPopup({ error }) {
 	}, [error, map]);
 
 	return error ? (
-		<Marker position={[0, 0]}>
-			<Popup
-				position={[0, 0]} // Position within the map (centered in this case)
-				autoClose={false}
-			>
-				<div>{error}</div>
-			</Popup>
-		</Marker>
+		<Popup
+			position={[0, 0]} // Position within the map (centered in this case)
+			autoPan={true}
+			autoClose={false}
+		>
+			<div>
+				<h2 className="error-popup">{error}</h2>
+			</div>
+		</Popup>
 	) : null;
 }
 

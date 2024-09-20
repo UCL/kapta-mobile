@@ -92,6 +92,10 @@
         background-color: transparent;
         color: var(--light-grey);
     }
+
+    .error-popup {
+        color: var(--mid-red);
+    }
 }
 
 .map-popup-body {
