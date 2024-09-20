@@ -166,25 +166,30 @@ const processGeoJson = (json) => {
 };
 
 const cleanMsgContent = (content, location, imgFileRegex) => {
+	// replace the edited message marker since it's attached to other content
+	content = content.replace(/<This message was edited>/gi, "").trim();
 	// Clean remaining content by removing images and location references
 	content = content
 		.split("\n")
 		.map((line) => {
 			// go line by line, remove whitespace and remove images and location references, replacing with a placeholder to maintain message structure and organisation
+			// placeholder is used to more easily ignore these messages later on (during the map phase) and serves as a template for future artifacts to remove
 			// if these are removed the message order is messed up and it's hard to match them up with the correct location and content
 			line = line.trim();
 			if (location && line.includes(location[0])) {
+				// if line contains location, replace with placeholder
 				return (location[0] = "\nremove_this_msg\n"); // setting this up for removal later
 			}
 			if (line.match(imgFileRegex)) {
+				// if line contains image reference, replace with placeholder
 				return "\nremove_this_msg\n";
 			}
 			return line;
 		})
 		.filter(
 			(line) =>
-				line &&
-				// ignore lines with the following content, they aren't included with other content
+				line && // take only non empty lines
+				// ignore lines with the following, they aren't included with other content
 				!line.includes("image omitted") &&
 				!line.includes("<Media omitted>") &&
 				!line.includes("This message was deleted") &&
@@ -260,7 +265,7 @@ const setImgMsgRegex = (fileType) => {
 		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
 		console.error("Unknown file format");
-		return [null, groupName];
+		return [null, null];
 	}
 	return [messageRegex, imgFileRegex];
 };
@@ -331,37 +336,23 @@ const processText = (text) => {
 		};
 	};
 
-	const isValidContent = (content) => {
-		// replace the edited message marker since it's attached to other content
-		content = content.replace(/<This message was edited>/gi, "").trim();
-		// return content that is not empty and has trimmed whitespace
-		return content
-			.split("\n")
-			.map((line) => line.trim())
-			.filter(Boolean)
-			.join("\n");
-	};
-
 	messages.forEach((message) => {
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
 		// we assign it to a variable to be sure the validated content is used
-		const validContent = isValidContent(message.content);
 
-		if (validContent) {
-			if (message.location || message.sender !== currentSender) {
-				if (currentFeature && currentFeature.geometry) {
-					mapdata.features.push(currentFeature);
-				}
-				currentFeature = createFeature(message, groupName);
-				currentSender = message.sender;
+		if (message.location || message.sender !== currentSender) {
+			if (currentFeature && currentFeature.geometry) {
+				mapdata.features.push(currentFeature);
 			}
+			currentFeature = createFeature(message, groupName);
+			currentSender = message.sender;
+		}
 
-			if (currentFeature) {
-				if (message.imgFilenames) {
-					currentFeature.properties.imgFilenames.push(...message.imgFilenames);
-				}
-				currentFeature.properties.observations += validContent + "\n";
+		if (currentFeature) {
+			if (message.imgFilenames) {
+				currentFeature.properties.imgFilenames.push(...message.imgFilenames);
 			}
+			currentFeature.properties.observations += message.content + "\n";
 		}
 	});
 	// Push the last message to mapdata
