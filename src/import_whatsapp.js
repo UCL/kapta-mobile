@@ -285,7 +285,12 @@ const processText = (text) => {
 	});
 	// Push the last message to mapdata
 	if (feature) {
-		mapdata.features.push(feature);
+		// Reject feature if it doesn't have geometry
+		if (feature.geometry) {
+			mapdata.features.push(feature);
+		} else {
+			feature = null;
+		}
 	}
 	return [mapdata, groupName];
 };
