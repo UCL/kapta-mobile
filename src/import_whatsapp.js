@@ -32,8 +32,11 @@ export function FileParser({ file, ...dataDisplayProps }) {
 
 	const setDataDisplayMap = useCallback(
 		(data, name, imgZip = null) => {
+			data = updateMapdata(data, name);
+			console.log("setdata", data);
+
 			setMapData({ data: data, imgZip: imgZip });
-			updateMapdata(name);
+
 			showMap(true);
 		},
 		[setMapData, showMap, setFileToParse]
@@ -47,6 +50,13 @@ export function FileParser({ file, ...dataDisplayProps }) {
 
 	return null; //don't render anything
 }
+
+const updateMapdata = (data, groupName = null) => {
+	return {
+		...data,
+		slug: slugify(groupName || "Kapta"),
+	};
+};
 
 export const allowedExtensions = [".zip", ".txt", ".geojson"];
 
@@ -138,15 +148,6 @@ const formatDateString = (date, time) => {
 	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
-};
-
-const updateMapdata = (groupName = null) => {
-	// not sure how much this is utilised atm, may need to better incorporate
-	if (groupName) {
-		Alpine.store("currentDataset").slug = slugify(groupName);
-	} else {
-		Alpine.store("currentDataset").slug = slugify("Kapta");
-	}
 };
 
 const processGeoJson = (json) => {
