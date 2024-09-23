@@ -33,7 +33,6 @@ export function FileParser({ file, ...dataDisplayProps }) {
 	const setDataDisplayMap = useCallback(
 		(data, name, imgZip = null) => {
 			data = updateMapdata(data, name);
-			console.log("setdata", data);
 
 			setMapData({ data: data, imgZip: imgZip });
 
