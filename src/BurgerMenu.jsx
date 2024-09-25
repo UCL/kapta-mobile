@@ -3,11 +3,12 @@ import Alpine from "alpinejs";
 import { useTranslation } from "react-i18next";
 import StatusBar from "./StatusBar.jsx";
 import "./styles/burger-menu.css";
+import { exitButtonIcon } from "./icons.js";
 
 const hasCognito = Alpine.store("appData")?.hasCognito;
 
-export default function BurgerMenu(isVisible) {
-	if (!isVisible) return null;
+export default function BurgerMenu({ isVisible, setIsVisible }) {
+	// if (!isVisible) return null;
 
 	const [isSBVisible, setIsSBVisible] = useState(false);
 	const { t } = useTranslation();
@@ -23,13 +24,19 @@ export default function BurgerMenu(isVisible) {
 	}, [isVisible]);
 
 	return (
-		<div id="burger-menu">
+		<div
+			id="burger-menu"
+			className={`drawer ${isVisible ? "drawer--open" : "drawer--closed"}`}
+		>
+			<button onClick={() => setIsVisible(false)} className="btn--close-bm">
+				{exitButtonIcon}
+			</button>
 			<StatusBar isVisible={isSBVisible} />
-			<details>
+			<details className="bm-item">
 				<summary>{t("about")}</summary>
 				<div dangerouslySetInnerHTML={{ __html: t("aboutContent") }}></div>
 			</details>
-			<details>
+			<details className="bm-item">
 				<summary>{t("people")}</summary>
 				<div dangerouslySetInnerHTML={{ __html: t("peopleContent") }}></div>
 			</details>

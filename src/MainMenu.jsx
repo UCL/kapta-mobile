@@ -215,7 +215,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 			<button onClick={toggleBM} className="btn--burger-menu">
 				{menuIcon}
 			</button>
-			{isBMVisible && <BurgerMenu isVisible={isBMVisible} />}
+			<BurgerMenu isVisible={isBMVisible} setIsVisible={setIsBMVisible} />
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
