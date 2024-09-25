@@ -19,6 +19,7 @@ import {
 	faX,
 	faThumbsUp,
 	faMessage,
+	faBars,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Add fontawesome icons to library
@@ -38,7 +39,8 @@ library.add(
 	faDotCircle,
 	faX,
 	faThumbsUp,
-	faMessage
+	faMessage,
+	faBars
 );
 export const chevronDown = <FontAwesomeIcon icon={faChevronDown} />;
 export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
@@ -63,3 +65,5 @@ export const closeIcon = <FontAwesomeIcon icon={faX} />;
 export const thumbsUpIcon = <FontAwesomeIcon icon={faThumbsUp} />;
 
 export const msgIcon = <FontAwesomeIcon icon={faMessage} />;
+
+export const menuIcon = <FontAwesomeIcon icon={faBars} />;

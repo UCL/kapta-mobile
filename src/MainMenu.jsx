@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
-import StatusBar from "./StatusBar.jsx";
 import config from "./config.json";
 import { isIOS } from "./main.js";
 import ReactGA from "react-ga4";
+import BurgerMenu from "./BurgerMenu.jsx";
+import { menuIcon } from "./icons.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -198,29 +199,23 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-const hasCognito = Alpine.store("appData")?.hasCognito;
-
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
-	const [isSBVisible, setIsSBVisible] = useState(false);
+	const [isBMVisible, setIsBMVisible] = useState(false);
 
-	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
-	useEffect(() => {
-		setIsSBVisible(hasCognito);
-	}, []);
-
-	// if menu not visible, nor should status bar be
-	useEffect(() => {
-		if (!isVisible) setIsSBVisible(false);
-	}, [isVisible]);
+	const toggleBM = () => {
+		setIsBMVisible((prevState) => !prevState);
+	};
 
 	if (!isVisible) return null;
 	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
 	return (
 		<>
-			<StatusBar isVisible={isSBVisible} />
-
+			<button onClick={toggleBM} className="btn--burger-menu">
+				{menuIcon}
+			</button>
+			{isBMVisible && <BurgerMenu isVisible={isBMVisible} />}
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
