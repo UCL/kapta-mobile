@@ -26,7 +26,7 @@ export default function BurgerMenu({ isVisible, setIsVisible }) {
 	return (
 		<div
 			id="burger-menu"
-			className={`drawer ${isVisible ? "drawer--open" : "drawer--closed"}`}
+			className={`${isVisible ? "drawer--open" : "drawer--closed"}`}
 		>
 			<button onClick={() => setIsVisible(false)} className="btn--close-bm">
 				{exitButtonIcon}
@@ -34,11 +34,17 @@ export default function BurgerMenu({ isVisible, setIsVisible }) {
 			<StatusBar isVisible={isSBVisible} />
 			<details className="bm-item">
 				<summary>{t("about")}</summary>
-				<div dangerouslySetInnerHTML={{ __html: t("aboutContent") }}></div>
+				<div
+					className="bm-item__content"
+					dangerouslySetInnerHTML={{ __html: t("aboutContent") }}
+				></div>
 			</details>
 			<details className="bm-item">
 				<summary>{t("people")}</summary>
-				<div dangerouslySetInnerHTML={{ __html: t("peopleContent") }}></div>
+				<div
+					className="bm-item__content"
+					dangerouslySetInnerHTML={{ __html: t("peopleContent") }}
+				></div>
 			</details>
 		</div>
 	);

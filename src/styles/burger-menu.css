@@ -28,9 +28,8 @@
 }
 
 #burger-menu {
-
     background-color: white;
-    width: 80vw;
+    width: 70vw;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -43,8 +42,11 @@
     .btn--close-bm {
         transform: rotate(180deg);
         border: none;
-        font-size: 1rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
+        background-color: transparent;
+        margin-top: 0.5rem;
+        margin-inline-start: 0.3rem;
 
         svg {
             color: var(--mid-red);
@@ -53,12 +55,21 @@
 
     .bm-item {
         position: relative;
-        padding: 0.5rem 0.3rem;
+        padding: 0.8rem 0.4rem;
+        transition: open 0.3s ease;
 
         summary {
             font-size: 1.5rem;
+            color: var(--black-grey);
+        }
+
+        .bm-item__content {
+            margin-inline: 4%;
+            font-size: 1rem;
+            color: var(--black-grey);
         }
     }
+
 
     &.drawer--open {
         transform: translateX(0);
