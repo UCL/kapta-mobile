@@ -35,7 +35,7 @@ function SubmitBtn() {
 	);
 }
 
-function InputArea({ setTitle, setPulse, setModalOpen }) {
+function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 	const { t } = useTranslation();
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
@@ -45,15 +45,11 @@ function InputArea({ setTitle, setPulse, setModalOpen }) {
 		e.preventDefault();
 		let topic = filterValue;
 
-		if (topic != "") Alpine.store("appData").mapTitle = topic;
-		let currentDataset = Alpine.store("currentDataset");
-		// Add topic, goal, dataSov to geoJSON
-
-		currentDataset.geoJSON?.features.forEach((feature) => {
+		currentDataset.features?.forEach((feature) => {
 			feature.properties.topic = topic;
 		});
 
-		// Create slug from topic and add to Alpine store
+		// Create slug from topic and add to dataset
 		const slug = slugify(`${currentDataset.slug}-${topic}`);
 		currentDataset.slug = slug;
 
@@ -84,7 +80,13 @@ function InputArea({ setTitle, setPulse, setModalOpen }) {
 		</form>
 	);
 }
-export function MapActionArea({ setTitle, setPulse, showMenu, setModalOpen }) {
+export function MapActionArea({
+	setTitle,
+	setPulse,
+	showMenu,
+	setModalOpen,
+	currentDataset,
+}) {
 	return (
 		<div id="map-actions-container">
 			<div className="map-actions__wrapper">
@@ -96,6 +98,7 @@ export function MapActionArea({ setTitle, setPulse, showMenu, setModalOpen }) {
 						setTitle={setTitle}
 						setPulse={setPulse}
 						setModalOpen={setModalOpen}
+						currentDataset={currentDataset}
 					/>
 				</div>
 			</div>
@@ -110,7 +113,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	const { t } = useTranslation();
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const filenameSlug = Alpine.store("currentDataset").slug;
+	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
 		text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
