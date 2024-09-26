@@ -184,7 +184,7 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 							category: "Help",
 							action: "Help Button Clicked",
 						});
-						window.location.href = config.kapta.askTheTeamURL;
+						window.location.href = process.env.ASK_URL;
 					}}
 				>
 					{t("asktheteam")}
