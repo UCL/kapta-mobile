@@ -15,6 +15,7 @@ import {
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
+import { hasCognito } from "./main.js";
 
 const config = require("./config.json");
 
@@ -107,7 +108,6 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	let hasCognito = Alpine.store("appData")?.hasCognito;
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const filenameSlug = Alpine.store("currentDataset").slug;
@@ -261,7 +261,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 						{dataIcn}
 						{t("sharedata")}
 					</button>
-					{hasCognito && (
+					{hasCognito() && (
 						<button
 							className={`btn ${!user.logged_in && "disabled"}`}
 							onClick={handleUploadClick}

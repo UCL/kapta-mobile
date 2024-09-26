@@ -25,6 +25,11 @@ export const isMobileOrTablet = () => {
 export const isIOS = () => {
 	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
 };
+export const hasCognito = () => {
+	const config = require("./config.json");
+	if (config.cognito) return true;
+	else return false;
+};
 function initAlpine() {
 	//may want to entirely convert to state or context
 	Alpine.store("deviceInfo", {
@@ -33,18 +38,20 @@ function initAlpine() {
 		},
 		isMobile: true,
 	});
-	Alpine.store("currentDataset", {
-		geoJSON: null,
-		slug: null,
-	});
-	Alpine.store("appData", {
-		init() {
-			const config = require("./config.json");
-			if (config.cognito) this.hasCognito = true;
-		},
-		hasCognito: false,
-		mapTitle: null,
-	});
+	// Alpine.store("currentDataset", {
+	// 	geoJSON: null,
+	// 	slug: null,
+	// });
+	// Alpine.store("appData", {
+	// 	init() {
+	// 		const config = require("./config.json");
+	// 		console.log("config", config);
+	// 		if (config.cognito) this.hasCognito = true;
+	// 		console.log("alpine", this);
+	// 	},
+	// 	hasCognito: false,
+	// 	mapTitle: null,
+	// });
 	Alpine.store("user", {
 		init() {
 			this.idToken = localStorage.getItem("idToken");
