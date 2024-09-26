@@ -79,13 +79,12 @@ function App() {
 	const [mapData, setMapData] = useState(null);
 	const [isLoaderVisible, setIsLoaderVisible] = useState(false);
 	// if map/menu is visible, the other shouldn't be
-	const showMap = () => {
-		setIsLoaderVisible(true);
+	const showMap = (showLoader = false) => {
+		if (showLoader) setIsLoaderVisible(true);
 		setIsMapVisible(true);
 		setIsMenuVisible(false);
 	};
 	const showMenu = () => {
-		setIsLoaderVisible(true);
 		setIsMapVisible(false);
 		setIsMenuVisible(true);
 	};
