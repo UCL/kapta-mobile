@@ -30,95 +30,6 @@ export const hasCognito = () => {
 	if (config.cognito) return true;
 	else return false;
 };
-function initAlpine() {
-	//may want to entirely convert to state or context
-	Alpine.store("deviceInfo", {
-		init() {
-			this.isMobile = isMobileOrTablet();
-		},
-		isMobile: true,
-	});
-	// Alpine.store("currentDataset", {
-	// 	geoJSON: null,
-	// 	slug: null,
-	// });
-	// Alpine.store("appData", {
-	// 	init() {
-	// 		const config = require("./config.json");
-	// 		console.log("config", config);
-	// 		if (config.cognito) this.hasCognito = true;
-	// 		console.log("alpine", this);
-	// 	},
-	// 	hasCognito: false,
-	// 	mapTitle: null,
-	// });
-	Alpine.store("user", {
-		init() {
-			this.idToken = localStorage.getItem("idToken");
-			this.accessToken = localStorage.getItem("accessToken");
-			this.refreshToken = localStorage.getItem("refreshToken");
-
-			Alpine.effect(() => {
-				["idToken", "accessToken", "refreshToken"].forEach((key) => {
-					if (this[key] === null) {
-						localStorage.removeItem(key);
-					} else {
-						localStorage.setItem(key, this[key]);
-					}
-				});
-				this.update_user_info();
-			});
-		},
-		update_user_info() {
-			if (this.idToken) {
-				let decodedIdTokenPayload = JSON.parse(
-					atob(this.idToken.split(".")[1])
-				); // decode id token's payload section
-				this.display_name = decodedIdTokenPayload["custom:display_name"];
-				this.phone_number = decodedIdTokenPayload["phone_number"];
-				this.logged_in = true;
-			} else {
-				this.display_name = null;
-				this.phone_number = null;
-				this.logged_in = false;
-			}
-		},
-		idToken: null,
-		accessToken: null,
-		refreshToken: null,
-		logged_in: false,
-		display_name: null,
-		phone_number: null,
-		refresh() {
-			initiateAuthRefresh({ refreshToken: this.refreshToken }).then(function (
-				response
-			) {
-				let authResult = response.AuthenticationResult;
-				Alpine.store("user").accessToken = authResult.AccessToken;
-				Alpine.store("user").idToken = authResult.IdToken;
-				Alpine.store("user").refreshToken = authResult.RefreshToken;
-				Alpine.store("user").update_user_info();
-			});
-		},
-		logout() {
-			signOut({ access_token: this.accessToken }).then(
-				function (response) {
-					console.info("Successfully signed out", response);
-				},
-				function (error) {
-					console.error("Error signing out", error);
-				}
-			);
-			localStorage.removeItem("accessToken");
-			localStorage.removeItem("idToken");
-			localStorage.removeItem("refreshToken");
-			this.accessToken = null;
-			this.idToken = null;
-			this.refreshToken = null;
-			this.update_user_info();
-		},
-	});
-}
 
 function initServiceWorker(setFileToParse) {
 	if ("serviceWorker" in navigator) {
@@ -133,7 +44,7 @@ function initServiceWorker(setFileToParse) {
 				});
 		});
 
-		if (!Alpine.store("deviceInfo").isMobile || isIOS()) {
+		if (!isMobileOrTablet() || isIOS()) {
 			window.addEventListener("load", function () {
 				const shownWorksBestOnAndroid = localStorage.getItem(
 					"shownWorksBestOnAndroid"
@@ -159,11 +70,7 @@ function App() {
 	const [fileToParse, setFileToParse] = useState(null);
 
 	useEffect(() => {
-		// Initialize Alpine and SW
-		document.addEventListener("alpine:init", () => {
-			initAlpine();
-		});
-		Alpine.start();
+		// Initialize GA and SW
 		initServiceWorker(setFileToParse);
 		ReactGA.initialize("G-LEP1Y0FVCD");
 	}, []); // Empty dependency array ensures this effect runs once on mount
@@ -187,6 +94,7 @@ function App() {
 		showMap,
 		setFileToParse,
 	}; // setting these in an object so they're easier to pass and update
+
 	return (
 		<>
 			<InstallDialog />

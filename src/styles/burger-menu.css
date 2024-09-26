@@ -1,6 +1,7 @@
 #status-bar {
     background-color: #031927;
     color: #fff;
+    display: block;
     /* height: 10vh;
     display: grid;
     align-content: center;

@@ -15,7 +15,7 @@ import {
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
-import { hasCognito } from "./main.js";
+import { hasCognito, isMobileOrTablet } from "./main.js";
 
 const config = require("./config.json");
 
@@ -222,7 +222,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					() => console.info("Data shared"),
 					() => console.error("Failed to share data")
 				);
-		} else if (!Alpine.store("deviceInfo").isMobile) {
+		} else if (!isMobileOrTablet()) {
 			downloadFile(blob, filename);
 		}
 	};

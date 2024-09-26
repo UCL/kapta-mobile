@@ -5,7 +5,7 @@ import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import config from "./config.json";
-import { isIOS } from "./main.js";
+import { isIOS, isMobileOrTablet } from "./main.js";
 import ReactGA from "react-ga4";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
@@ -208,7 +208,6 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	};
 
 	if (!isVisible) return null;
-	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
 	return (
 		<>
@@ -221,7 +220,9 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 				<Instructions />
 				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
 				{/* File picker (web only) */}
-				{(!isMobile || isIOS()) && <FilePicker {...dataDisplayProps} />}
+				{(!isMobileOrTablet() || isIOS()) && (
+					<FilePicker {...dataDisplayProps} />
+				)}
 				<Copyright />
 			</div>
 		</>

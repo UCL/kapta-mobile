@@ -6,19 +6,20 @@ import { exitButtonIcon } from "./icons.js";
 import { hasCognito } from "./main.js";
 
 export default function BurgerMenu({ isVisible, setIsVisible }) {
-	console.log(hasCognito());
-	const [isSBVisible, setIsSBVisible] = useState(false);
+	// console.log(hasCognito());
+	// const [isSBVisible, setIsSBVisible] = useState(false);
 	const { t } = useTranslation();
 
-	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
-	useEffect(() => {
-		setIsSBVisible(hasCognito());
-	}, []);
+	// // set status bar visibility based on if cognito in config, doedn't need to be updated after init
+	// useEffect(() => {
+	// 	console.log("useffect", hasCognito());
+	// 	setIsSBVisible(hasCognito());
+	// }, []);
 
 	// if menu not visible, nor should status bar be
-	useEffect(() => {
-		if (!isVisible) setIsSBVisible(false);
-	}, [isVisible]);
+	// useEffect(() => {
+	// 	if (!isVisible) setIsSBVisible(false);
+	// }, [isVisible]);
 
 	return (
 		<div
@@ -28,7 +29,7 @@ export default function BurgerMenu({ isVisible, setIsVisible }) {
 			<button onClick={() => setIsVisible(false)} className="btn--close-bm">
 				{exitButtonIcon}
 			</button>
-			<StatusBar isVisible={isSBVisible} />
+			<StatusBar />
 			<details className="bm-item">
 				<summary>{t("about")}</summary>
 				<div

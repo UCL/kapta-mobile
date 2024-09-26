@@ -1,17 +1,16 @@
 import { /* webpackPrefetch: true */ displayLoginDialog } from "./login.js";
 import React from "react";
-import Alpine from "alpinejs";
+import { hasCognito } from "./main.js";
+import { useUserStore } from "./useUserStore.js";
 
 window.displayLoginDialog = displayLoginDialog;
 
-export default function StatusBar({ isVisible }) {
-	console.log("sb visible", isVisible);
-	if (!isVisible) return null;
+export default function StatusBar() {
+	if (!hasCognito()) return null; // don't render anything if we don't have cognito
 
-	const user = Alpine.store("user");
+	const user = useUserStore(); // get user details
 	const onLogin = () => displayLoginDialog();
 	const onLogout = () => (user.logged_in = false);
-
 	return (
 		<div id="status-bar">
 			{user.logged_in ? (
