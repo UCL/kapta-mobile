@@ -29,7 +29,7 @@ export default function BurgerMenu({ isVisible, setIsVisible }) {
 			<button onClick={() => setIsVisible(false)} className="btn--close-bm">
 				{exitButtonIcon}
 			</button>
-			{/* <StatusBar /> */}
+			<StatusBar />
 			<details className="bm-item">
 				<summary>{t("about")}</summary>
 				<div

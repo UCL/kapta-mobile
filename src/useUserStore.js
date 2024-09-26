@@ -11,11 +11,20 @@ export const useUserStore = () => {
 
 	const updateUserInfo = useCallback(() => {
 		if (idToken) {
-			const decodedIdTokenPayload = JSON.parse(atob(idToken.split(".")[1]));
-			setDisplayName(decodedIdTokenPayload["custom:display_name"]);
-			setPhoneNumber(decodedIdTokenPayload["phone_number"]);
-			setLoggedIn(true);
+			try {
+				const base64Payload = idToken.split(".")[1]; // Get the payload part
+				const decodedIdTokenPayload = JSON.parse(atob(base64Payload));
+				setDisplayName(decodedIdTokenPayload["custom:display_name"]);
+				setPhoneNumber(decodedIdTokenPayload["phone_number"]);
+				setLoggedIn(true);
+			} catch (error) {
+				console.error("Failed to decode idToken:", error);
+				setDisplayName(null);
+				setPhoneNumber(null);
+				setLoggedIn(false);
+			}
 		} else {
+			// Reset state if idToken is null or empty
 			setDisplayName(null);
 			setPhoneNumber(null);
 			setLoggedIn(false);
@@ -28,9 +37,10 @@ export const useUserStore = () => {
 		const storedAccessToken = localStorage.getItem("accessToken");
 		const storedRefreshToken = localStorage.getItem("refreshToken");
 
-		setIdToken(storedIdToken);
-		setAccessToken(storedAccessToken);
-		setRefreshToken(storedRefreshToken);
+		// Only set state if tokens are not the string "null"
+		setIdToken(storedIdToken === "null" ? null : storedIdToken);
+		setAccessToken(storedAccessToken === "null" ? null : storedAccessToken);
+		setRefreshToken(storedRefreshToken === "null" ? null : storedRefreshToken);
 
 		// Update user info after initializing tokens
 		updateUserInfo();
@@ -38,9 +48,9 @@ export const useUserStore = () => {
 
 	// Sync tokens with localStorage whenever they change
 	useEffect(() => {
-		localStorage.setItem("idToken", idToken);
-		localStorage.setItem("accessToken", accessToken);
-		localStorage.setItem("refreshToken", refreshToken);
+		localStorage.setItem("idToken", idToken || "null"); // Save as "null" if null
+		localStorage.setItem("accessToken", accessToken || "null");
+		localStorage.setItem("refreshToken", refreshToken || "null");
 
 		updateUserInfo(); // Update user info whenever tokens change
 	}, [idToken, accessToken, refreshToken, updateUserInfo]);

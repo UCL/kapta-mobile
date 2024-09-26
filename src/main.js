@@ -69,7 +69,6 @@ function App() {
 		// Initialize GA and SW
 		initServiceWorker(setFileToParse);
 		ReactGA.initialize("G-LEP1Y0FVCD");
-		console.log("main useEffect");
 	}, []); // Empty dependency array ensures this effect runs once on mount
 
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
@@ -110,5 +109,4 @@ function App() {
 
 const rootElement = document.getElementById("main");
 const root = ReactDOM.createRoot(rootElement);
-console.log("root", root);
 root.render(<App />);

@@ -1,13 +1,4 @@
 #status-bar {
-    background-color: #031927;
-    color: #fff;
-    display: block;
-    /* height: 10vh;
-    display: grid;
-    align-content: center;
-    width: 100%;
-    position: fixed;
-    top: 0; */
 
     div {
         display: grid;
@@ -19,10 +10,12 @@
         /* margin-top: 0.5rem; */
     }
 
-    button {
+    .button--login {
         margin: 0.6rem 1rem;
         height: 2rem;
         border: none;
+        background-color: var(--black-blue);
+        color: white;
         /* border-radius: 6px; */
     }
 
