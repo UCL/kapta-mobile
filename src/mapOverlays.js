@@ -16,6 +16,7 @@ import {
 } from "./icons";
 import { slugify } from "./utils.js";
 import { hasCognito, isMobileOrTablet } from "./main.js";
+import { useUserStore } from "./useUserStore.js";
 
 const config = require("./config.json");
 
@@ -111,7 +112,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	const user = Alpine.store("user");
+	const user = useUserStore();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
@@ -232,7 +233,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	const handleUploadClick = async () => {
 		setIsDialogOpen(true).then(
 			function () {
-				let idToken = Alpine.store("user").idToken;
+				let idToken = user.idToken;
 				submitData(currentDataset.geoJSON, idToken);
 			},
 			function (rejectReason) {

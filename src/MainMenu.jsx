@@ -1,4 +1,3 @@
-import Alpine from "alpinejs";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";

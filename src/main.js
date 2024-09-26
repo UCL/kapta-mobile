@@ -1,17 +1,13 @@
-import Alpine from "alpinejs";
 import React, { useEffect, useState } from "react";
 import { i18next } from "./languages.js";
 import ReactDOM from "react-dom/client";
 import { FileParser } from "./import_whatsapp.js";
-import { signOut, initiateAuthRefresh } from "./auth.js";
 import { Map } from "./map.js";
 import InstallDialog from "./Install.jsx";
 import MainMenu from "./MainMenu.jsx";
 import Loader from "./Loader.jsx";
 import "./styles/main.css";
 import ReactGA from "react-ga4";
-
-window.Alpine = Alpine;
 
 export const isMobileOrTablet = () => {
 	return (
@@ -73,7 +69,9 @@ function App() {
 		// Initialize GA and SW
 		initServiceWorker(setFileToParse);
 		ReactGA.initialize("G-LEP1Y0FVCD");
+		console.log("main useEffect");
 	}, []); // Empty dependency array ensures this effect runs once on mount
+
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
@@ -93,7 +91,6 @@ function App() {
 		showMap,
 		setFileToParse,
 	}; // setting these in an object so they're easier to pass and update
-
 	return (
 		<>
 			<InstallDialog />
@@ -113,4 +110,5 @@ function App() {
 
 const rootElement = document.getElementById("main");
 const root = ReactDOM.createRoot(rootElement);
+console.log("root", root);
 root.render(<App />);

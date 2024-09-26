@@ -1,12 +1,7 @@
-import Alpine from "alpinejs";
-import {
-	signUp,
-	initiateAuth,
-	respondToSMSChallenge,
-	signOut,
-} from "./auth.js";
+import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
 import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
+import { useUserStore } from "./useUserStore.js";
 
 var loginDialog;
 var phone_number;
@@ -77,6 +72,7 @@ function displayConsoleError(message, error) {
 }
 
 function addLoginFormListeners(loginForm) {
+	const user = useUserStore();
 	loginForm.addEventListener("submit", function (e) {
 		e.preventDefault();
 		var formData = new FormData(loginForm);
@@ -95,9 +91,9 @@ function addLoginFormListeners(loginForm) {
 						})
 							.then(function (response) {
 								let authResult = response.AuthenticationResult;
-								Alpine.store("user").accessToken = authResult.AccessToken;
-								Alpine.store("user").idToken = authResult.IdToken;
-								Alpine.store("user").refreshToken = authResult.RefreshToken;
+								user.accessToken = authResult.AccessToken;
+								user.idToken = authResult.IdToken;
+								user.refreshToken = authResult.RefreshToken;
 							})
 							.catch((error) =>
 								displayConsoleError("Error responding to SMS challenge", error)
@@ -156,6 +152,7 @@ function displaySignUpForm(phone_number, message) {
 }
 
 function addSignUpFormListeners(signUpForm) {
+	const user = useUserStore();
 	signUpForm.addEventListener("submit", function (e) {
 		e.preventDefault();
 		var formData = new FormData(signUpForm);
@@ -179,9 +176,9 @@ function addSignUpFormListeners(signUpForm) {
 								})
 									.then(function (response) {
 										let authResult = response.AuthenticationResult;
-										Alpine.store("user").accessToken = authResult.AccessToken;
-										Alpine.store("user").idToken = authResult.IdToken;
-										Alpine.store("user").refreshToken = authResult.RefreshToken;
+										user.accessToken = authResult.AccessToken;
+										user.idToken = authResult.IdToken;
+										user.refreshToken = authResult.RefreshToken;
 									})
 									.catch((error) =>
 										displayConsoleError(
