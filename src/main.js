@@ -33,10 +33,6 @@ function initAlpine() {
 		},
 		isMobile: true,
 	});
-	Alpine.store("currentDataset", {
-		geoJSON: null,
-		slug: null,
-	});
 	Alpine.store("appData", {
 		init() {
 			const config = require("./config.json");

@@ -294,7 +294,6 @@ function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
 
 export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
-
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [titleValue, setTitleValue] = useState("");
 	const [shouldPulse, setShouldPulse] = useState(false);
@@ -343,7 +342,7 @@ export function Map({ isVisible, showMenu, data }) {
 			<ShareModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
-				currentDataset={data}
+				currentDataset={data.data}
 			/>
 
 			<div id="map">
@@ -396,6 +395,7 @@ export function Map({ isVisible, showMenu, data }) {
 					setPulse={setShouldPulse}
 					showMenu={showMenu}
 					setModalOpen={setIsModalOpen}
+					currentDataset={data.data}
 				/>
 			</div>
 		</>
