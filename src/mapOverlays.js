@@ -15,7 +15,7 @@ import {
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
-import { ASK_URL } from "../globals.js";
+import { ASK_URL, hasCognito } from "../globals.js";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -106,7 +106,6 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	let hasCognito = Alpine.store("appData")?.hasCognito;
 	const user = Alpine.store("user");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const filenameSlug = Alpine.store("currentDataset").slug;

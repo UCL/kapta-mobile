@@ -7,7 +7,7 @@ import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
 import { isIOS } from "./main.js";
 import ReactGA from "react-ga4";
-import { ASK_URL } from "../globals.js";
+import { ASK_URL, hasCognito } from "../globals.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -201,8 +201,6 @@ function Copyright() {
 	const { t } = useTranslation();
 	return <div id="copyright">{t("copyright")}</div>;
 }
-
-const hasCognito = Alpine.store("appData")?.hasCognito;
 
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;

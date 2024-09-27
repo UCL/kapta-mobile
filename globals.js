@@ -6,11 +6,15 @@ export const REGION = process.env.REGION;
 export const INVOKE_URL = process.env.INVOKE_URL;
 export const MAPBOX_TOKEN = process.token.MAPBOX_TOKEN;
 
-// for hasCognito, we should check if we have a pool id and client id and return true if yes
-// and then we can do the following
-
-export const cognito = {
-	userPoolId: POOL_ID,
-	userPoolClientId: CLIENT_ID,
-	region: REGION,
-};
+export let cognito = null;
+export let hasCognito = false;
+// only set hasCognito to true if both id and client are available
+if (POOL_ID !== "null" && CLIENT_ID !== "null") {
+	// checking for null string due to amplify store
+	hasCognito = true;
+	cognito = {
+		userPoolId: POOL_ID,
+		userPoolClientId: CLIENT_ID,
+		region: REGION,
+	};
+}
