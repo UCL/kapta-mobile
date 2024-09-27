@@ -57,6 +57,9 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new webpack.EnvironmentPlugin({
+			ASK_URL: "https://wa.me/+34678380944?"
+		}),
 		new webpack.ProvidePlugin({
 			L: "leaflet",
 		}),
