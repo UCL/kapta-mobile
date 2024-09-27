@@ -5,9 +5,9 @@ import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
 import StatusBar from "./StatusBar.jsx";
-import config from "./config.json";
 import { isIOS } from "./main.js";
 import ReactGA from "react-ga4";
+import { ASK_URL } from "../globals.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -184,7 +184,7 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 							category: "Help",
 							action: "Help Button Clicked",
 						});
-						window.location.href = process.env.ASK_URL;
+						window.location.href = ASK_URL;
 					}}
 				>
 					{t("asktheteam")}
