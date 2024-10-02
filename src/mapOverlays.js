@@ -17,8 +17,7 @@ import {
 import { slugify } from "./utils.js";
 import { hasCognito, isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./useUserStore.js";
-
-const config = require("./config.json");
+import { ASK_URL, hasCognito } from "../globals.js";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -244,7 +243,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	const handleHelpClick = (evt) => {
 		evt.target.style.backgroundColor = "#a6a4a4";
 		setTimeout(() => {
-			window.location.href = config.kapta.askTheTeamURL;
+			window.location.href = ASK_URL;
 			evt.target.style.backgroundColor = "white";
 		}, 500);
 	};

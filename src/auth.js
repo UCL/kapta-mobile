@@ -7,7 +7,7 @@ import {
 	ChallengeName,
 } from "@aws-sdk/client-cognito-identity-provider";
 
-const config = require("./config.json");
+import { cognito } from "../globals";
 
 const generate_password = function (length) {
 	const lower = "abcdefghijklmnopqrstuvwxyz";
@@ -58,10 +58,10 @@ const generate_password = function (length) {
 };
 
 const signUp = ({ phone_number, display_name }) => {
-	const client = new CognitoIdentityProviderClient(config.cognito);
+	const client = new CognitoIdentityProviderClient(cognito);
 
 	const command = new SignUpCommand({
-		ClientId: config.cognito.userPoolClientId,
+		ClientId: cognito.userPoolClientId,
 		Username: phone_number,
 		Password: generate_password(30),
 		UserAttributes: [{ Name: "custom:display_name", Value: display_name }],
@@ -71,10 +71,10 @@ const signUp = ({ phone_number, display_name }) => {
 };
 
 const initiateAuth = ({ phone_number }) => {
-	const client = new CognitoIdentityProviderClient(config.cognito);
+	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		AuthFlow: "CUSTOM_AUTH",
-		ClientId: config.cognito.userPoolClientId,
+		ClientId: cognito.userPoolClientId,
 		AuthParameters: {
 			USERNAME: phone_number,
 		},
@@ -84,10 +84,10 @@ const initiateAuth = ({ phone_number }) => {
 };
 
 const initiateAuthRefresh = ({ refreshToken }) => {
-	const client = new CognitoIdentityProviderClient(config.cognito);
+	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		AuthFlow: "REFRESH_TOKEN_AUTH",
-		ClientId: config.cognito.userPoolClientId,
+		ClientId: cognito.userPoolClientId,
 		AuthParameters: {
 			REFRESH_TOKEN: refreshToken,
 		},
@@ -97,9 +97,9 @@ const initiateAuthRefresh = ({ refreshToken }) => {
 };
 
 const respondToSMSChallenge = ({ code, sessionToken, phone_number }) => {
-	const client = new CognitoIdentityProviderClient(config.cognito);
+	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
-		ClientId: config.cognito.userPoolClientId,
+		ClientId: cognito.userPoolClientId,
 		ChallengeName: "CUSTOM_CHALLENGE",
 		Session: sessionToken,
 		ChallengeResponses: {
@@ -112,7 +112,7 @@ const respondToSMSChallenge = ({ code, sessionToken, phone_number }) => {
 };
 
 const signOut = ({ access_token }) => {
-	const client = new CognitoIdentityProviderClient(config.cognito);
+	const client = new CognitoIdentityProviderClient(cognito);
 	const command = new GlobalSignOutCommand({
 		AccessToken: access_token,
 	});

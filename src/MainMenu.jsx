@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
-import config from "./config.json";
 import { isIOS, isMobileOrTablet } from "./main.js";
 import ReactGA from "react-ga4";
+import { ASK_URL } from "../globals.js";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
 import { LoginDialog } from "./login.js";
@@ -185,7 +185,7 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 							category: "Help",
 							action: "Help Button Clicked",
 						});
-						window.location.href = config.kapta.askTheTeamURL;
+						window.location.href = ASK_URL;
 					}}
 				>
 					{t("asktheteam")}

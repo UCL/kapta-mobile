@@ -9,5 +9,6 @@ dist/
 
 # Config
 src/config.json
+src/exportConfig.sh
 
 .DS_Store
