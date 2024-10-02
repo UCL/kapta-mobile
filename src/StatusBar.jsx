@@ -1,12 +1,12 @@
 import React from "react";
-import { hasCognito } from "./main.js";
+import { hasCognito } from "../globals.js";
 import { useUserStore } from "./useUserStore.js";
 
 export default function StatusBar({
 	setIsSideMenuVisible,
 	setIsDialogVisible,
 }) {
-	if (!hasCognito()) return null; // don't render anything if we don't have cognito
+	if (!hasCognito) return null; // don't render anything if we don't have cognito
 
 	const user = useUserStore(); // get user details
 	const onLogin = () => {

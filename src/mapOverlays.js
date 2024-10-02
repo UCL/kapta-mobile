@@ -264,7 +264,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 						{dataIcn}
 						{t("sharedata")}
 					</button>
-					{hasCognito() && (
+					{hasCognito && (
 						<button
 							className={`btn ${!user.logged_in && "disabled"}`}
 							onClick={handleUploadClick}

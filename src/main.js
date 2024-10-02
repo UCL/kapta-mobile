@@ -21,11 +21,6 @@ export const isMobileOrTablet = () => {
 export const isIOS = () => {
 	return /iPad|iPhone|iPod/i.test(navigator.userAgent);
 };
-export const hasCognito = () => {
-	const config = require("./config.json");
-	if (config.cognito) return true;
-	else return false;
-};
 
 function initServiceWorker(setFileToParse) {
 	if ("serviceWorker" in navigator) {
