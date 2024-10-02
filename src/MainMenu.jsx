@@ -8,6 +8,7 @@ import { isIOS, isMobileOrTablet } from "./main.js";
 import ReactGA from "react-ga4";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
+import { LoginDialog } from "./login.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -205,6 +206,7 @@ function Copyright() {
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
 	const [isBMVisible, setIsBMVisible] = useState(false);
+	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
 	const toggleBM = () => {
 		setIsBMVisible((prevState) => !prevState);
@@ -214,10 +216,18 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 
 	return (
 		<>
+			<LoginDialog
+				isDialogVisible={isDialogVisible}
+				setIsDialogVisible={setIsDialogVisible}
+			/>
 			<button onClick={toggleBM} className="btn--burger-menu">
 				{menuIcon}
 			</button>
-			<BurgerMenu isVisible={isBMVisible} setIsVisible={setIsBMVisible} />
+			<BurgerMenu
+				isVisible={isBMVisible}
+				setIsVisible={setIsBMVisible}
+				setIsDialogVisible={setIsDialogVisible}
+			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />

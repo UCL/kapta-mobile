@@ -60,9 +60,11 @@ export const GPSPositionIcn = icon({
 	prefix: "fas",
 	iconName: "dot-circle",
 }).html;
-export const closeIcon = <FontAwesomeIcon icon={faX} />;
+export const closeIcon = <FontAwesomeIcon icon={faX} className="btn-icon" />;
 
-export const thumbsUpIcon = <FontAwesomeIcon icon={faThumbsUp} />;
+export const thumbsUpIcon = (
+	<FontAwesomeIcon icon={faThumbsUp} className="btn-icon" />
+);
 
 export const msgIcon = <FontAwesomeIcon icon={faMessage} />;
 

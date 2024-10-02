@@ -1,15 +1,18 @@
-import { /* webpackPrefetch: true */ displayLoginDialog } from "./login.js";
 import React from "react";
 import { hasCognito } from "./main.js";
 import { useUserStore } from "./useUserStore.js";
 
-window.displayLoginDialog = displayLoginDialog;
-
-export default function StatusBar() {
+export default function StatusBar({
+	setIsSideMenuVisible,
+	setIsDialogVisible,
+}) {
 	if (!hasCognito()) return null; // don't render anything if we don't have cognito
 
 	const user = useUserStore(); // get user details
-	const onLogin = () => displayLoginDialog();
+	const onLogin = () => {
+		setIsDialogVisible(true);
+		setIsSideMenuVisible(false);
+	};
 	const onLogout = () => (user.logged_in = false);
 	return (
 		<div id="status-bar">
