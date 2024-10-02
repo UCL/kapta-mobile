@@ -15,7 +15,7 @@ import {
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
-import { hasCognito, isMobileOrTablet } from "./main.js";
+import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./useUserStore.js";
 import { ASK_URL, hasCognito } from "../globals.js";
 

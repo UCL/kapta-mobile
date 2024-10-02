@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import StatusBar from "./StatusBar.jsx";
 import "./styles/burger-menu.css";
 import { exitButtonIcon } from "./icons.js";
-import { hasCognito } from "./main.js";
 
 export default function BurgerMenu({
 	isVisible,
