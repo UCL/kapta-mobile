@@ -73,8 +73,9 @@ body {
     }
 
     .logo {
-        scale: 0.8;
+        scale: 0.7;
         margin-bottom: 1rem;
+        border-radius: 8px;
     }
 
     .btn-box {
