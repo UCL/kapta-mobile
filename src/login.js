@@ -43,22 +43,32 @@ function ButtonBox({ setIsDialogVisible }) {
 function displayConsoleError(message, error) {
 	return console.error(message, error);
 }
-function LoginForm({ showSignupForm, getSMSVerificationCode }) {
+
+function LoginForm({
+	phoneNumber,
+	setPhoneNumber,
+	showSignupForm,
+	getSMSVerificationCode,
+}) {
+	const handleInputChange = (e) => {
+		setPhoneNumber(e.target.value);
+	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		var formData = new FormData(e.target);
 		phone_number = formData.get("phone-number");
-		initiateAuth({ phone_number }).then(
-			function (response) {
-				return getSMSVerificationCode(response.Session, phone_number);
-			},
-			function (error) {
-				let message = "Phone number not found. Please sign up.";
-				console.log("ERROR", phone_number, message);
-				showSignupForm(phone_number, message);
-				displayConsoleError(message, error);
-			}
-		);
+		phoneNumber === phone_number &&
+			initiateAuth({ phone_number }).then(
+				function (response) {
+					return getSMSVerificationCode(response.Session, phoneNumber);
+				},
+				function (error) {
+					let message = "Phone number not found. Please sign up.";
+					console.log("ERROR", phone_number, message);
+					showSignupForm(phone_number, message);
+					displayConsoleError(message, error);
+				}
+			);
 	};
 	return (
 		<form onSubmit={handleSubmit} className="login-form" id="dialog-form">
@@ -66,6 +76,7 @@ function LoginForm({ showSignupForm, getSMSVerificationCode }) {
 				name="phone-number"
 				type="tel"
 				placeholder="📞 + Phone Number"
+				onChange={handleInputChange}
 			></input>
 		</form>
 	);
@@ -82,17 +93,18 @@ function SignUpForm({
 		var formData = new FormData(e.target);
 		display_name = formData.get("display-name");
 		phone_number = formData.get("phone-number");
-		signUp({ phone_number, display_name })
-			.then(function (value) {
-				return initiateAuth({ phone_number })
-					.then(function (response) {
-						return getSMSVerificationCode(response.Session, phone_number);
-					})
-					.catch((error) =>
-						displayConsoleError("Error in initiating auth", error)
-					);
-			})
-			.catch((error) => displayConsoleError("Error in sign up", error));
+		phoneNumber === phone_number &&
+			signUp({ phone_number, display_name })
+				.then(function (value) {
+					return initiateAuth({ phone_number })
+						.then(function (response) {
+							return getSMSVerificationCode(response.Session, phone_number);
+						})
+						.catch((error) =>
+							displayConsoleError("Error in initiating auth", error)
+						);
+				})
+				.catch((error) => displayConsoleError("Error in sign up", error));
 	};
 	const handlePhoneNumberChange = (e) => {
 		setPhoneNumber(e.target.value);
@@ -111,6 +123,7 @@ function SignUpForm({
 		</form>
 	);
 }
+
 export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 	if (!isDialogVisible) return null;
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
@@ -127,12 +140,13 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 		setPhoneNumber(phone_number);
 	};
 
-	const getSMSVerificationCode = (sessionToken, phone_number) => {
+	const getSMSVerificationCode = (sessionToken, phoneNumber) => {
 		setIsLoginFormVisible(false);
 		setIsSignupFormVisible(false);
 		setIsSmsInputVisible(true);
 		setSessionToken(sessionToken);
-		setPhoneNumber(phone_number);
+		setPhoneNumber(phoneNumber);
+		console.log("getting sms verification code", sessionToken, phoneNumber);
 	};
 
 	return (
@@ -145,6 +159,8 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 			></img>
 			{isLoginFormVisible && (
 				<LoginForm
+					phoneNumber={phoneNumber}
+					setPhoneNumber={setPhoneNumber}
 					showSignupForm={showSignupForm}
 					getSMSVerificationCode={getSMSVerificationCode}
 				/>
@@ -161,6 +177,7 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 				<SmsInput
 					setIsDialogVisible={setIsDialogVisible}
 					sessionToken={sessionToken}
+					phoneNumber={phoneNumber}
 				/>
 			)}
 			<ButtonBox setIsDialogVisible={setIsDialogVisible} />
@@ -170,8 +187,10 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 
 function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 	const user = useUserStore();
+	console.log("smsinput", phoneNumber);
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		console.log(e);
 		const data = {
 			code: code,
 			sessionToken: sessionToken,
@@ -179,6 +198,7 @@ function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 		};
 		return respondToSMSChallenge(data)
 			.then(function (response) {
+				console.log("response is", response);
 				let authResult = response.AuthenticationResult;
 				user.accessToken = authResult.AccessToken;
 				user.idToken = authResult.IdToken;
@@ -192,6 +212,7 @@ function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 	return (
 		<form onSubmit={handleSubmit}>
 			<label>Please enter your SMS verification code.</label>
+			<br></br>
 			<input type="text" name="input" className="sms"></input>
 		</form>
 	);
