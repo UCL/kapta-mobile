@@ -47,7 +47,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 50vw;
-    min-height: 50vh;
+    height: fit-content;
     background-color: var(--black-blue--translucent);
     border: 1px solid var(--black-blue);
     border-radius: 8px;
@@ -73,9 +73,14 @@ body {
     }
 
     .logo {
-        scale: 0.7;
+        align-self: center;
+        width: 80%;
         margin-bottom: 1rem;
         border-radius: 8px;
+
+        @media screen and (min-width: 800px) {
+            width: 50%;
+        }
     }
 
     .btn-box {
