@@ -96,7 +96,7 @@ const initiateAuthRefresh = ({ refreshToken }) => {
 	return client.send(command);
 };
 
-const respondToSMSChallenge = ({ code, sessionToken, phone_number }) => {
+const respondToSMSChallenge = ({ code, sessionToken, phoneNumber }) => {
 	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		ClientId: cognito.userPoolClientId,
@@ -104,7 +104,7 @@ const respondToSMSChallenge = ({ code, sessionToken, phone_number }) => {
 		Session: sessionToken,
 		ChallengeResponses: {
 			ANSWER: code,
-			USERNAME: phone_number,
+			USERNAME: phoneNumber,
 		},
 	};
 	const command = new RespondToAuthChallengeCommand(input);

@@ -4,29 +4,9 @@ import { closeIcon, thumbsUpIcon } from "./icons.js";
 import { useUserStore } from "./useUserStore.js";
 import React, { useState } from "react";
 
-var loginDialog;
 var phone_number;
 var display_name;
 
-function createButtonBox() {
-	// var cancelBtn = document.createElement("button");
-	// cancelBtn.classList.add("cancel", "btn");
-	// cancelBtn.innerHTML = closeIcon;
-	// var cancelBtnIcon = cancelBtn.querySelector("svg");
-	// cancelBtnIcon.alt = "Cancel";
-	// cancelBtnIcon.classList.add("btn-icon");
-	// var submitBtn = document.createElement("button");
-	// submitBtn.classList.add("btn", "confirm");
-	// submitBtn.innerHTML = thumbsUpIcon;
-	// var submitBtnIcon = submitBtn.querySelector("svg");
-	// submitBtnIcon.alt = "Submit";
-	// submitBtnIcon.classList.add("btn-icon");
-	// var buttonContainer = document.createElement("div");
-	// buttonContainer.appendChild(cancelBtn);
-	// buttonContainer.appendChild(submitBtn);
-	// buttonContainer.classList.add("btn-box");
-	// return buttonContainer;
-}
 function ButtonBox({ setIsDialogVisible }) {
 	return (
 		<div className="btn-box">
@@ -64,7 +44,6 @@ function LoginForm({
 				},
 				function (error) {
 					let message = "Phone number not found. Please sign up.";
-					console.log("ERROR", phone_number, message);
 					showSignupForm(phone_number, message);
 					displayConsoleError(message, error);
 				}
@@ -146,7 +125,6 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 		setIsSmsInputVisible(true);
 		setSessionToken(sessionToken);
 		setPhoneNumber(phoneNumber);
-		console.log("getting sms verification code", sessionToken, phoneNumber);
 	};
 
 	return (
@@ -187,10 +165,10 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 
 function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 	const user = useUserStore();
-	console.log("smsinput", phoneNumber);
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(e);
+		var formData = new FormData(e.target);
+		const code = formData.get("code");
 		const data = {
 			code: code,
 			sessionToken: sessionToken,
@@ -198,7 +176,6 @@ function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 		};
 		return respondToSMSChallenge(data)
 			.then(function (response) {
-				console.log("response is", response);
 				let authResult = response.AuthenticationResult;
 				user.accessToken = authResult.AccessToken;
 				user.idToken = authResult.IdToken;
@@ -210,10 +187,10 @@ function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 			);
 	};
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit} id="dialog-form">
 			<label>Please enter your SMS verification code.</label>
 			<br></br>
-			<input type="text" name="input" className="sms"></input>
+			<input type="text" name="code" className="sms"></input>
 		</form>
 	);
 }
