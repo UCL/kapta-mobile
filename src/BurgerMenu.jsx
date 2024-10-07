@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import StatusBar from "./StatusBar.jsx";
 import "./styles/burger-menu.css";
-import { exitButtonIcon } from "./icons.js";
+import { exitButtonIcon, GHIcon } from "./icons.js";
 
 export default function BurgerMenu({
 	isVisible,
@@ -37,6 +37,20 @@ export default function BurgerMenu({
 					dangerouslySetInnerHTML={{ __html: t("peopleContent") }}
 				></div>
 			</details>
+			<div>
+				<a
+					href="https://github.com/UCL/kapta-mobile"
+					className="bm-item gh bm-item__content"
+				>
+					{GHIcon}
+				</a>{" "}
+				<a
+					href="https://github.com/UCL/kapta-mobile?tab=readme-ov-file#legal-disclaimer"
+					className="bm-item disclaimer bm-item__content"
+				>
+					{t("legalDisclaimer")}
+				</a>
+			</div>
 		</div>
 	);
 }

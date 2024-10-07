@@ -64,6 +64,20 @@
         }
     }
 
+    .gh {
+        font-size: 1.5rem;
+        color: var(--mid-red);
+    }
+
+    .disclaimer {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: var(--mid-red);
+        }
+    }
 
     &.drawer--open {
         transform: translateX(0);
