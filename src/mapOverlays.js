@@ -91,7 +91,7 @@ export function MapActionArea({
 		<div id="map-actions-container">
 			<div className="map-actions__wrapper">
 				<div className="map-actions__body">
-					<button id="exit-map" className="btn" onClick={showMenu}>
+					<button id="exit-map" type="button" onClick={showMenu}>
 						{exitButtonIcon}
 					</button>
 					<InputArea
