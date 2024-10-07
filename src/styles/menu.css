@@ -45,6 +45,10 @@
         >option {
             color: black;
         }
+
+        &:focus-visible {
+            outline: none;
+        }
     }
 
     #instructions {
