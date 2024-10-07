@@ -37,16 +37,18 @@ export default function BurgerMenu({
 					dangerouslySetInnerHTML={{ __html: t("peopleContent") }}
 				></div>
 			</details>
-			<div>
+			<div className="bm-item bm-links">
 				<a
 					href="https://github.com/UCL/kapta-mobile"
-					className="bm-item gh bm-item__content"
+					id="gh"
+					className="bm-item__content"
 				>
 					{GHIcon}
-				</a>{" "}
+				</a>
 				<a
 					href="https://github.com/UCL/kapta-mobile?tab=readme-ov-file#legal-disclaimer"
-					className="bm-item disclaimer bm-item__content"
+					id="disclaimer"
+					className="bm-item__content"
 				>
 					{t("legalDisclaimer")}
 				</a>
