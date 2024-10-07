@@ -32,7 +32,7 @@
 
     .map-button {
         position: absolute;
-        top: 2rem;
+        top: 0.8rem;
         z-index: 900;
         height: 45px;
         border-radius: 50%;
