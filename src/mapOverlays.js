@@ -108,12 +108,16 @@ export function MapActionArea({
 }
 
 // Modal stuff
-export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
+export function ShareModal({
+	isOpen,
+	setIsOpen,
+	currentDataset,
+	setIsUploadDialogOpen,
+}) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
 	const user = useUserStore();
-	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
@@ -230,9 +234,11 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			downloadFile(blob, filename);
 		}
 	};
-	const handleUploadClick = async () => {
-		// TODO: show login if not logged in then
-		if (!user.loggedIn) setIsUploadDialogOpen(true);
+	const handleUploadClick = () => {
+		console.log("clicked!");
+		setIsUploadDialogOpen(true);
+		setIsOpen(false);
+		// login stuff handled in the component
 	};
 	const handleHelpClick = (evt) => {
 		evt.target.style.backgroundColor = "#a6a4a4";
@@ -243,10 +249,6 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	};
 	return (
 		<>
-			<UploadDialog
-				isOpen={isUploadDialogOpen}
-				setIsOpen={setIsUploadDialogOpen}
-			/>
 			<div id="sharing-modal">
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
@@ -263,12 +265,11 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					</button>
 					{hasCognito && (
 						<button
-							className={`btn ${!user.logged_in && "disabled"}`}
+							className={`btn ${!user.loggedIn && "disabled"}`}
 							onClick={handleUploadClick}
-							disabled={!user.logged_in}
 						>
 							{uploadIcn}
-							{user.logged_in ? t("uploaddata") : "Log in to upload data"}
+							{user.loggedIn ? t("uploaddata") : "Log in to upload data"}
 						</button>
 					)}
 

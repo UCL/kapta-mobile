@@ -27,6 +27,7 @@ import {
 	nextIcn,
 } from "./icons.js";
 import { MAPBOX_TOKEN } from "../globals.js";
+import { UploadDialog } from "./UploadDialog.jsx";
 
 /************************************************************************************************
  *   Basemaps (TileLayers)
@@ -290,6 +291,8 @@ function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
 export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+
 	const [titleValue, setTitleValue] = useState("");
 	const [shouldPulse, setShouldPulse] = useState(false);
 	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
@@ -334,10 +337,15 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
+			<UploadDialog
+				isOpen={isUploadDialogOpen}
+				setIsOpen={setIsUploadDialogOpen}
+			/>
 			<ShareModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
 				currentDataset={data.data}
+				setIsUploadDialogOpen={setIsUploadDialogOpen}
 			/>
 
 			<div id="map">

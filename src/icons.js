@@ -44,20 +44,32 @@ library.add(
 	faBars,
 	faGithub
 );
+// we use .btn-icon but there is no global styling for it, only ever nested,
+// which allows for easy selecting and flexible styling
 export const chevronDown = <FontAwesomeIcon icon={faChevronDown} />;
 export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
 export const nextIcn = <FontAwesomeIcon icon={faForwardStep} />;
-export const imageIcn = <FontAwesomeIcon icon={faImage} />;
+export const imageIcn = <FontAwesomeIcon icon={faImage} className="btn-icon" />;
 export const shareIcn = <FontAwesomeIcon icon={faShareNodes} />;
-export const dataIcn = <FontAwesomeIcon icon={faFileCode} />;
-export const addMetaIcn = (
-	<FontAwesomeIcon icon={faFileCirclePlus} style={{ fontSize: "0.75rem" }} />
+export const dataIcn = (
+	<FontAwesomeIcon icon={faFileCode} className="btn-icon" />
 );
-export const uploadIcn = <FontAwesomeIcon icon={faCloudArrowUp} />;
+export const addMetaIcn = (
+	<FontAwesomeIcon
+		icon={faFileCirclePlus}
+		style={{ fontSize: "0.75rem" }}
+		className="btn-icon"
+	/>
+);
+export const uploadIcn = (
+	<FontAwesomeIcon icon={faCloudArrowUp} className="btn-icon" />
+);
 export const GPSIcn = <FontAwesomeIcon icon={faLocationCrosshairs} />;
 export const basemapSatIcon = <FontAwesomeIcon icon={faSun} />;
 export const basemapDarkIcon = <FontAwesomeIcon icon={faMoon} />;
-export const exitButtonIcon = <FontAwesomeIcon icon={faArrowLeft} />;
+export const exitButtonIcon = (
+	<FontAwesomeIcon icon={faArrowLeft} className="btn-icon" />
+);
 export const GPSPositionIcn = icon({
 	prefix: "fas",
 	iconName: "dot-circle",
@@ -67,9 +79,10 @@ export const closeIcon = <FontAwesomeIcon icon={faX} className="btn-icon" />;
 export const thumbsUpIcon = (
 	<FontAwesomeIcon icon={faThumbsUp} className="btn-icon" />
 );
+export const msgIcon = (
+	<FontAwesomeIcon icon={faMessage} className="btn-icon" />
+);
 
-export const msgIcon = <FontAwesomeIcon icon={faMessage} />;
-
+// menu
 export const menuIcon = <FontAwesomeIcon icon={faBars} />;
-
 export const GHIcon = <FontAwesomeIcon icon={faGithub} />;

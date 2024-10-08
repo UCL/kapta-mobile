@@ -41,6 +41,7 @@ body {
 
 }
 
+/* z-index of 902 means these will be seen above the map and sharing modal (login, upload and welcome dialogs */
 #login-dialog {
     position: absolute;
     top: 15%;
@@ -53,7 +54,7 @@ body {
     border-radius: 8px;
     backdrop-filter: blur(4px);
     text-align: center;
-    z-index: 2;
+    z-index: 902;
 
 
     input[name="phone-number"],
@@ -111,6 +112,22 @@ body {
 
 }
 
+#upload-dialog {
+    position: absolute;
+    top: 15%;
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: fit-content;
+    background-color: white;
+    border: 1px solid var(--mid-red--translucent);
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    text-align: center;
+    z-index: 902;
+
+}
+
 #welcome-back {
     position: absolute;
     top: 15%;
@@ -123,7 +140,7 @@ body {
     border-radius: 8px;
     backdrop-filter: blur(4px);
     text-align: center;
-    z-index: 2;
+    z-index: 902;
 
     h3 {
         color: white;
