@@ -18,6 +18,7 @@ import { slugify } from "./utils.js";
 import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./useUserStore.js";
 import { ASK_URL, hasCognito } from "../globals.js";
+import { UploadDialog } from "./UploadDialog.jsx";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -112,7 +113,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 
 	const { t } = useTranslation();
 	const user = useUserStore();
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
@@ -230,15 +231,8 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 		}
 	};
 	const handleUploadClick = async () => {
-		setIsDialogOpen(true).then(
-			function () {
-				let idToken = user.idToken;
-				submitData(currentDataset.geoJSON, idToken);
-			},
-			function (rejectReason) {
-				console.error(rejectReason);
-			}
-		);
+		// TODO: show login if not logged in then
+		if (!user.loggedIn) setIsUploadDialogOpen(true);
 	};
 	const handleHelpClick = (evt) => {
 		evt.target.style.backgroundColor = "#a6a4a4";
@@ -249,7 +243,10 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	};
 	return (
 		<>
-			<MetaDataDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
+			<UploadDialog
+				isOpen={isUploadDialogOpen}
+				setIsOpen={setIsUploadDialogOpen}
+			/>
 			<div id="sharing-modal">
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
@@ -282,62 +279,5 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				</div>
 			</div>
 		</>
-	);
-}
-
-export function MetaDataDialog({ isOpen, setIsOpen }) {
-	if (!isOpen) return null;
-	const { t } = useTranslation();
-	const [isChecked, setIsChecked] = useState(false);
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (isChecked == true) {
-			resolve(true);
-		} else {
-			reject("Permission not given");
-		}
-		setIsOpen(false);
-	};
-	return (
-		<dialog id="upload-dialog" open>
-			<form className="upload-form" onSubmit={handleSubmit}>
-				<h3>Upload data to Kapta</h3>
-				<small>
-					{t("addMetadataTitle")} {addMetaIcn}
-				</small>
-
-				<label for="input-topic">{t("inputtopiclabel")}</label>
-				<textarea name="input-topic" id="input-topic"></textarea>
-
-				<label for="input-goal">{t("inputgoallabel")}</label>
-				<textarea name="input-goal" id="input-goal"></textarea>
-				<label for="data-sov">{t("datasovmessage")}</label>
-				<label for="data-sov" class="toggle">
-					<input
-						type="checkbox"
-						id="data-sov"
-						name="data-sov"
-						class="toggle-input"
-						checked={isChecked}
-						onChange={(e) => setIsChecked(e.target.checked)}
-					/>
-					<span
-						class="toggle-label"
-						data-on={t("yes")}
-						data-off={t("no")}
-					></span>
-					<span class="toggle-handle"></span>
-				</label>
-				<div className="btn-area">
-					<button className="cancel btn" onClick={() => setIsOpen(false)}>
-						{t("cancel")}
-					</button>
-					<button type="submit" className="confirm btn" disabled={!isChecked}>
-						{t("confirm")}
-					</button>
-				</div>
-			</form>
-		</dialog>
 	);
 }
