@@ -8,6 +8,7 @@ export default function BurgerMenu({
 	isVisible,
 	setIsVisible,
 	setIsDialogVisible,
+	setIsWelcomeVisible,
 }) {
 	const { t } = useTranslation();
 
@@ -22,6 +23,7 @@ export default function BurgerMenu({
 			<StatusBar
 				setIsSideMenuVisible={setIsVisible}
 				setIsDialogVisible={setIsDialogVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
 			<details className="bm-item">
 				<summary>{t("about")}</summary>

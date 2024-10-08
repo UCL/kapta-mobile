@@ -4,7 +4,7 @@ import { submitData } from "./data_submission.js";
 import "./styles/map-etc.css";
 import html2canvas from "html2canvas";
 import { addMetaIcn } from "./icons";
-import { useUserStore } from "./useUserStore.js";
+import { useUserStore } from "./UserContext.js";
 import { ASK_URL, hasCognito } from "../globals.js";
 
 export function UploadDialog({ isOpen, setIsOpen }) {
