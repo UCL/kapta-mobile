@@ -113,7 +113,7 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 			} catch (error) {
 				console.error("Error hiding the dialog:", error);
 			}
-		}, 4000);
+		}, 3000);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes
 		return () => clearTimeout(timer);
