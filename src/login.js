@@ -193,7 +193,12 @@ export function LoginDialog({
 	);
 }
 
-function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
+function SmsInput({
+	setIsDialogVisible,
+	sessionToken,
+	phoneNumber,
+	setIsWelcomeVisible,
+}) {
 	const user = useUserStore();
 	const handleSubmit = (e) => {
 		e.preventDefault();
