@@ -1,8 +1,8 @@
 import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
 import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
-import { useUserStore } from "./useUserStore.js";
-import React, { useState } from "react";
+import { useUserStore } from "./UserContext.js";
+import React, { useEffect, useState } from "react";
 
 var phone_number;
 var display_name;
@@ -103,8 +103,37 @@ function SignUpForm({
 	);
 }
 
-export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
+export function WelcomeBackDialog({ isVisible, setIsVisible }) {
+	if (!isVisible) return null;
+	const user = useUserStore();
+	useEffect(() => {
+		let timer = setTimeout(() => {
+			try {
+				setIsVisible(false);
+			} catch (error) {
+				console.error("Error hiding the dialog:", error);
+			}
+		}, 4000);
+
+		// Clean up the timer if the component is unmounted or if `isVisible` changes
+		return () => clearTimeout(timer);
+	}, [isVisible, setIsVisible]);
+	return (
+		<dialog id="welcome-back">
+			<div>
+				<h3>Welcome back, {user.displayName} </h3>
+			</div>
+		</dialog>
+	);
+}
+
+export function LoginDialog({
+	isDialogVisible,
+	setIsDialogVisible,
+	setIsWelcomeVisible,
+}) {
 	if (!isDialogVisible) return null;
+
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
 	const [isSignupFormVisible, setIsSignupFormVisible] = useState(false);
 	const [isSmsInputVisible, setIsSmsInputVisible] = useState(false);
@@ -156,6 +185,7 @@ export function LoginDialog({ isDialogVisible, setIsDialogVisible }) {
 					setIsDialogVisible={setIsDialogVisible}
 					sessionToken={sessionToken}
 					phoneNumber={phoneNumber}
+					setIsWelcomeVisible={setIsWelcomeVisible}
 				/>
 			)}
 			<ButtonBox setIsDialogVisible={setIsDialogVisible} />
@@ -175,12 +205,16 @@ function SmsInput({ setIsDialogVisible, sessionToken, phoneNumber }) {
 			phoneNumber: phoneNumber,
 		};
 		return respondToSMSChallenge(data)
-			.then(function (response) {
+			.then((response) => {
 				let authResult = response.AuthenticationResult;
-				user.accessToken = authResult.AccessToken;
-				user.idToken = authResult.IdToken;
-				user.refreshToken = authResult.RefreshToken;
+				let userDetails = {
+					accessToken: authResult.AccessToken,
+					idToken: authResult.IdToken,
+					refreshToken: authResult.RefreshToken,
+				};
+				user.setUserDetails(userDetails);
 				setIsDialogVisible(false);
+				setIsWelcomeVisible(true);
 			})
 			.catch((error) =>
 				displayConsoleError("Error responding to SMS challenge", error)

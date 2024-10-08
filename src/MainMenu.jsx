@@ -8,7 +8,7 @@ import ReactGA from "react-ga4";
 import { ASK_URL } from "../globals.js";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
-import { LoginDialog } from "./login.js";
+import { LoginDialog, WelcomeBackDialog } from "./login.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -206,6 +206,7 @@ function Copyright() {
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
 	const [isBMVisible, setIsBMVisible] = useState(false);
+	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
 	const toggleBM = () => {
@@ -219,6 +220,11 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 			<LoginDialog
 				isDialogVisible={isDialogVisible}
 				setIsDialogVisible={setIsDialogVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
+			<WelcomeBackDialog
+				isVisible={isWelcomeVisible}
+				setIsVisible={setIsWelcomeVisible}
 			/>
 			<button onClick={toggleBM} className="btn--burger-menu">
 				{menuIcon}
@@ -227,6 +233,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 				isVisible={isBMVisible}
 				setIsVisible={setIsBMVisible}
 				setIsDialogVisible={setIsDialogVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />

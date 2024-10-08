@@ -8,6 +8,7 @@ import MainMenu from "./MainMenu.jsx";
 import Loader from "./Loader.jsx";
 import "./styles/main.css";
 import ReactGA from "react-ga4";
+import { UserProvider } from "./UserContext.js";
 
 export const isMobileOrTablet = () => {
 	return (
@@ -86,7 +87,7 @@ function App() {
 		setFileToParse,
 	}; // setting these in an object so they're easier to pass and update
 	return (
-		<>
+		<UserProvider>
 			<InstallDialog />
 			<Loader isVisible={isLoaderVisible} setIsVisible={setIsLoaderVisible} />
 
@@ -98,7 +99,7 @@ function App() {
 			/>
 			{fileToParse && <FileParser file={fileToParse} {...dataDisplayProps} />}
 			<Map isVisible={isMapVisible} showMenu={showMenu} data={mapData} />
-		</>
+		</UserProvider>
 	);
 }
 
