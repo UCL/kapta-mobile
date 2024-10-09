@@ -9,6 +9,7 @@ import { ASK_URL } from "../globals.js";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
 import { LoginDialog, WelcomeBackDialog } from "./login.js";
+import { useUserStore } from "./UserContext.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -212,7 +213,7 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const toggleBM = () => {
 		setIsBMVisible((prevState) => !prevState);
 	};
-
+	useUserStore().checkForDetails(); // check if details and log them in
 	if (!isVisible) return null;
 
 	return (

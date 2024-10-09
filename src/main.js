@@ -8,7 +8,7 @@ import MainMenu from "./MainMenu.jsx";
 import Loader from "./Loader.jsx";
 import "./styles/main.css";
 import ReactGA from "react-ga4";
-import { UserProvider } from "./UserContext.js";
+import { UserProvider, useUserStore } from "./UserContext.js";
 
 export const isMobileOrTablet = () => {
 	return (
