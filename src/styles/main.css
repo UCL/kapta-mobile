@@ -127,6 +127,10 @@ body {
     border: 1px solid var(--mid-red--translucent);
     text-align: center;
 
+    .code-input {
+        padding: 0.5rem;
+        min-height: 1.5rem;
+    }
 
     .upload-form {
         display: flex;

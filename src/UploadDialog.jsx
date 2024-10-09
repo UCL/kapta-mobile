@@ -6,6 +6,7 @@ import { addMetaIcn, nextIcn } from "./icons";
 import { useUserStore } from "./UserContext.js";
 import { LoginDialog, WelcomeBackDialog } from "./login.js";
 
+const opendataCode = "OPENDATA";
 export function UploadDialog({ isOpen, setIsOpen }) {
 	if (!isOpen) return null;
 	const user = useUserStore();
@@ -73,7 +74,11 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 									<label>
 										Please enter the <strong>campaign code</strong> for the task
 										you'd like to contribute to if you have one.<br></br>
-										<input type="text" name="c-code"></input>
+										<input
+											type="text"
+											name="c-code"
+											className="code-input"
+										></input>
 									</label>
 									<button type="submit" className="btn">
 										{nextIcn}
@@ -95,7 +100,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 										hidden
 										type="text"
 										name="c-code"
-										defaultValue="opendata"
+										defaultValue={opendataCode}
 									></input>
 									<button type="submit" className="btn">
 										Share for public use
@@ -103,7 +108,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 								</form>
 							</>
 						)}
-						{task && task.id === "opendata" && (
+						{task && task.id === opendataCode && (
 							<form className="upload-form" onSubmit={handleSubmit}>
 								<h3>Upload data to Kapta</h3>
 								<small>
@@ -152,7 +157,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 								</div>
 							</form>
 						)}
-						{task && task.id !== "opendata" && (
+						{task && task.id !== opendataCode && (
 							<form className="upload-form" onSubmit={handleSubmit}>
 								<h3>Upload data to Kapta</h3>
 
