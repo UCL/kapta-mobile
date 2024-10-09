@@ -19,7 +19,9 @@ import {
 	faX,
 	faThumbsUp,
 	faMessage,
+	faBars,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons/faGithub";
 
 // Add fontawesome icons to library
 library.add(
@@ -38,7 +40,9 @@ library.add(
 	faDotCircle,
 	faX,
 	faThumbsUp,
-	faMessage
+	faMessage,
+	faBars,
+	faGithub
 );
 export const chevronDown = <FontAwesomeIcon icon={faChevronDown} />;
 export const chevronUp = <FontAwesomeIcon icon={faChevronUp} />;
@@ -58,8 +62,14 @@ export const GPSPositionIcn = icon({
 	prefix: "fas",
 	iconName: "dot-circle",
 }).html;
-export const closeIcon = <FontAwesomeIcon icon={faX} />;
+export const closeIcon = <FontAwesomeIcon icon={faX} className="btn-icon" />;
 
-export const thumbsUpIcon = <FontAwesomeIcon icon={faThumbsUp} />;
+export const thumbsUpIcon = (
+	<FontAwesomeIcon icon={faThumbsUp} className="btn-icon" />
+);
 
 export const msgIcon = <FontAwesomeIcon icon={faMessage} />;
+
+export const menuIcon = <FontAwesomeIcon icon={faBars} />;
+
+export const GHIcon = <FontAwesomeIcon icon={faGithub} />;

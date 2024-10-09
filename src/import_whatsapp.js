@@ -1,4 +1,3 @@
-import Alpine from "alpinejs";
 import * as JSZip from "jszip";
 import { slugify } from "./utils.js";
 import React, { useEffect, useCallback } from "react";

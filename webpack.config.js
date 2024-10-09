@@ -57,6 +57,17 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new webpack.EnvironmentPlugin(
+			// make sure you run the exportConfig.sh script before building
+			[
+				"ASK_URL",
+				"POOL_ID",
+				"CLIENT_ID",
+				"REGION",
+				"INVOKE_URL",
+				"MAPBOX_TOKEN",
+			]
+		),
 		new webpack.ProvidePlugin({
 			L: "leaflet",
 		}),

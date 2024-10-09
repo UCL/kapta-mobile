@@ -1,13 +1,15 @@
-import Alpine from "alpinejs";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
-import StatusBar from "./StatusBar.jsx";
-import config from "./config.json";
-import { isIOS } from "./main.js";
+import { isIOS, isMobileOrTablet } from "./main.js";
 import ReactGA from "react-ga4";
+import { ASK_URL } from "../globals.js";
+import BurgerMenu from "./BurgerMenu.jsx";
+import { menuIcon } from "./icons.js";
+import { LoginDialog, WelcomeBackDialog } from "./login.js";
+import { useUserStore } from "./UserContext.js";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -184,7 +186,7 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 							category: "Help",
 							action: "Help Button Clicked",
 						});
-						window.location.href = config.kapta.askTheTeamURL;
+						window.location.href = ASK_URL;
 					}}
 				>
 					{t("asktheteam")}
@@ -202,35 +204,46 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-const hasCognito = Alpine.store("appData")?.hasCognito;
-
 export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const { setMapData, showMap } = dataDisplayProps;
-	const [isSBVisible, setIsSBVisible] = useState(false);
+	const [isBMVisible, setIsBMVisible] = useState(false);
+	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
+	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
-	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
-	useEffect(() => {
-		setIsSBVisible(hasCognito);
-	}, []);
-
-	// if menu not visible, nor should status bar be
-	useEffect(() => {
-		if (!isVisible) setIsSBVisible(false);
-	}, [isVisible]);
-
+	const toggleBM = () => {
+		setIsBMVisible((prevState) => !prevState);
+	};
+	useUserStore().checkForDetails(); // check if details and log them in
 	if (!isVisible) return null;
-	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
 	return (
 		<>
-			<StatusBar isVisible={isSBVisible} />
-
+			<LoginDialog
+				isDialogVisible={isDialogVisible}
+				setIsDialogVisible={setIsDialogVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
+			<WelcomeBackDialog
+				isVisible={isWelcomeVisible}
+				setIsVisible={setIsWelcomeVisible}
+			/>
+			<button onClick={toggleBM} className="btn--burger-menu">
+				{menuIcon}
+			</button>
+			<BurgerMenu
+				isVisible={isBMVisible}
+				setIsVisible={setIsBMVisible}
+				setIsDialogVisible={setIsDialogVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
 				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
 				{/* File picker (web only) */}
-				{(!isMobile || isIOS()) && <FilePicker {...dataDisplayProps} />}
+				{(!isMobileOrTablet() || isIOS()) && (
+					<FilePicker {...dataDisplayProps} />
+				)}
 				<Copyright />
 			</div>
 		</>

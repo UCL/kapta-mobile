@@ -1,9 +1,8 @@
-const config = require("./config.json");
-const invokeURL = config.api.invokeUrl;
+import { INVOKE_URL } from "../globals";
 
 async function submitData(data, token) {
 	try {
-		const response = await fetch(invokeURL, {
+		const response = await fetch(INVOKE_URL, {
 			method: "POST",
 			mode: "cors",
 			headers: {

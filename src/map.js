@@ -26,19 +26,16 @@ import {
 	GPSIcn,
 	nextIcn,
 } from "./icons.js";
-
-const config = require("./config.json");
+import { MAPBOX_TOKEN } from "../globals.js";
 
 /************************************************************************************************
  *   Basemaps (TileLayers)
  ************************************************************************************************/
 
 function DarkTileLayer() {
-	const accessToken = config.mapbox.accessToken; // Make sure config is imported or defined
-
 	return (
 		<TileLayer
-			url={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			url={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`}
 			minZoom={2}
 			maxZoom={21}
 			maxNativeZoom={21}
@@ -51,11 +48,9 @@ function DarkTileLayer() {
 }
 
 function SatelliteTileLayer() {
-	const accessToken = config.mapbox.accessToken;
-
 	return (
 		<TileLayer
-			url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`}
 			minZoom={2}
 			maxZoom={21}
 			maxNativeZoom={21}

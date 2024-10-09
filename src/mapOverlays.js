@@ -15,8 +15,9 @@ import {
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
-
-const config = require("./config.json");
+import { isMobileOrTablet } from "./main.js";
+import { useUserStore } from "./UserContext.js";
+import { ASK_URL, hasCognito } from "../globals.js";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -90,7 +91,7 @@ export function MapActionArea({
 		<div id="map-actions-container">
 			<div className="map-actions__wrapper">
 				<div className="map-actions__body">
-					<button id="exit-map" className="btn" onClick={showMenu}>
+					<button id="exit-map" type="button" onClick={showMenu}>
 						{exitButtonIcon}
 					</button>
 					<InputArea
@@ -110,8 +111,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	let hasCognito = Alpine.store("appData")?.hasCognito;
-	const user = Alpine.store("user");
+	const user = useUserStore();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
@@ -225,14 +225,14 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					() => console.info("Data shared"),
 					() => console.error("Failed to share data")
 				);
-		} else if (!Alpine.store("deviceInfo").isMobile) {
+		} else if (!isMobileOrTablet()) {
 			downloadFile(blob, filename);
 		}
 	};
 	const handleUploadClick = async () => {
 		setIsDialogOpen(true).then(
 			function () {
-				let idToken = Alpine.store("user").idToken;
+				let idToken = user.idToken;
 				submitData(currentDataset.geoJSON, idToken);
 			},
 			function (rejectReason) {
@@ -243,7 +243,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	const handleHelpClick = (evt) => {
 		evt.target.style.backgroundColor = "#a6a4a4";
 		setTimeout(() => {
-			window.location.href = config.kapta.askTheTeamURL;
+			window.location.href = ASK_URL;
 			evt.target.style.backgroundColor = "white";
 		}, 500);
 	};
@@ -266,12 +266,12 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					</button>
 					{hasCognito && (
 						<button
-							className={`btn ${!user.logged_in && "disabled"}`}
+							className={`btn ${!user.loggedIn && "disabled"}`}
 							onClick={handleUploadClick}
-							disabled={!user.logged_in}
+							disabled={!user.loggedIn}
 						>
 							{uploadIcn}
-							{user.logged_in ? t("uploaddata") : "Log in to upload data"}
+							{user.loggedIn ? t("uploaddata") : "Log in to upload data"}
 						</button>
 					)}
 
