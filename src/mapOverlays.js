@@ -42,11 +42,11 @@ function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 	const [filterValue, setFilterValue] = useState("");
 	const [placeholderValue, setPlaceholderValue] = useState(t("addDescription"));
 
-	const handleSubmit = (e) => {
+	const handleSubmit = e => {
 		e.preventDefault();
 		let topic = filterValue;
 
-		currentDataset.features?.forEach((feature) => {
+		currentDataset.features?.forEach(feature => {
 			feature.properties.topic = topic;
 		});
 
@@ -61,7 +61,7 @@ function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 		setIsSubmit(false);
 	};
 
-	const handleInputChange = (e) => {
+	const handleInputChange = e => {
 		const value = e.target.value;
 		setFilterValue(value);
 		if (value.length >= 1) setIsSubmit(true);
@@ -133,7 +133,7 @@ export function ShareModal({
 			removeContainer: true,
 			logging: false,
 			foreignObjectRendering: false,
-			ignoreElements: function (element) {
+			ignoreElements: function(element) {
 				if ("button" == element.type || "submit" == element.type) {
 					return true;
 				}
@@ -144,7 +144,7 @@ export function ShareModal({
 					return true;
 				}
 			},
-		}).then(async function (canvas) {
+		}).then(async function(canvas) {
 			const dataURL = canvas.toDataURL();
 			const blob = await (await fetch(dataURL)).blob();
 			const filename = `${filenameSlug}.png`;
@@ -239,7 +239,7 @@ export function ShareModal({
 		setIsOpen(false);
 		// login stuff handled in the component
 	};
-	const handleHelpClick = (evt) => {
+	const handleHelpClick = evt => {
 		evt.target.style.backgroundColor = "#a6a4a4";
 		setTimeout(() => {
 			window.location.href = ASK_URL;
@@ -266,6 +266,7 @@ export function ShareModal({
 						<button
 							className={`btn ${!user.loggedIn && "disabled"}`}
 							onClick={handleUploadClick}
+							disabled={!user.loggedIn}
 						>
 							{uploadIcn}
 							{user.loggedIn ? t("uploaddata") : "Log in to upload data"}
