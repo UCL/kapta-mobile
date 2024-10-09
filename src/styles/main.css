@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
+/* tends to have the dialog styling and colours */
 :root {
     --mid-red: #9f1203;
     --mid-red--translucent: #9b11027e;
@@ -113,19 +114,61 @@ body {
 }
 
 #upload-dialog {
+    background-color: white;
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    z-index: 902;
     position: absolute;
     top: 24%;
     display: flex;
     flex-direction: column;
     width: 50vw;
     height: fit-content;
-    background-color: white;
     border: 1px solid var(--mid-red--translucent);
-    border-radius: 8px;
-    backdrop-filter: blur(4px);
     text-align: center;
-    z-index: 902;
 
+
+    .upload-form {
+        display: flex;
+        flex-direction: column;
+        margin-inline: 1.4rem;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        h3 {
+            color: var(--mid-red);
+            margin: 0 auto;
+        }
+
+        small {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            margin-bottom: 0.4rem;
+        }
+
+        textarea {
+            margin-bottom: 0.8rem;
+            min-width: 70%;
+            min-height: 1.2rem;
+        }
+
+        .btn-area {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            justify-content: space-around;
+
+        }
+    }
+
+    .btn {
+        padding: 0.6rem;
+
+    }
 }
 
 #welcome-back {
@@ -135,7 +178,7 @@ body {
     flex-direction: column;
     width: 50vw;
     height: fit-content;
-    background-color: var(--black-blue--translucent);
+    background-color: var(--mid-red--translucent);
     border: 1px solid var(--black-blue);
     border-radius: 8px;
     backdrop-filter: blur(4px);

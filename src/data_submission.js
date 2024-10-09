@@ -31,8 +31,10 @@ export async function getTaskDetails(code) {
 		});
 
 		const result = await response.json();
-		console.info("Data upload success", result);
+
+		const info = JSON.parse(result); // it's returning the whole thing as a single object
+		return info;
 	} catch (error) {
-		console.error("Data upload failed", error);
+		console.error("Data retrieval failed", error);
 	}
 }

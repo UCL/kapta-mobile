@@ -235,7 +235,6 @@ export function ShareModal({
 		}
 	};
 	const handleUploadClick = () => {
-		console.log("clicked!");
 		setIsUploadDialogOpen(true);
 		setIsOpen(false);
 		// login stuff handled in the component
