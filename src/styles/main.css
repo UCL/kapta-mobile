@@ -68,6 +68,10 @@ body {
         border: 1px solid var(--mid-grey);
     }
 
+    .sms {
+        font-size: 1.5rem;
+    }
+
     h3 {
         width: inherit;
         text-align: center;
@@ -154,10 +158,10 @@ body {
             margin-bottom: 0.4rem;
         }
 
-        textarea {
+        #task-description {
             margin-bottom: 0.8rem;
             min-width: 70%;
-            min-height: 1.2rem;
+            min-height: 1.8rem;
         }
 
         .btn-area {
@@ -182,16 +186,18 @@ body {
     flex-direction: column;
     width: 50vw;
     height: fit-content;
-    background-color: var(--mid-red--translucent);
-    border: 1px solid var(--black-blue);
     border-radius: 8px;
     backdrop-filter: blur(4px);
     text-align: center;
     z-index: 903;
+    background-color: #eeeeeeda;
+    border: 1px solid #eeeeeeda;
 
     h3 {
-        color: white;
+        color: var(--black-blue);
     }
+
+
 }
 
 #install-dialog {
@@ -255,11 +261,4 @@ body {
         color: var(--mid-red--translucent);
         border-color: var(--mid-red--translucent);
     }
-}
-
-.button--login,
-.button--logout {
-    font-weight: 600;
-    font-size: 105%;
-    color: var(--black-blue);
 }

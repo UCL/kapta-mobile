@@ -111,7 +111,7 @@ const respondToSMSChallenge = ({ code, sessionToken, phoneNumber }) => {
 	return client.send(command);
 };
 
-const signOut = ({ access_token }) => {
+const signOut = (access_token) => {
 	const client = new CognitoIdentityProviderClient(cognito);
 	const command = new GlobalSignOutCommand({
 		AccessToken: access_token,

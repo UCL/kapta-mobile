@@ -10,15 +10,25 @@
         /* margin-top: 0.5rem; */
     }
 
-    .button--login {
+    .button--login,
+    .button--logout {
+        font-weight: 600;
+        font-size: 105%;
         margin: 0.6rem 1rem;
         height: 2rem;
         border: none;
-        background-color: var(--black-blue);
-        color: white;
-        /* border-radius: 6px; */
     }
 
+    .button--login {
+        background-color: var(--black-blue);
+        color: white;
+    }
+
+    .button--logout {
+        background-color: transparent;
+        color: var(--mid-red);
+        border: 1px solid var(--mid-red--translucent);
+    }
 }
 
 #burger-menu {
