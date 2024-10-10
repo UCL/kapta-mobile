@@ -118,6 +118,7 @@ export function ShareModal({
 
 	const { t } = useTranslation();
 	const user = useUserStore();
+	user.checkForDetails();
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
@@ -264,9 +265,8 @@ export function ShareModal({
 					</button>
 					{hasCognito && (
 						<button
-							className={`btn ${!user.loggedIn && "disabled"}`}
+							className={`btn ${!user.loggedIn ? "disabled" : ""}`}
 							onClick={handleUploadClick}
-							disabled={!user.loggedIn}
 						>
 							{uploadIcn}
 							{user.loggedIn ? t("uploaddata") : "Log in to upload data"}

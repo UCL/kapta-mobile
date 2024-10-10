@@ -92,7 +92,7 @@ export const UserProvider = ({ children }) => {
 	// Function to log out
 	const logout = useCallback(() => {
 		if (accessToken) {
-			signOut({ access_token: accessToken }).then(
+			signOut(accessToken).then(
 				(response) => {
 					console.info("Successfully signed out", response);
 				},
