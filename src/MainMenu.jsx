@@ -210,17 +210,15 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 	const [isBMVisible, setIsBMVisible] = useState(false);
 	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
-	const [isLoaderVisible, setIsLoaderVisible] = useState(true);
 
 	const toggleBM = () => {
 		setIsBMVisible((prevState) => !prevState);
 	};
-	useUserStore().checkForDetails(); // check if details and log them in
+
 	if (!isVisible) return null;
 
 	return (
 		<>
-			<Loader isVisible={isLoaderVisible} setIsVisible={setIsLoaderVisible} />
 			<LoginDialog
 				isDialogVisible={isDialogVisible}
 				setIsDialogVisible={setIsDialogVisible}
