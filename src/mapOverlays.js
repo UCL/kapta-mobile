@@ -18,6 +18,7 @@ import { slugify } from "./utils.js";
 import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./UserContext.js";
 import { ASK_URL, hasCognito } from "../globals.js";
+import { UploadDialog } from "./UploadDialog.jsx";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -41,11 +42,11 @@ function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 	const [filterValue, setFilterValue] = useState("");
 	const [placeholderValue, setPlaceholderValue] = useState(t("addDescription"));
 
-	const handleSubmit = (e) => {
+	const handleSubmit = e => {
 		e.preventDefault();
 		let topic = filterValue;
 
-		currentDataset.features?.forEach((feature) => {
+		currentDataset.features?.forEach(feature => {
 			feature.properties.topic = topic;
 		});
 
@@ -60,7 +61,7 @@ function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 		setIsSubmit(false);
 	};
 
-	const handleInputChange = (e) => {
+	const handleInputChange = e => {
 		const value = e.target.value;
 		setFilterValue(value);
 		if (value.length >= 1) setIsSubmit(true);
@@ -107,12 +108,16 @@ export function MapActionArea({
 }
 
 // Modal stuff
-export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
+export function ShareModal({
+	isOpen,
+	setIsOpen,
+	currentDataset,
+	setIsUploadDialogOpen,
+}) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
 	const user = useUserStore();
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
@@ -128,7 +133,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			removeContainer: true,
 			logging: false,
 			foreignObjectRendering: false,
-			ignoreElements: function (element) {
+			ignoreElements: function(element) {
 				if ("button" == element.type || "submit" == element.type) {
 					return true;
 				}
@@ -139,7 +144,7 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					return true;
 				}
 			},
-		}).then(async function (canvas) {
+		}).then(async function(canvas) {
 			const dataURL = canvas.toDataURL();
 			const blob = await (await fetch(dataURL)).blob();
 			const filename = `${filenameSlug}.png`;
@@ -229,18 +234,12 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 			downloadFile(blob, filename);
 		}
 	};
-	const handleUploadClick = async () => {
-		setIsDialogOpen(true).then(
-			function () {
-				let idToken = user.idToken;
-				submitData(currentDataset.geoJSON, idToken);
-			},
-			function (rejectReason) {
-				console.error(rejectReason);
-			}
-		);
+	const handleUploadClick = () => {
+		setIsUploadDialogOpen(true);
+		setIsOpen(false);
+		// login stuff handled in the component
 	};
-	const handleHelpClick = (evt) => {
+	const handleHelpClick = evt => {
 		evt.target.style.backgroundColor = "#a6a4a4";
 		setTimeout(() => {
 			window.location.href = ASK_URL;
@@ -249,7 +248,6 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 	};
 	return (
 		<>
-			<MetaDataDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
 			<div id="sharing-modal">
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
@@ -282,62 +280,5 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				</div>
 			</div>
 		</>
-	);
-}
-
-export function MetaDataDialog({ isOpen, setIsOpen }) {
-	if (!isOpen) return null;
-	const { t } = useTranslation();
-	const [isChecked, setIsChecked] = useState(false);
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (isChecked == true) {
-			resolve(true);
-		} else {
-			reject("Permission not given");
-		}
-		setIsOpen(false);
-	};
-	return (
-		<dialog id="upload-dialog" open>
-			<form className="upload-form" onSubmit={handleSubmit}>
-				<h3>Upload data to Kapta</h3>
-				<small>
-					{t("addMetadataTitle")} {addMetaIcn}
-				</small>
-
-				<label for="input-topic">{t("inputtopiclabel")}</label>
-				<textarea name="input-topic" id="input-topic"></textarea>
-
-				<label for="input-goal">{t("inputgoallabel")}</label>
-				<textarea name="input-goal" id="input-goal"></textarea>
-				<label for="data-sov">{t("datasovmessage")}</label>
-				<label for="data-sov" class="toggle">
-					<input
-						type="checkbox"
-						id="data-sov"
-						name="data-sov"
-						class="toggle-input"
-						checked={isChecked}
-						onChange={(e) => setIsChecked(e.target.checked)}
-					/>
-					<span
-						class="toggle-label"
-						data-on={t("yes")}
-						data-off={t("no")}
-					></span>
-					<span class="toggle-handle"></span>
-				</label>
-				<div className="btn-area">
-					<button className="cancel btn" onClick={() => setIsOpen(false)}>
-						{t("cancel")}
-					</button>
-					<button type="submit" className="confirm btn" disabled={!isChecked}>
-						{t("confirm")}
-					</button>
-				</div>
-			</form>
-		</dialog>
 	);
 }

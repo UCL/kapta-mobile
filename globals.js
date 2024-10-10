@@ -5,6 +5,7 @@ export const CLIENT_ID = process.env.CLIENT_ID;
 export const REGION = process.env.REGION;
 export const INVOKE_URL = process.env.INVOKE_URL;
 export const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+export const CODE_API_URL = process.env.CODE_API_URL;
 
 export let cognito = null;
 export let hasCognito = false;

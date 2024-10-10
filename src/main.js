@@ -8,7 +8,7 @@ import MainMenu from "./MainMenu.jsx";
 import Loader from "./Loader.jsx";
 import "./styles/main.css";
 import ReactGA from "react-ga4";
-import { UserProvider } from "./UserContext.js";
+import { UserProvider, useUserStore } from "./UserContext.js";
 
 export const isMobileOrTablet = () => {
 	return (
@@ -70,7 +70,7 @@ function App() {
 	const [isMenuVisible, setIsMenuVisible] = useState(true);
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
-	const [isLoaderVisible, setIsLoaderVisible] = useState(false);
+	const [isLoaderVisible, setIsLoaderVisible] = useState(true);
 	// if map/menu is visible, the other shouldn't be
 	const showMap = (showLoader = false) => {
 		if (showLoader) setIsLoaderVisible(true);
@@ -93,7 +93,6 @@ function App() {
 
 			<MainMenu
 				isVisible={isMenuVisible}
-				setLoaderVisible={setIsLoaderVisible}
 				dataset={mapData}
 				{...dataDisplayProps}
 			/>
