@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getTaskDetails, submitData } from "./data_submission.js";
+import { createTask, getTaskDetails, submitData } from "./data_submission.js";
 import "./styles/main.css";
 import { addMetaIcn, nextIcn } from "./icons";
 import { useUserStore } from "./UserContext.js";
 import { LoginDialog, WelcomeBackDialog } from "./login.js";
 
 const opendataCode = "OPENDATA";
+const opendataId = opendataCode.toLowerCase();
 export function UploadDialog({ isOpen, setIsOpen }) {
 	if (!isOpen) return null;
 	const user = useUserStore();
@@ -25,9 +26,9 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		return getTaskDetails(code).then((response) => {
 			response = response[0];
 			const task = {
-				id: response.task_id.S,
-				description: response.task_description.S,
-				title: response.task_title.S,
+				id: response.task_id?.S,
+				description: response.task_description?.S,
+				title: response.task_title?.S,
 			};
 			return setTask(task);
 		});
@@ -46,8 +47,40 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		};
 		setIsOpen(false);
 	};
+	const handleODSubmit = (e) => {
+		e.preventDefault();
+		if (isChecked == true) {
+			resolve(true);
+		} else {
+			reject("Permission not given");
+		}
+		console.log(user);
+		let idToken = user.idToken;
+		// create a new task and then submit the data
+		var formData = new FormData(e.target);
+		const campaign_code = opendataCode;
+		const data = {
+			campaignCode: campaign_code,
+			title: formData.get("title"),
+			description: formData.get("description"),
+			createdBy: user.id,
+			organisation: "opendata",
+			private: false,
+			visible: true,
+			task_id: user.id,
+		};
+		createTask(data).then((response) => {
+			console.log("create task response", response);
+		});
 
-	if (hasDetails) {
+		submitData(currentDataset.geoJSON, idToken);
+		(rejectReason) => {
+			console.error(rejectReason);
+		};
+		setIsOpen(false);
+	};
+
+	if (hasDetails && !user.loggedIn) {
 		useEffect(() => {
 			setIsWelcomeVisible(true);
 		}, [hasDetails]);
@@ -64,9 +97,11 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 			<WelcomeBackDialog
 				isVisible={isWelcomeVisible}
 				setIsVisible={setIsWelcomeVisible}
+				version="r"
 			/>
 			{user.loggedIn && (
 				<>
+					{/* check the code or choose open data */}
 					<dialog id="upload-dialog" open>
 						{!task && (
 							<>
@@ -108,37 +143,38 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 								</form>
 							</>
 						)}
-						{task && task.id === opendataCode && (
-							<form className="upload-form" onSubmit={handleSubmit}>
+						{/* opendata request - will also create a new task */}
+						{task && task.id === opendataId && (
+							<form className="upload-form" onSubmit={handleODSubmit}>
 								<h3>Upload data to Kapta</h3>
 								<small>
 									{t("addMetadataTitle")} {addMetaIcn}
 								</small>
 
-								<label for="task-topic">{t("inputtopiclabel")}</label>
-								<textarea name="task-topic" id="task-topic"></textarea>
+								<label htmlFor="task-title">{t("inputtopiclabel")}</label>
+								<textarea name="task-title" id="task-title"></textarea>
 
-								<label for="task-description">{t("inputgoallabel")}</label>
+								<label htmlFor="task-description">{t("inputgoallabel")}</label>
 								<textarea
 									name="task-description"
 									id="task-description"
 								></textarea>
-								<label for="data-sov">{t("datasovmessage")}</label>
-								<label for="data-sov" class="toggle">
+								<label htmlFor="data-sov">{t("datasovmessage")}</label>
+								<label htmlFor="data-sov" className="toggle">
 									<input
 										type="checkbox"
 										id="data-sov"
 										name="data-sov"
-										class="toggle-input"
+										className="toggle-input"
 										checked={isChecked}
 										onChange={(e) => setIsChecked(e.target.checked)}
 									/>
 									<span
-										class="toggle-label"
+										className="toggle-label"
 										data-on={t("yes")}
 										data-off={t("no")}
 									></span>
-									<span class="toggle-handle"></span>
+									<span className="toggle-handle"></span>
 								</label>
 								<div className="btn-area">
 									<button
@@ -157,34 +193,36 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 								</div>
 							</form>
 						)}
-						{task && task.id !== opendataCode && (
+						{/* if they have a campaign code */}
+						{task && task.id !== opendataId && (
 							<form className="upload-form" onSubmit={handleSubmit}>
 								<h3>Upload data to Kapta</h3>
-
-								<h3 name="task-topic" id="task-topic">
-									{task.title}
+								<h3>Task Details</h3>
+								<h3 name="task-title" id="task-title">
+									<small>title:</small> {task.title}
 								</h3>
 
+								<p>Description:</p>
 								<p name="task-description" id="task-description">
 									{task.description}
 								</p>
 
-								<label for="data-sov">{t("datasovmessage")}</label>
-								<label for="data-sov" class="toggle">
+								<label htmlFor="data-sov">{t("datasovmessage")}</label>
+								<label htmlFor="data-sov" className="toggle">
 									<input
 										type="checkbox"
 										id="data-sov"
 										name="data-sov"
-										class="toggle-input"
+										className="toggle-input"
 										checked={isChecked}
 										onChange={(e) => setIsChecked(e.target.checked)}
 									/>
 									<span
-										class="toggle-label"
+										className="toggle-label"
 										data-on={t("yes")}
 										data-off={t("no")}
 									></span>
-									<span class="toggle-handle"></span>
+									<span className="toggle-handle"></span>
 								</label>
 								<div className="btn-area">
 									<button
