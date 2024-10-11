@@ -126,14 +126,32 @@ body {
     top: 24%;
     display: flex;
     flex-direction: column;
-    width: 50vw;
+    width: 52vw;
+    padding: 1rem;
     height: fit-content;
     border: 1px solid var(--mid-red--translucent);
     text-align: center;
 
+
+    hr {
+        border: 0px;
+        border-bottom: 1px solid var(--light-grey);
+        width: 100%;
+        margin-top: 1rem;
+    }
+
     .code-input {
         padding: 0.5rem;
         min-height: 1.5rem;
+        border: 1px solid var(--mid-red--translucent);
+        border-radius: 6px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+
+    .opendata-info {
+        color: var(--light-grey)
     }
 
     .upload-form {
@@ -144,9 +162,19 @@ body {
         align-items: center;
         text-align: center;
 
+        h2 {
+            margin-top: 0;
+        }
+
         h3 {
             color: var(--mid-red);
             margin: 0 auto;
+        }
+
+        h4 {
+            color: var(--light-grey);
+            margin-bottom: 0.2rem;
+
         }
 
         small {
@@ -162,6 +190,10 @@ body {
             margin-bottom: 0.8rem;
             min-width: 70%;
             min-height: 1.8rem;
+
+            span {
+                color: var(--mid-red);
+            }
         }
 
         .btn-area {
@@ -173,11 +205,37 @@ body {
         }
     }
 
+    .code-form>.btn {
+        padding: 0.6rem;
+        background-color: var(--mid-red);
+        color: white;
+        border-color: var(--mid-red--translucent);
+
+        &.check-code {
+            border-radius: 6px;
+            height: 2.65rem;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        &.opendata {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+    }
+
     .btn {
         padding: 0.6rem;
+    }
 
+    .grey {
+        color: var(--light-grey);
     }
 }
+
+
+
+
 
 #welcome-back {
     position: absolute;

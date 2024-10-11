@@ -5,6 +5,9 @@ import "./styles/main.css";
 import { addMetaIcn, nextIcn } from "./icons";
 import { useUserStore } from "./UserContext.js";
 import { LoginDialog, WelcomeBackDialog } from "./login.js";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { icon } from "leaflet";
 
 const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
@@ -24,7 +27,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
 		return getTaskDetails(code).then((response) => {
-			response = response[0];
+			if (!response) return console.error("Error: no response received");
 			const task = {
 				id: response.task_id?.S,
 				description: response.task_description?.S,
@@ -80,6 +83,11 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		setIsOpen(false);
 	};
 
+	const handleInfoClick = (e) => {
+		const abbrElem = e.target.closest("abbr");
+		return alert(abbrElem.title);
+	};
+
 	if (hasDetails && !user.loggedIn) {
 		useEffect(() => {
 			setIsWelcomeVisible(true);
@@ -105,39 +113,43 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 					<dialog id="upload-dialog" open>
 						{!task && (
 							<>
-								<form onSubmit={checkCode}>
+								<form onSubmit={checkCode} className="code-form">
 									<label>
-										Please enter the <strong>campaign code</strong> for the task
-										you'd like to contribute to if you have one.<br></br>
+										If you have a <strong>campaign code</strong>, enter it
+										below.<br></br>
 										<input
+											placeholder="Campaign code"
 											type="text"
 											name="c-code"
 											className="code-input"
 										></input>
 									</label>
-									<button type="submit" className="btn">
+									<button type="submit" className="btn check-code">
 										{nextIcn}
 									</button>
 								</form>
-								<form onSubmit={checkCode}>
+								<hr></hr>
+								<form onSubmit={checkCode} className="code-form">
 									<p>
 										If you want to upload your data as{" "}
 										<strong>open data</strong>, click the button below.{" "}
+										<abbr
+											onClick={handleInfoClick}
+											className="opendata-info"
+											title="Open Data"
+										>
+											{" "}
+											<FontAwesomeIcon icon={faInfoCircle} />
+										</abbr>
 									</p>
-									<small>
-										<a>
-											Click here to learn more about <strong>open data</strong>{" "}
-											in Kapta
-										</a>
-									</small>
-									<br></br>
+
 									<input
 										hidden
 										type="text"
 										name="c-code"
 										defaultValue={opendataCode}
 									></input>
-									<button type="submit" className="btn">
+									<button type="submit" className="btn opendata">
 										Share for public use
 									</button>
 								</form>
@@ -196,14 +208,14 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 						{/* if they have a campaign code */}
 						{task && task.id !== opendataId && (
 							<form className="upload-form" onSubmit={handleSubmit}>
-								<h3>Upload data to Kapta</h3>
-								<h3>Task Details</h3>
+								<h4 className="grey">Upload data to Kapta</h4>
+								<h2>Task Details</h2>
 								<h3 name="task-title" id="task-title">
-									<small>title:</small> {task.title}
+									<small>Title:</small> {task.title}
 								</h3>
 
-								<p>Description:</p>
 								<p name="task-description" id="task-description">
+									<span>Description: </span>
 									{task.description}
 								</p>
 

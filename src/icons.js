@@ -20,6 +20,7 @@ import {
 	faThumbsUp,
 	faMessage,
 	faBars,
+	faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons/faGithub";
 
@@ -42,7 +43,8 @@ library.add(
 	faThumbsUp,
 	faMessage,
 	faBars,
-	faGithub
+	faGithub,
+	faInfoCircle
 );
 // we use .btn-icon but there is no global styling for it, only ever nested,
 // which allows for easy selecting and flexible styling
