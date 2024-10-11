@@ -200,27 +200,37 @@ body {
             display: flex;
             flex-direction: row;
             width: 80%;
-            justify-content: space-around;
+            justify-content: space-between;
 
         }
     }
 
-    .code-form>.btn {
-        padding: 0.6rem;
-        background-color: var(--mid-red);
-        color: white;
-        border-color: var(--mid-red--translucent);
+    .code-form {
 
-        &.check-code {
-            border-radius: 6px;
-            height: 2.65rem;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
+        .code-error {
+            color: var(--mid-red);
+            font-size: 0.7rem;
+            display: block;
+            margin: 0.1rem;
         }
 
-        &.opendata {
-            font-weight: 600;
-            font-size: 1rem;
+        .btn {
+            padding: 0.6rem;
+            background-color: var(--mid-red);
+            color: white;
+            border-color: var(--mid-red--translucent);
+
+            &.check-code {
+                border-radius: 6px;
+                height: 2.65rem;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            &.opendata {
+                font-weight: 600;
+                font-size: 1rem;
+            }
         }
     }
 

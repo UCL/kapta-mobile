@@ -21,13 +21,17 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 	const [isLoginVisible, setIsLoginVisible] = useState(false);
 	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 	const [task, setTask] = useState(null);
+	const [hasCodeError, setHasCodeError] = useState(false);
 
 	const checkCode = (e) => {
 		e.preventDefault();
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
 		return getTaskDetails(code).then((response) => {
-			if (!response) return console.error("Error: no response received");
+			if (!response) {
+				console.error("Error: no response received");
+				return setHasCodeError(true);
+			}
 			const task = {
 				id: response.task_id?.S,
 				description: response.task_description?.S,
@@ -43,6 +47,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		} else {
 			reject("Permission not given");
 		}
+
 		let idToken = user.idToken;
 		submitData(currentDataset.geoJSON, idToken);
 		(rejectReason) => {
@@ -59,6 +64,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 		}
 		console.log(user);
 		let idToken = user.idToken;
+		// not sure we want to use the whole token since that's rather long
 		// create a new task and then submit the data
 		var formData = new FormData(e.target);
 		const campaign_code = opendataCode;
@@ -66,11 +72,11 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 			campaignCode: campaign_code,
 			title: formData.get("title"),
 			description: formData.get("description"),
-			createdBy: user.id,
+			createdBy: idToken,
 			organisation: "opendata",
 			private: false,
 			visible: true,
-			task_id: user.id,
+			task_id: idToken,
 		};
 		createTask(data).then((response) => {
 			console.log("create task response", response);
@@ -127,6 +133,11 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 									<button type="submit" className="btn check-code">
 										{nextIcn}
 									</button>
+									{hasCodeError && (
+										<small className="code-error">
+											Code not valid, check code and try again
+										</small>
+									)}
 								</form>
 								<hr></hr>
 								<form onSubmit={checkCode} className="code-form">
