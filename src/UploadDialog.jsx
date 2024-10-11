@@ -4,7 +4,7 @@ import { createTask, getTaskDetails, submitData } from "./data_submission.js";
 import "./styles/main.css";
 import { addMetaIcn, nextIcn } from "./icons";
 import { useUserStore } from "./UserContext.js";
-import { LoginDialog, WelcomeBackDialog } from "./login.js";
+import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { icon } from "leaflet";

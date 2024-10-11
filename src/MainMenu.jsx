@@ -8,9 +8,7 @@ import ReactGA from "react-ga4";
 import { ASK_URL } from "../globals.js";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
-import { LoginDialog, WelcomeBackDialog } from "./login.js";
-import { useUserStore } from "./UserContext.js";
-import Loader from "./Loader.jsx";
+import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
