@@ -20,7 +20,7 @@ export default function StatusBar({
 		} // show welcome back
 		setIsSideMenuVisible(false);
 	};
-	const onLogout = () => (user.loggedIn = false);
+	const onLogout = () => (user.logout(), setIsSideMenuVisible(false));
 	return (
 		<div id="status-bar">
 			{user.loggedIn ? (

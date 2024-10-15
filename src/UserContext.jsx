@@ -1,4 +1,10 @@
-import React, { useState, useCallback, createContext, useContext } from "react";
+import React, {
+	useState,
+	useCallback,
+	createContext,
+	useContext,
+	useEffect,
+} from "react";
 import { initiateAuthRefresh, signOut } from "./auth";
 
 // Create the User Context
@@ -16,6 +22,10 @@ export const UserProvider = ({ children }) => {
 	const [displayName, setDisplayName] = useState(null);
 	const [phoneNumber, setPhoneNumber] = useState(null);
 	const [loggedIn, setLoggedIn] = useState(false);
+
+	useEffect(() => {
+		checkForDetails();
+	}, []); // check for details when component mounts ie app starts
 
 	const setUserDetails = useCallback(
 		(userDetails) => {
@@ -82,7 +92,7 @@ export const UserProvider = ({ children }) => {
 	// Function to log out
 	const logout = useCallback(() => {
 		if (accessToken) {
-			signOut({ access_token: accessToken }).then(
+			signOut(accessToken).then(
 				(response) => {
 					console.info("Successfully signed out", response);
 				},

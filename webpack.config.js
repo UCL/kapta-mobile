@@ -66,6 +66,7 @@ module.exports = {
 				"REGION",
 				"INVOKE_URL",
 				"MAPBOX_TOKEN",
+				"CODE_API_URL",
 			]
 		),
 		new webpack.ProvidePlugin({
