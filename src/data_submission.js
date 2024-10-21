@@ -7,7 +7,7 @@ export async function submitData(data, token) {
 			method: "POST",
 			mode: "cors",
 			headers: {
-				"Content-Type": "applications/json",
+				"Content-Type": "application/json",
 				Authorization: token,
 			},
 			body: JSON.stringify(data),
@@ -28,10 +28,9 @@ export async function getTaskDetails(code) {
 			method: "GET",
 			mode: "cors",
 			headers: {
-				"Content-Type": "applications/json",
+				"Content-Type": "application/json",
 			},
 		});
-
 		const result = await response.json();
 
 		const info = JSON.parse(result); // it's returning the whole thing as a single object
@@ -49,7 +48,7 @@ export async function createTask(values) {
 			method: "PUT",
 			mode: "cors",
 			headers: {
-				"Content-Type": "applications/json",
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(values),
 		});
