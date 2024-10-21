@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { createTask, getTaskDetails, submitData } from "./data_submission.js";
 import "./styles/main.css";
 import { addMetaIcn, nextIcn } from "./icons";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

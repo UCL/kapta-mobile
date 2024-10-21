@@ -1,7 +1,7 @@
 import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
 import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 import React, { useEffect, useState } from "react";
 
 var phone_number;

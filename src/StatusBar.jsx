@@ -1,6 +1,6 @@
 import React from "react";
 import { hasCognito } from "../globals.js";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 
 export default function StatusBar({
 	setIsSideMenuVisible,
