@@ -205,14 +205,15 @@ body {
         }
     }
 
-    .code-form {
+    .code-error,
+    .consent-error {
+        color: var(--mid-red);
+        font-size: 0.7rem;
+        display: block;
+        margin: 0.1rem;
+    }
 
-        .code-error {
-            color: var(--mid-red);
-            font-size: 0.7rem;
-            display: block;
-            margin: 0.1rem;
-        }
+    .code-form {
 
         .btn {
             padding: 0.6rem;
@@ -316,7 +317,7 @@ body {
     background-color: white;
     box-shadow: 2px 2px 10px -6px rgba(34, 34, 34, 0.7);
 
-    &.confirm {
+    &.confirm:not(:disabled) {
         color: green;
         border-color: green;
 
@@ -328,5 +329,12 @@ body {
     &.cancel {
         color: var(--mid-red--translucent);
         border-color: var(--mid-red--translucent);
+    }
+
+    &:disabled,
+    &[disabled] {
+        opacity: 0.5;
+        color: var(--light-grey);
+        border-color: var(--light-grey);
     }
 }

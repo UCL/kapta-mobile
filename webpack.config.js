@@ -64,7 +64,7 @@ module.exports = {
 				"POOL_ID",
 				"CLIENT_ID",
 				"REGION",
-				"INVOKE_URL",
+				"UPLOAD_URL",
 				"MAPBOX_TOKEN",
 				"CODE_API_URL",
 			]

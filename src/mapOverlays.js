@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { submitData } from "./data_submission.js";
 import "./styles/map-etc.css";
 import html2canvas from "html2canvas";
 import {
@@ -10,7 +9,6 @@ import {
 	dataIcn,
 	uploadIcn,
 	chevronUp,
-	addMetaIcn,
 	exitButtonIcon,
 	msgIcon,
 } from "./icons";
@@ -18,7 +16,6 @@ import { slugify } from "./utils.js";
 import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./UserContext.jsx";
 import { ASK_URL, hasCognito } from "../globals.js";
-import { UploadDialog } from "./UploadDialog.jsx";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);

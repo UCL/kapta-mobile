@@ -1,9 +1,9 @@
-import { INVOKE_URL, CODE_API_URL } from "../globals";
+import { UPLOAD_URL, CODE_API_URL } from "../globals";
 
 // function to submit data that ends up in s3
 export async function submitData(data, token) {
 	try {
-		const response = await fetch(INVOKE_URL, {
+		const response = await fetch(UPLOAD_URL, {
 			method: "POST",
 			mode: "cors",
 			headers: {

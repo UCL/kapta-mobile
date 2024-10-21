@@ -7,11 +7,10 @@ import { useUserStore } from "./UserContext.jsx";
 import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { icon } from "leaflet";
 
 const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
-export function UploadDialog({ isOpen, setIsOpen }) {
+export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
 	const user = useUserStore();
 	const hasDetails = user.checkForDetails();
@@ -23,7 +22,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 	const [task, setTask] = useState(null);
 	const [hasCodeError, setHasCodeError] = useState(false);
 
-	const checkCode = (e) => {
+	const checkCode = async (e) => {
 		e.preventDefault();
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
@@ -42,18 +41,21 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (isChecked == true) {
-			resolve(true);
+		if (!isChecked) {
+			// this shouldn't trigger because the button is disabled when not checked
+			console.error("Permission not given");
+			return;
 		} else {
-			reject("Permission not given");
+			let idToken = user.idToken;
+			console.log(currentDataset, "\n", idToken);
+			return submitData(currentDataset, idToken).then((response) => {
+				console.log("Data upload success", response);
+				if (response) {
+					setIsOpen(false);
+					// todo: show success modal
+				}
+			});
 		}
-
-		let idToken = user.idToken;
-		submitData(currentDataset.geoJSON, idToken);
-		(rejectReason) => {
-			console.error(rejectReason);
-		};
-		setIsOpen(false);
 	};
 	const handleODSubmit = (e) => {
 		e.preventDefault();
@@ -140,6 +142,7 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 									)}
 								</form>
 								<hr></hr>
+								{/* opendata button */}
 								<form onSubmit={checkCode} className="code-form">
 									<p>
 										If you want to upload your data as{" "}
@@ -197,7 +200,6 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 										data-on={t("yes")}
 										data-off={t("no")}
 									></span>
-									<span className="toggle-handle"></span>
 								</label>
 								<div className="btn-area">
 									<button
@@ -245,7 +247,6 @@ export function UploadDialog({ isOpen, setIsOpen }) {
 										data-on={t("yes")}
 										data-off={t("no")}
 									></span>
-									<span className="toggle-handle"></span>
 								</label>
 								<div className="btn-area">
 									<button

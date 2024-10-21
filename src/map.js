@@ -340,6 +340,7 @@ export function Map({ isVisible, showMenu, data }) {
 			<UploadDialog
 				isOpen={isUploadDialogOpen}
 				setIsOpen={setIsUploadDialogOpen}
+				currentDataset={data.data}
 			/>
 			<ShareModal
 				isOpen={isModalOpen}
