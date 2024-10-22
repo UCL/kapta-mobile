@@ -21,6 +21,7 @@ export const UserProvider = ({ children }) => {
 	const [refreshToken, setRefreshToken] = useState(null);
 	const [displayName, setDisplayName] = useState(null);
 	const [phoneNumber, setPhoneNumber] = useState(null);
+	const [userId, setUserId] = useState(null);
 	const [loggedIn, setLoggedIn] = useState(false);
 
 	useEffect(() => {
@@ -33,6 +34,7 @@ export const UserProvider = ({ children }) => {
 			const decodedIdTokenPayload = JSON.parse(atob(base64Payload));
 			setDisplayName(decodedIdTokenPayload["custom:display_name"]);
 			setPhoneNumber(decodedIdTokenPayload["phone_number"]);
+			setUserId(decodedIdTokenPayload["sub"]);
 
 			setAccessToken(userDetails.accessToken);
 			setIdToken(userDetails.idToken);
@@ -47,27 +49,47 @@ export const UserProvider = ({ children }) => {
 		},
 		[idToken]
 	);
+	function isTokenValid(token) {
+		const base64Payload = token.split(".")[1];
+		const decodedToken = JSON.parse(atob(base64Payload));
+		const expirationTime = decodedToken.exp;
+		const currentTime = Math.floor(Date.now() / 1000);
+
+		return expirationTime > currentTime;
+	}
+
+	const getLocalStorageTokens = useCallback(() => {
+		return {
+			idToken: localStorage.getItem("idToken"),
+			accessToken: localStorage.getItem("accessToken"),
+			refreshToken: localStorage.getItem("refreshToken"),
+		};
+	}, []);
 
 	// Check for user tokens from localStorage and update user info
-	const checkForDetails = useCallback(() => {
-		const storedIdToken = localStorage.getItem("idToken");
-		const storedAccessToken = localStorage.getItem("accessToken");
-		const storedRefreshToken = localStorage.getItem("refreshToken");
-
-		let userDetails = {
-			accessToken: storedAccessToken,
-			idToken: storedIdToken,
-			refreshToken: storedRefreshToken,
-		};
+	const checkForDetails = useCallback(async () => {
+		let userDetails = getLocalStorageTokens();
+		// check each of the tokens is there and not "null"
 		const userDetailsNotNull = Object.values(userDetails).every(
 			(value) => value !== null && value !== "null" && value !== undefined
 		);
 
-		// Only set user details if tokens exist and are not the string "null"
 		if (userDetailsNotNull) {
-			setUserDetails(userDetails);
-			return true;
-		} else return false;
+			const isValid = await isTokenValid(userDetails.idToken);
+			if (!isValid) {
+				await refresh(userDetails.refreshToken);
+				try {
+					userDetails = getLocalStorageTokens();
+					await isTokenValid();
+					setUserDetails(userDetails);
+				} catch (error) {
+					console.error("Error refreshing tokens", error);
+				}
+			} else {
+				setUserDetails(userDetails);
+				return true;
+			}
+		} else return false; // user will have to log in again
 	}, [setUserDetails]);
 
 	// update localStorage values
@@ -78,16 +100,20 @@ export const UserProvider = ({ children }) => {
 	};
 
 	// Function to refresh tokens
-	const refresh = useCallback(() => {
-		if (refreshToken) {
-			initiateAuthRefresh({ refreshToken }).then((response) => {
+	const refresh = useCallback(
+		async (refreshToken) => {
+			if (refreshToken) {
+				const response = await initiateAuthRefresh(refreshToken);
 				const authResult = response.AuthenticationResult;
-				setIdToken(authResult.IdToken);
-				setAccessToken(authResult.AccessToken);
-				setRefreshToken(authResult.RefreshToken);
-			});
-		}
-	}, [refreshToken]);
+				setUserDetails({
+					accessToken: authResult.AccessToken,
+					idToken: authResult.IdToken,
+					refreshToken: authResult.RefreshToken,
+				});
+			}
+		},
+		[refreshToken, setUserDetails]
+	);
 
 	// Function to log out
 	const logout = useCallback(() => {
@@ -119,6 +145,7 @@ export const UserProvider = ({ children }) => {
 				refreshToken,
 				displayName,
 				phoneNumber,
+				userId,
 				loggedIn,
 				refresh,
 				logout,
