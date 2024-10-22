@@ -57,7 +57,7 @@ const generate_password = function (length) {
 	}
 };
 
-const signUp = ({ phone_number, display_name }) => {
+const signUp = (phone_number, display_name) => {
 	const client = new CognitoIdentityProviderClient(cognito);
 
 	const command = new SignUpCommand({
@@ -70,7 +70,7 @@ const signUp = ({ phone_number, display_name }) => {
 	return client.send(command);
 };
 
-const initiateAuth = ({ phone_number }) => {
+const initiateAuth = (phone_number) => {
 	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		AuthFlow: "CUSTOM_AUTH",
@@ -83,7 +83,7 @@ const initiateAuth = ({ phone_number }) => {
 	return client.send(command);
 };
 
-const initiateAuthRefresh = ({ refreshToken }) => {
+const initiateAuthRefresh = (refreshToken) => {
 	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		AuthFlow: "REFRESH_TOKEN_AUTH",
@@ -96,7 +96,8 @@ const initiateAuthRefresh = ({ refreshToken }) => {
 	return client.send(command);
 };
 
-const respondToSMSChallenge = ({ code, sessionToken, phoneNumber }) => {
+const respondToSMSChallenge = (data) => {
+	const { code, sessionToken, phoneNumber } = data;
 	const client = new CognitoIdentityProviderClient(cognito);
 	const input = {
 		ClientId: cognito.userPoolClientId,
