@@ -38,7 +38,7 @@ function LoginForm({
 		var formData = new FormData(e.target);
 		phone_number = formData.get("phone-number");
 		phoneNumber === phone_number &&
-			initiateAuth({ phone_number }).then(
+			initiateAuth(phone_number).then(
 				function (response) {
 					return getSMSVerificationCode(response.Session, phoneNumber);
 				},
@@ -75,7 +75,7 @@ function SignUpForm({
 		phoneNumber === phone_number &&
 			signUp({ phone_number, display_name })
 				.then(function (value) {
-					return initiateAuth({ phone_number })
+					return initiateAuth(phone_number)
 						.then(function (response) {
 							return getSMSVerificationCode(response.Session, phone_number);
 						})
@@ -128,10 +128,16 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 }
 
 export function LoginDialog({
+	visible = null,
 	isDialogVisible,
 	setIsDialogVisible,
 	setIsWelcomeVisible,
 }) {
+	console.log("login visible:", isDialogVisible, visible);
+	if (visible == true) {
+		setIsDialogVisible(true);
+		visible = null;
+	}
 	if (!isDialogVisible) return null;
 
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
