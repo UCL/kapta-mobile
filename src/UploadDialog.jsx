@@ -12,8 +12,6 @@ const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
 export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 	if (!isOpen) return null;
-	const user = useUserStore();
-	const hasDetails = user.checkForDetails();
 
 	const { t } = useTranslation();
 	const [isChecked, setIsChecked] = useState(false);
@@ -22,73 +20,79 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 	const [task, setTask] = useState(null);
 	const [hasCodeError, setHasCodeError] = useState(false);
 
+	const user = useUserStore();
+	var hasDetails;
+	const checkDetails = async () => {
+		hasDetails = await user.checkForDetails();
+		return hasDetails;
+	};
+	checkDetails();
+
 	const checkCode = async (e) => {
 		e.preventDefault();
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
-		return getTaskDetails(code).then((response) => {
-			if (!response) {
-				console.error("Error: no response received");
-				return setHasCodeError(true);
-			}
+		const response = await getTaskDetails(code);
+		if (!response) {
+			console.error("Error: no response received");
+			return setHasCodeError(true);
+		} else {
 			const task = {
 				id: response.task_id?.S,
 				description: response.task_description?.S,
 				title: response.task_title?.S,
 			};
 			return setTask(task);
-		});
+		}
 	};
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!isChecked) {
 			// this shouldn't trigger because the button is disabled when not checked
 			console.error("Permission not given");
 			return;
 		} else {
-			let idToken = user.idToken;
-			console.log(currentDataset, "\n", idToken);
-			return submitData(currentDataset, idToken).then((response) => {
+			const response = await submitData(currentDataset, user.idToken);
+			if (response.status === 200) {
 				console.log("Data upload success", response);
-				if (response) {
-					setIsOpen(false);
-					// todo: show success modal
-				}
-			});
+				setIsOpen(false);
+				// todo: show success modal
+			}
 		}
 	};
-	const handleODSubmit = (e) => {
+	const handleODSubmit = async (e) => {
 		e.preventDefault();
-		if (isChecked == true) {
-			resolve(true);
+		if (!isChecked) {
+			// this shouldn't trigger because the button is disabled when not checked
+			console.error("Permission not given");
+			return;
 		} else {
-			reject("Permission not given");
-		}
-		console.log(user);
-		let idToken = user.idToken;
-		// not sure we want to use the whole token since that's rather long
-		// create a new task and then submit the data
-		var formData = new FormData(e.target);
-		const campaign_code = opendataCode;
-		const data = {
-			campaignCode: campaign_code,
-			title: formData.get("title"),
-			description: formData.get("description"),
-			createdBy: idToken,
-			organisation: "opendata",
-			private: false,
-			visible: true,
-			task_id: idToken,
-		};
-		createTask(data).then((response) => {
-			console.log("create task response", response);
-		});
+			console.log(user);
+			// not sure we want to use the whole token since that's rather long
+			// create a new task and then submit the data
+			var formData = new FormData(e.target);
+			const campaign_code = opendataCode;
+			const data = {
+				campaignCode: campaign_code,
+				title: formData.get("title"),
+				description: formData.get("description"),
+				createdBy: user.userId,
+				organisation: "opendata",
+				private: false,
+				visible: true,
+				task_id: user.userId,
+			};
+			const response = await createTask(data);
+			if (response.status === 200) {
+				console.log("create task response", response);
 
-		submitData(currentDataset.geoJSON, idToken);
-		(rejectReason) => {
-			console.error(rejectReason);
-		};
-		setIsOpen(false);
+				await submitData(currentDataset, user.idToken).catch((rejectReason) => {
+					console.error(rejectReason);
+				});
+
+				setIsOpen(false);
+			}
+		}
 	};
 
 	const handleInfoClick = (e) => {
@@ -96,18 +100,29 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 		return alert(abbrElem.title);
 	};
 
-	if (hasDetails && !user.loggedIn) {
-		useEffect(() => {
+	useEffect(() => {
+		if (isOpen && hasDetails && !user.loggedIn) {
 			setIsWelcomeVisible(true);
-		}, [hasDetails]);
-	}
+			//TODO: set user as logged or is this is handled in checkdetails
+		}
+	}, [isOpen, user.loggedIn, hasDetails]);
+
+	// trying to get login dialog to show even after it's dismissed
+	// useEffect(() => {
+	// 	if (!user.loggedIn && !hasDetails) {
+	// 		console.log("not logged in and no details");
+	// 		setIsLoginVisible(true);
+	// 	}
+	// }, [isOpen, user.loggedIn, hasDetails, isLoginVisible]);
+
 	return (
 		<>
 			{!user.loggedIn && !hasDetails && (
 				<LoginDialog
-					isDialogVisible={true}
+					visible={true}
+					isDialogVisible={isLoginVisible}
 					setIsDialogVisible={setIsLoginVisible}
-					setIsWelcomeVisible={false}
+					setIsWelcomeVisible={setIsWelcomeVisible}
 				/>
 			)}
 			<WelcomeBackDialog
