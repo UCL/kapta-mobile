@@ -18,6 +18,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 	const [isLoginVisible, setIsLoginVisible] = useState(false);
 	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 	const [task, setTask] = useState(null);
+	const [showOpenDataForm, setShowOpenDataForm] = useState(false);
 	const [hasCodeError, setHasCodeError] = useState(false);
 
 	const user = useUserStore();
@@ -32,17 +33,21 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 		e.preventDefault();
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
-		const response = await getTaskDetails(code);
-		if (!response) {
-			console.error("Error: no response received");
-			return setHasCodeError(true);
+		if (code === opendataCode) {
+			return setShowOpenDataForm(true);
 		} else {
-			const task = {
-				id: response.task_id?.S,
-				description: response.task_description?.S,
-				title: response.task_title?.S,
-			};
-			return setTask(task);
+			const response = await getTaskDetails(code);
+			if (!response) {
+				console.error("Error: no response received");
+				return setHasCodeError(true);
+			} else {
+				const task = {
+					id: response.task_id?.S,
+					description: response.task_description?.S,
+					title: response.task_title?.S,
+				};
+				return setTask(task);
+			}
 		}
 	};
 	const handleSubmit = async (e) => {
@@ -53,8 +58,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 			return;
 		} else {
 			const response = await submitData(currentDataset, user.idToken);
-			if (response.status === 200) {
-				console.log("Data upload success", response);
+			if (response.statusCode === 200) {
 				setIsOpen(false);
 				// todo: show success modal
 			}
@@ -67,30 +71,27 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 			console.error("Permission not given");
 			return;
 		} else {
-			console.log(user);
-			// not sure we want to use the whole token since that's rather long
 			// create a new task and then submit the data
 			var formData = new FormData(e.target);
-			const campaign_code = opendataCode;
+			const taskId = `${opendataId}-${user.userId}`;
 			const data = {
-				campaignCode: campaign_code,
-				title: formData.get("title"),
-				description: formData.get("description"),
+				campaignCode: opendataCode,
+				title: formData.get("task-title"),
+				description: formData.get("task-description"),
 				createdBy: user.userId,
 				organisation: "opendata",
 				private: false,
 				visible: true,
-				task_id: user.userId,
+				taskID: taskId,
 			};
 			const response = await createTask(data);
-			if (response.status === 200) {
-				console.log("create task response", response);
-
+			if (response.includes(taskId)) {
 				await submitData(currentDataset, user.idToken).catch((rejectReason) => {
 					console.error(rejectReason);
 				});
 
 				setIsOpen(false);
+				// todo: show success modal
 			}
 		}
 	};
@@ -132,10 +133,10 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 			/>
 			{user.loggedIn && (
 				<>
-					{/* check the code or choose open data */}
 					<dialog id="upload-dialog" open>
-						{!task && (
+						{!task && !showOpenDataForm && (
 							<>
+								{/* check the code or choose open data */}
 								<form onSubmit={checkCode} className="code-form">
 									<label>
 										If you have a <strong>campaign code</strong>, enter it
@@ -157,6 +158,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 									)}
 								</form>
 								<hr></hr>
+
 								{/* opendata button */}
 								<form onSubmit={checkCode} className="code-form">
 									<p>
@@ -185,7 +187,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 							</>
 						)}
 						{/* opendata request - will also create a new task */}
-						{task && task.id === opendataId && (
+						{!task && showOpenDataForm && (
 							<form className="upload-form" onSubmit={handleODSubmit}>
 								<h3>Upload data to Kapta</h3>
 								<small>
@@ -234,7 +236,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 							</form>
 						)}
 						{/* if they have a campaign code */}
-						{task && task.id !== opendataId && (
+						{task && !showOpenDataForm && (
 							<form className="upload-form" onSubmit={handleSubmit}>
 								<h4 className="grey">Upload data to Kapta</h4>
 								<h2>Task Details</h2>

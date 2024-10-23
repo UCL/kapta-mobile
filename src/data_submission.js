@@ -14,7 +14,7 @@ export async function submitData(data, token) {
 		});
 
 		const result = await response.json();
-		console.info("Data upload success", result);
+		return result;
 	} catch (error) {
 		console.error("Data upload failed", error);
 	}
@@ -54,9 +54,7 @@ export async function createTask(values) {
 		});
 
 		const result = await response.json();
-
-		const info = JSON.parse(result); // it's returning the whole thing as a single object
-		return info;
+		return result;
 	} catch (error) {
 		console.error("Data retrieval failed", error);
 	}
