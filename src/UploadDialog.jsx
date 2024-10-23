@@ -10,7 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
-export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
+export function UploadDialog({
+	isOpen,
+	setIsOpen,
+	currentDataset,
+	setSuccessModalVisible,
+}) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
@@ -60,7 +65,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 			const response = await submitData(currentDataset, user.idToken);
 			if (response.statusCode === 200) {
 				setIsOpen(false);
-				// todo: show success modal
+				setSuccessModalVisible(true);
 			}
 		}
 	};
@@ -91,7 +96,7 @@ export function UploadDialog({ isOpen, setIsOpen, currentDataset }) {
 				});
 
 				setIsOpen(false);
-				// todo: show success modal
+				setSuccessModalVisible(true);
 			}
 		}
 	};

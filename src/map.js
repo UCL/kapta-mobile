@@ -28,6 +28,7 @@ import {
 } from "./icons.js";
 import { MAPBOX_TOKEN } from "../globals.js";
 import { UploadDialog } from "./UploadDialog.jsx";
+import SuccessModal from "./SuccessModal.jsx";
 
 /************************************************************************************************
  *   Basemaps (TileLayers)
@@ -290,6 +291,7 @@ export function Map({ isVisible, showMenu, data }) {
 	if (!isVisible) return null;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+	const [successModalVisible, setSuccessModalVisible] = useState(false);
 
 	const [titleValue, setTitleValue] = useState("");
 	const [shouldPulse, setShouldPulse] = useState(false);
@@ -335,10 +337,16 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
+			{" "}
+			<SuccessModal
+				isVisible={successModalVisible}
+				setIsVisible={setSuccessModalVisible}
+			/>
 			<UploadDialog
 				isOpen={isUploadDialogOpen}
 				setIsOpen={setIsUploadDialogOpen}
 				currentDataset={data.data}
+				setSuccessModalVisible={setSuccessModalVisible}
 			/>
 			<ShareModal
 				isOpen={isModalOpen}
@@ -346,7 +354,6 @@ export function Map({ isVisible, showMenu, data }) {
 				currentDataset={data.data}
 				setIsUploadDialogOpen={setIsUploadDialogOpen}
 			/>
-
 			<div id="map">
 				<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
 					{titleValue}

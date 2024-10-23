@@ -298,6 +298,25 @@ body {
     }
 }
 
+#success-dialog {
+    position: absolute;
+    top: 28%;
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: fit-content;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    text-align: center;
+    z-index: 903;
+    background-color: #eeeeeeda;
+    border: 1px solid #eeeeeeda;
+
+    h3 {
+        color: green;
+    }
+}
+
 
 .error-dialog {
     opacity: 0;
