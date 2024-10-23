@@ -133,7 +133,6 @@ export function LoginDialog({
 	setIsDialogVisible,
 	setIsWelcomeVisible,
 }) {
-	console.log("login visible:", isDialogVisible, visible);
 	if (visible == true) {
 		setIsDialogVisible(true);
 		visible = null;

@@ -87,7 +87,6 @@ const getImageURLFromZip = async (zip, imgFilename) => {
 			return null;
 		}
 		const blob = await file[0].async("blob");
-		console.log(`Successfully extracted file: ${imgFilename}`);
 		let urlCreator = window.URL || window.webkitURL;
 		let url = urlCreator.createObjectURL(blob);
 		return url;
@@ -123,7 +122,6 @@ function MapDataLayer({ data }) {
 				feature.properties.imgFilenames.map(async (filename) =>
 					// check the image isn't already loaded
 					{
-						console.log("filename", filename);
 						if (filename && !featureImages[filename]) {
 							const url = await getImageURLFromZip(imgZip, filename);
 							setFeatureImages((prev) => ({
