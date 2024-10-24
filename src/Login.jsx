@@ -1,7 +1,7 @@
 import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
 import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 import React, { useEffect, useState } from "react";
 
 var phone_number;
@@ -38,7 +38,7 @@ function LoginForm({
 		var formData = new FormData(e.target);
 		phone_number = formData.get("phone-number");
 		phoneNumber === phone_number &&
-			initiateAuth({ phone_number }).then(
+			initiateAuth(phone_number).then(
 				function (response) {
 					return getSMSVerificationCode(response.Session, phoneNumber);
 				},
@@ -75,7 +75,7 @@ function SignUpForm({
 		phoneNumber === phone_number &&
 			signUp({ phone_number, display_name })
 				.then(function (value) {
-					return initiateAuth({ phone_number })
+					return initiateAuth(phone_number)
 						.then(function (response) {
 							return getSMSVerificationCode(response.Session, phone_number);
 						})
@@ -113,7 +113,7 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 			} catch (error) {
 				console.error("Error hiding the dialog:", error);
 			}
-		}, 4000);
+		}, 3000);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes
 		return () => clearTimeout(timer);
@@ -128,10 +128,15 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 }
 
 export function LoginDialog({
+	visible = null,
 	isDialogVisible,
 	setIsDialogVisible,
 	setIsWelcomeVisible,
 }) {
+	if (visible == true) {
+		setIsDialogVisible(true);
+		visible = null;
+	}
 	if (!isDialogVisible) return null;
 
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
