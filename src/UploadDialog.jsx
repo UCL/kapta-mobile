@@ -39,8 +39,10 @@ export function UploadDialog({
 		var formData = new FormData(e.target);
 		const code = formData.get("c-code");
 		if (code === opendataCode) {
+			// handle opendata request
 			return setShowOpenDataForm(true);
 		} else {
+			// normal campaign code
 			const response = await getTaskDetails(code);
 			if (!response) {
 				console.error("Error: no response received");
@@ -62,7 +64,7 @@ export function UploadDialog({
 			console.error("Permission not given");
 			return;
 		} else {
-			const response = await submitData(currentDataset, user.idToken);
+			const response = await submitData(currentDataset, task.id, user.idToken);
 			if (response.statusCode === 200) {
 				setIsOpen(false);
 				setSuccessModalVisible(true);
@@ -91,9 +93,11 @@ export function UploadDialog({
 			};
 			const response = await createTask(data);
 			if (response.includes(taskId)) {
-				await submitData(currentDataset, user.idToken).catch((rejectReason) => {
-					console.error(rejectReason);
-				});
+				await submitData(currentDataset, taskId, user.idToken).catch(
+					(rejectReason) => {
+						console.error(rejectReason);
+					}
+				);
 
 				setIsOpen(false);
 				setSuccessModalVisible(true);

@@ -1,7 +1,11 @@
 import { UPLOAD_URL, CODE_API_URL } from "../globals";
 
 // function to submit data that ends up in s3
-export async function submitData(data, token) {
+export async function submitData(dataset, id, token) {
+	const data = {
+		taskId: id,
+		dataset: dataset,
+	};
 	try {
 		const response = await fetch(UPLOAD_URL, {
 			method: "POST",
