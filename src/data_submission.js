@@ -17,7 +17,7 @@ export async function submitData(dataset, id, token) {
 			body: JSON.stringify(data),
 		});
 
-		const result = await response.json();
+		const result = await response;
 		return result;
 	} catch (error) {
 		console.error("Data upload failed", error);

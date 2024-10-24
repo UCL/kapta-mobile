@@ -65,7 +65,7 @@ export function UploadDialog({
 			return;
 		} else {
 			const response = await submitData(currentDataset, task.id, user.idToken);
-			if (response.statusCode === 200) {
+			if (response.status === 200) {
 				setIsOpen(false);
 				setSuccessModalVisible(true);
 			}
@@ -93,14 +93,15 @@ export function UploadDialog({
 			};
 			const response = await createTask(data);
 			if (response.includes(taskId)) {
-				await submitData(currentDataset, taskId, user.idToken).catch(
-					(rejectReason) => {
-						console.error(rejectReason);
-					}
+				const response = await submitData(
+					currentDataset,
+					task.id,
+					user.idToken
 				);
-
-				setIsOpen(false);
-				setSuccessModalVisible(true);
+				if (response.status === 200) {
+					setIsOpen(false);
+					setSuccessModalVisible(true);
+				}
 			}
 		}
 	};
