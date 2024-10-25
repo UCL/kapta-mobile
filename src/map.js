@@ -287,7 +287,13 @@ function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
 	return null;
 }
 
-export function Map({ isVisible, showMenu, data }) {
+export function Map({
+	isVisible,
+	showMenu,
+	data,
+	isLoginVisible,
+	setIsLoginVisible,
+}) {
 	if (!isVisible) return null;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
@@ -347,6 +353,8 @@ export function Map({ isVisible, showMenu, data }) {
 				setIsOpen={setIsUploadDialogOpen}
 				currentDataset={data.data}
 				setSuccessModalVisible={setSuccessModalVisible}
+				isLoginVisible={isLoginVisible}
+				setIsLoginVisible={setIsLoginVisible}
 			/>
 			<ShareModal
 				isOpen={isModalOpen}

@@ -10,7 +10,13 @@ var display_name;
 function ButtonBox({ setIsDialogVisible }) {
 	return (
 		<div className="btn-box">
-			<button className="btn cancel" onClick={() => setIsDialogVisible(false)}>
+			<button
+				className="btn cancel"
+				onClick={() => {
+					console.log("closing");
+					setIsDialogVisible(false);
+				}}
+			>
 				{closeIcon}
 			</button>
 			<button className="btn confirm" form="dialog-form">
@@ -127,24 +133,15 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 	);
 }
 
-export function LoginDialog({
-	visible = null,
-	isDialogVisible,
-	setIsDialogVisible,
-	setIsWelcomeVisible,
-}) {
-	if (visible == true) {
-		setIsDialogVisible(true);
-		visible = null;
-	}
-	if (!isDialogVisible) return null;
-
+export function LoginDialog({ isVisible, setIsVisible, setIsWelcomeVisible }) {
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
 	const [isSignupFormVisible, setIsSignupFormVisible] = useState(false);
 	const [isSmsInputVisible, setIsSmsInputVisible] = useState(false);
 	const [sessionToken, setSessionToken] = useState(null);
 	const [message, setMessage] = useState("Sign up to Kapta");
 	const [phoneNumber, setPhoneNumber] = useState(null);
+
+	if (!isVisible) return null;
 
 	const showSignupForm = (phone_number = null, message = null) => {
 		setIsLoginFormVisible(false);
@@ -187,13 +184,13 @@ export function LoginDialog({
 			)}
 			{isSmsInputVisible && (
 				<SmsInput
-					setIsDialogVisible={setIsDialogVisible}
+					setIsDialogVisible={setIsVisible}
 					sessionToken={sessionToken}
 					phoneNumber={phoneNumber}
 					setIsWelcomeVisible={setIsWelcomeVisible}
 				/>
 			)}
-			<ButtonBox setIsDialogVisible={setIsDialogVisible} />
+			<ButtonBox setIsDialogVisible={setIsVisible} />
 		</dialog>
 	);
 }

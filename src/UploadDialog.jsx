@@ -15,12 +15,13 @@ export function UploadDialog({
 	setIsOpen,
 	currentDataset,
 	setSuccessModalVisible,
+	isLoginVisible,
+	setIsLoginVisible,
 }) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
 	const [isChecked, setIsChecked] = useState(false);
-	const [isLoginVisible, setIsLoginVisible] = useState(false);
 	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 	const [task, setTask] = useState(null);
 	const [showOpenDataForm, setShowOpenDataForm] = useState(false);
@@ -114,28 +115,26 @@ export function UploadDialog({
 	useEffect(() => {
 		if (isOpen && hasDetails && !user.loggedIn) {
 			setIsWelcomeVisible(true);
-			//TODO: set user as logged or is this is handled in checkdetails
 		}
 	}, [isOpen, user.loggedIn, hasDetails]);
 
-	// trying to get login dialog to show even after it's dismissed
-	// useEffect(() => {
-	// 	if (!user.loggedIn && !hasDetails) {
-	// 		console.log("not logged in and no details");
-	// 		setIsLoginVisible(true);
-	// 	}
-	// }, [isOpen, user.loggedIn, hasDetails, isLoginVisible]);
+	// close upload dialog when showing login dialog to allow login to show again after dismissal
+	useEffect(() => {
+		if (isOpen && !user.loggedIn && !hasDetails) {
+			setIsLoginVisible(true);
+			setIsOpen(false);
+		}
+	});
 
 	return (
 		<>
-			{!user.loggedIn && !hasDetails && (
-				<LoginDialog
-					visible={true}
-					isDialogVisible={isLoginVisible}
-					setIsDialogVisible={setIsLoginVisible}
-					setIsWelcomeVisible={setIsWelcomeVisible}
-				/>
-			)}
+			{/* {!user.loggedIn && !hasDetails && ( */}
+			<LoginDialog
+				isVisible={isLoginVisible}
+				setIsVisible={setIsLoginVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
+			{/* )} */}
 			<WelcomeBackDialog
 				isVisible={isWelcomeVisible}
 				setIsVisible={setIsWelcomeVisible}

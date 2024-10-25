@@ -203,11 +203,14 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
-	const { setMapData, showMap } = dataDisplayProps;
+export default function MainMenu({
+	isVisible,
+	setIsLoginVisible,
+	setIsWelcomeVisible,
+	dataset,
+	...dataDisplayProps
+}) {
 	const [isBMVisible, setIsBMVisible] = useState(false);
-	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
 	const toggleBM = () => {
 		setIsBMVisible((prevState) => !prevState);
@@ -217,28 +220,22 @@ export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
 
 	return (
 		<>
-			<LoginDialog
-				isDialogVisible={isDialogVisible}
-				setIsDialogVisible={setIsDialogVisible}
-				setIsWelcomeVisible={setIsWelcomeVisible}
-			/>
-			<WelcomeBackDialog
-				isVisible={isWelcomeVisible}
-				setIsVisible={setIsWelcomeVisible}
-			/>
 			<button onClick={toggleBM} className="btn--burger-menu">
 				{menuIcon}
 			</button>
 			<BurgerMenu
 				isVisible={isBMVisible}
 				setIsVisible={setIsBMVisible}
-				setIsDialogVisible={setIsDialogVisible}
+				setIsLoginVisible={setIsLoginVisible}
 				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
-				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
+				<ButtonArea
+					showMap={dataDisplayProps.showMap}
+					hasCurrentDataset={dataset}
+				/>
 				{/* File picker (web only) */}
 				{(!isMobileOrTablet() || isIOS()) && (
 					<FilePicker {...dataDisplayProps} />

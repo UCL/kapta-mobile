@@ -8,7 +8,8 @@ import MainMenu from "./MainMenu.jsx";
 import Loader from "./Loader.jsx";
 import "./styles/main.css";
 import ReactGA from "react-ga4";
-import { UserProvider, useUserStore } from "./UserContext.jsx";
+import { UserProvider } from "./UserContext.jsx";
+import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 
 export const isMobileOrTablet = () => {
 	return (
@@ -71,6 +72,9 @@ function App() {
 	const [isMapVisible, setIsMapVisible] = useState(false);
 	const [mapData, setMapData] = useState(null);
 	const [isLoaderVisible, setIsLoaderVisible] = useState(true);
+	const [isLoginVisible, setIsLoginVisible] = useState(false);
+	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
+
 	// if map/menu is visible, the other shouldn't be
 	const showMap = (showLoader = false) => {
 		if (showLoader) setIsLoaderVisible(true);
@@ -90,14 +94,30 @@ function App() {
 		<UserProvider>
 			<InstallDialog />
 			<Loader isVisible={isLoaderVisible} setIsVisible={setIsLoaderVisible} />
-
+			<LoginDialog
+				isVisible={isLoginVisible}
+				setIsVisible={setIsLoginVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
+			<WelcomeBackDialog
+				isVisible={isWelcomeVisible}
+				setIsVisible={setIsWelcomeVisible}
+			/>
 			<MainMenu
 				isVisible={isMenuVisible}
+				setIsLoginVisible={setIsLoginVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
 				dataset={mapData}
 				{...dataDisplayProps}
 			/>
 			{fileToParse && <FileParser file={fileToParse} {...dataDisplayProps} />}
-			<Map isVisible={isMapVisible} showMenu={showMenu} data={mapData} />
+			<Map
+				isVisible={isMapVisible}
+				showMenu={showMenu}
+				data={mapData}
+				isLoginVisible={isLoginVisible}
+				setIsLoginVisible={setIsLoginVisible}
+			/>
 		</UserProvider>
 	);
 }

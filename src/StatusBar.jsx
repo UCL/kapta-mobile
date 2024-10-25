@@ -4,7 +4,7 @@ import { useUserStore } from "./UserContext.jsx";
 
 export default function StatusBar({
 	setIsSideMenuVisible,
-	setIsDialogVisible,
+	setIsLoginVisible,
 	setIsWelcomeVisible,
 }) {
 	if (!hasCognito) return null; // don't render anything if we don't have cognito
@@ -18,7 +18,7 @@ export default function StatusBar({
 		};
 		checkDetails();
 		if (!hasDetails) {
-			setIsDialogVisible(true);
+			setIsLoginVisible(true);
 		} else {
 			setIsWelcomeVisible(true);
 		} // show welcome back
