@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
 		(userDetails) => {
 			const base64Payload = userDetails.idToken.split(".")[1];
 			const decodedIdTokenPayload = JSON.parse(atob(base64Payload));
-			setDisplayName(decodedIdTokenPayload["custom:display_name"]);
+			setDisplayName(decodedIdTokenPayload["preferred_username"]);
 			setPhoneNumber(decodedIdTokenPayload["phone_number"]);
 			setUserId(decodedIdTokenPayload["sub"]);
 
