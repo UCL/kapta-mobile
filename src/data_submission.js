@@ -46,7 +46,7 @@ export async function getTaskDetails(code) {
 
 // function to create task in task dynamodb, mainly done for opendata
 export async function createTask(values) {
-	const url = `${CODE_API_URL}/requests`;
+	const url = `${CODE_API_URL}/requests/new-opendata`;
 	try {
 		const response = await fetch(url, {
 			method: "PUT",
