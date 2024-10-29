@@ -64,7 +64,7 @@ const signUp = (phone_number, display_name) => {
 		ClientId: cognito.userPoolClientId,
 		Username: phone_number,
 		Password: generate_password(30),
-		UserAttributes: [{ Name: "custom:display_name", Value: display_name }],
+		UserAttributes: [{ Name: "preferred_username", Value: display_name }],
 	});
 
 	return client.send(command);
