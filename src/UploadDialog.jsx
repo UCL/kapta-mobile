@@ -44,7 +44,7 @@ export function UploadDialog({
 			return setShowOpenDataForm(true);
 		} else {
 			// normal campaign code
-			const response = await getTaskDetails(code);
+			const response = await getTaskDetails(code, user.idToken);
 			if (!response) {
 				console.error("Error: no response received");
 				return setHasCodeError(true);
@@ -92,7 +92,7 @@ export function UploadDialog({
 				visible: true,
 				taskID: taskId,
 			};
-			const response = await createTask(data);
+			const response = await createTask(data, user.idToken);
 			if (response.includes(taskId)) {
 				const response = await submitData(
 					currentDataset,

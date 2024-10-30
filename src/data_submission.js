@@ -25,7 +25,7 @@ export async function submitData(dataset, id, token) {
 }
 
 // function to get task details from task dynamodb
-export async function getTaskDetails(code) {
+export async function getTaskDetails(code, token) {
 	const url = `${CODE_API_URL}/requests/code/${code}`;
 	try {
 		const response = await fetch(url, {
@@ -33,6 +33,7 @@ export async function getTaskDetails(code) {
 			mode: "cors",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: token,
 			},
 		});
 		const result = await response.json();
@@ -45,7 +46,7 @@ export async function getTaskDetails(code) {
 }
 
 // function to create task in task dynamodb, mainly done for opendata
-export async function createTask(values) {
+export async function createTask(values, token) {
 	const url = `${CODE_API_URL}/requests/new-opendata`;
 	try {
 		const response = await fetch(url, {
@@ -53,6 +54,7 @@ export async function createTask(values) {
 			mode: "cors",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: token,
 			},
 			body: JSON.stringify(values),
 		});
