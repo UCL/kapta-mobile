@@ -57,7 +57,12 @@
         }
     }
 
-    .bm-item {
+    .bm__content {
+        display: grid;
+        height: 90%;
+    }
+
+    .bm__item {
         position: relative;
         padding: 0.8rem 0.4rem;
         transition: open 0.3s ease;
@@ -67,16 +72,15 @@
             color: var(--black-grey);
         }
 
-        .bm-item__content {
+        .bm__item__content {
             margin-inline: 4%;
             font-size: 1rem;
             color: var(--black-grey);
         }
     }
 
-    .bm-links {
-        position: relative;
-        top: 50vh;
+    .links-disclaimer__wrapper {
+        position: fixed;
         bottom: 0;
     }
 
@@ -86,13 +90,9 @@
     }
 
     #disclaimer {
-        text-decoration: none;
         color: inherit;
-        transition: color 0.3s ease;
+        font-size: smaller;
 
-        &:hover {
-            color: var(--mid-red);
-        }
     }
 
     &.drawer--open {
