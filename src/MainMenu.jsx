@@ -1,13 +1,14 @@
-import Alpine from "alpinejs";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { i18next, savedLanguage, supportedLanguages } from "./languages.js";
 import { FileParser, allowedExtensions } from "./import_whatsapp.js";
 import "./styles/menu.css";
-import StatusBar from "./StatusBar.jsx";
-import config from "./config.json";
-import { isIOS } from "./main.js";
+import { isIOS, isMobileOrTablet } from "./main.js";
 import ReactGA from "react-ga4";
+import { ASK_URL } from "../globals.js";
+import BurgerMenu from "./BurgerMenu.jsx";
+import { menuIcon } from "./icons.js";
+import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -110,7 +111,11 @@ function VideoModal({ isOpen, setIsOpen }) {
 function RecentMapButton({ showMap }) {
 	const { t } = useTranslation();
 	return (
-		<button id="recentBtn" className="btn menu-btn" onClick={showMap}>
+		<button
+			id="recentBtn"
+			className="btn menu-btn"
+			onClick={() => showMap(false)}
+		>
 			{t("viewrecentmap")}
 		</button>
 	);
@@ -180,7 +185,7 @@ function ButtonArea({ hasCurrentDataset, showMap }) {
 							category: "Help",
 							action: "Help Button Clicked",
 						});
-						window.location.href = config.kapta.askTheTeamURL;
+						window.location.href = ASK_URL;
 					}}
 				>
 					{t("asktheteam")}
@@ -198,35 +203,43 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-const hasCognito = Alpine.store("appData")?.hasCognito;
+export default function MainMenu({
+	isVisible,
+	setIsLoginVisible,
+	setIsWelcomeVisible,
+	dataset,
+	...dataDisplayProps
+}) {
+	const [isBMVisible, setIsBMVisible] = useState(false);
 
-export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
-	const { setMapData, showMap } = dataDisplayProps;
-	const [isSBVisible, setIsSBVisible] = useState(false);
-
-	// set status bar visibility based on if cognito in config, doedn't need to be updated after init
-	useEffect(() => {
-		setIsSBVisible(hasCognito);
-	}, []);
-
-	// if menu not visible, nor should status bar be
-	useEffect(() => {
-		if (!isVisible) setIsSBVisible(false);
-	}, [isVisible]);
+	const toggleBM = () => {
+		setIsBMVisible((prevState) => !prevState);
+	};
 
 	if (!isVisible) return null;
-	let isMobile = Alpine.store("deviceInfo")?.isMobile || null;
 
 	return (
 		<>
-			<StatusBar isVisible={isSBVisible} />
-
+			<button onClick={toggleBM} className="btn--burger-menu">
+				{menuIcon}
+			</button>
+			<BurgerMenu
+				isVisible={isBMVisible}
+				setIsVisible={setIsBMVisible}
+				setIsLoginVisible={setIsLoginVisible}
+				setIsWelcomeVisible={setIsWelcomeVisible}
+			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
-				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
+				<ButtonArea
+					showMap={dataDisplayProps.showMap}
+					hasCurrentDataset={dataset}
+				/>
 				{/* File picker (web only) */}
-				{(!isMobile || isIOS()) && <FilePicker {...dataDisplayProps} />}
+				{(!isMobileOrTablet() || isIOS()) && (
+					<FilePicker {...dataDisplayProps} />
+				)}
 				<Copyright />
 			</div>
 		</>

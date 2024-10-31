@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { submitData } from "./data_submission.js";
 import "./styles/map-etc.css";
 import html2canvas from "html2canvas";
 import {
@@ -10,13 +9,13 @@ import {
 	dataIcn,
 	uploadIcn,
 	chevronUp,
-	addMetaIcn,
 	exitButtonIcon,
 	msgIcon,
 } from "./icons";
 import { slugify } from "./utils.js";
-
-const config = require("./config.json");
+import { isMobileOrTablet } from "./main.js";
+import { useUserStore } from "./UserContext.jsx";
+import { ASK_URL, hasCognito } from "../globals.js";
 
 function ShareBtn({ setOpen }) {
 	const openShareModal = () => setOpen(true);
@@ -34,7 +33,7 @@ function SubmitBtn() {
 	);
 }
 
-function InputArea({ setTitle, setPulse, setModalOpen }) {
+function InputArea({ setTitle, setPulse, setModalOpen, currentDataset }) {
 	const { t } = useTranslation();
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
@@ -44,15 +43,11 @@ function InputArea({ setTitle, setPulse, setModalOpen }) {
 		e.preventDefault();
 		let topic = filterValue;
 
-		if (topic != "") Alpine.store("appData").mapTitle = topic;
-		let currentDataset = Alpine.store("currentDataset");
-		// Add topic, goal, dataSov to geoJSON
-
-		currentDataset.geoJSON?.features.forEach((feature) => {
+		currentDataset.features?.forEach((feature) => {
 			feature.properties.topic = topic;
 		});
 
-		// Create slug from topic and add to Alpine store
+		// Create slug from topic and add to dataset
 		const slug = slugify(`${currentDataset.slug}-${topic}`);
 		currentDataset.slug = slug;
 
@@ -83,18 +78,25 @@ function InputArea({ setTitle, setPulse, setModalOpen }) {
 		</form>
 	);
 }
-export function MapActionArea({ setTitle, setPulse, showMenu, setModalOpen }) {
+export function MapActionArea({
+	setTitle,
+	setPulse,
+	showMenu,
+	setModalOpen,
+	currentDataset,
+}) {
 	return (
 		<div id="map-actions-container">
 			<div className="map-actions__wrapper">
 				<div className="map-actions__body">
-					<button id="exit-map" className="btn" onClick={showMenu}>
+					<button id="exit-map" type="button" onClick={showMenu}>
 						{exitButtonIcon}
 					</button>
 					<InputArea
 						setTitle={setTitle}
 						setPulse={setPulse}
 						setModalOpen={setModalOpen}
+						currentDataset={currentDataset}
 					/>
 				</div>
 			</div>
@@ -103,14 +105,18 @@ export function MapActionArea({ setTitle, setPulse, showMenu, setModalOpen }) {
 }
 
 // Modal stuff
-export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
+export function ShareModal({
+	isOpen,
+	setIsOpen,
+	currentDataset,
+	setIsUploadDialogOpen,
+}) {
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
-	let hasCognito = Alpine.store("appData")?.hasCognito;
-	const user = Alpine.store("user");
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const filenameSlug = Alpine.store("currentDataset").slug;
+	const user = useUserStore();
+	user.checkForDetails();
+	const filenameSlug = currentDataset.slug;
 	const shareContent = {
 		title: "#MadeWithKapta",
 		text: "Create your WhatsApp Maps with Kapta https://kapta.earth/",
@@ -222,31 +228,24 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					() => console.info("Data shared"),
 					() => console.error("Failed to share data")
 				);
-		} else if (!Alpine.store("deviceInfo").isMobile) {
+		} else if (!isMobileOrTablet()) {
 			downloadFile(blob, filename);
 		}
 	};
-	const handleUploadClick = async () => {
-		setIsDialogOpen(true).then(
-			function () {
-				let idToken = Alpine.store("user").idToken;
-				submitData(currentDataset.geoJSON, idToken);
-			},
-			function (rejectReason) {
-				console.error(rejectReason);
-			}
-		);
+	const handleUploadClick = () => {
+		setIsUploadDialogOpen(true);
+		setIsOpen(false);
+		// login stuff handled in the component
 	};
 	const handleHelpClick = (evt) => {
 		evt.target.style.backgroundColor = "#a6a4a4";
 		setTimeout(() => {
-			window.location.href = config.kapta.askTheTeamURL;
+			window.location.href = ASK_URL;
 			evt.target.style.backgroundColor = "white";
 		}, 500);
 	};
 	return (
 		<>
-			<MetaDataDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} />
 			<div id="sharing-modal">
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
@@ -263,12 +262,11 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 					</button>
 					{hasCognito && (
 						<button
-							className={`btn ${!user.logged_in && "disabled"}`}
+							className={`btn ${!user.loggedIn ? "disabled" : ""}`}
 							onClick={handleUploadClick}
-							disabled={!user.logged_in}
 						>
 							{uploadIcn}
-							{user.logged_in ? t("uploaddata") : "Log in to upload data"}
+							{user.loggedIn ? t("uploaddata") : "Log in to upload data"}
 						</button>
 					)}
 
@@ -279,62 +277,5 @@ export function ShareModal({ isOpen, setIsOpen, currentDataset }) {
 				</div>
 			</div>
 		</>
-	);
-}
-
-export function MetaDataDialog({ isOpen, setIsOpen }) {
-	if (!isOpen) return null;
-	const { t } = useTranslation();
-	const [isChecked, setIsChecked] = useState(false);
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (isChecked == true) {
-			resolve(true);
-		} else {
-			reject("Permission not given");
-		}
-		setIsOpen(false);
-	};
-	return (
-		<dialog id="upload-dialog" open>
-			<form className="upload-form" onSubmit={handleSubmit}>
-				<h3>Upload data to Kapta</h3>
-				<small>
-					{t("addMetadataTitle")} {addMetaIcn}
-				</small>
-
-				<label for="input-topic">{t("inputtopiclabel")}</label>
-				<textarea name="input-topic" id="input-topic"></textarea>
-
-				<label for="input-goal">{t("inputgoallabel")}</label>
-				<textarea name="input-goal" id="input-goal"></textarea>
-				<label for="data-sov">{t("datasovmessage")}</label>
-				<label for="data-sov" class="toggle">
-					<input
-						type="checkbox"
-						id="data-sov"
-						name="data-sov"
-						class="toggle-input"
-						checked={isChecked}
-						onChange={(e) => setIsChecked(e.target.checked)}
-					/>
-					<span
-						class="toggle-label"
-						data-on={t("yes")}
-						data-off={t("no")}
-					></span>
-					<span class="toggle-handle"></span>
-				</label>
-				<div className="btn-area">
-					<button className="cancel btn" onClick={() => setIsOpen(false)}>
-						{t("cancel")}
-					</button>
-					<button type="submit" className="confirm btn" disabled={!isChecked}>
-						{t("confirm")}
-					</button>
-				</div>
-			</form>
-		</dialog>
 	);
 }

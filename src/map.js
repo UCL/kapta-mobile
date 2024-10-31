@@ -26,19 +26,18 @@ import {
 	GPSIcn,
 	nextIcn,
 } from "./icons.js";
-
-const config = require("./config.json");
+import { MAPBOX_TOKEN } from "../globals.js";
+import { UploadDialog } from "./UploadDialog.jsx";
+import SuccessModal from "./SuccessModal.jsx";
 
 /************************************************************************************************
  *   Basemaps (TileLayers)
  ************************************************************************************************/
 
 function DarkTileLayer() {
-	const accessToken = config.mapbox.accessToken; // Make sure config is imported or defined
-
 	return (
 		<TileLayer
-			url={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			url={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`}
 			minZoom={2}
 			maxZoom={21}
 			maxNativeZoom={21}
@@ -51,11 +50,9 @@ function DarkTileLayer() {
 }
 
 function SatelliteTileLayer() {
-	const accessToken = config.mapbox.accessToken;
-
 	return (
 		<TileLayer
-			url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token=${accessToken}`}
+			url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`}
 			minZoom={2}
 			maxZoom={21}
 			maxNativeZoom={21}
@@ -91,7 +88,6 @@ const getImageURLFromZip = async (zip, imgFilename) => {
 			return null;
 		}
 		const blob = await file[0].async("blob");
-		console.log(`Successfully extracted file: ${imgFilename}`);
 		let urlCreator = window.URL || window.webkitURL;
 		let url = urlCreator.createObjectURL(blob);
 		return url;
@@ -122,13 +118,11 @@ function MapDataLayer({ data }) {
 
 	const handleMarkerClick = useCallback(
 		async (feature) => {
-			console.log("feature", feature);
 			if (imgZip && feature.properties.imgFilenames.length > 0) {
 				// will want to map over imgFilenames when we support multiple
 				feature.properties.imgFilenames.map(async (filename) =>
 					// check the image isn't already loaded
 					{
-						console.log("filename", filename);
 						if (filename && !featureImages[filename]) {
 							const url = await getImageURLFromZip(imgZip, filename);
 							setFeatureImages((prev) => ({
@@ -293,10 +287,18 @@ function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
 	return null;
 }
 
-export function Map({ isVisible, showMenu, data }) {
+export function Map({
+	isVisible,
+	showMenu,
+	data,
+	isLoginVisible,
+	setIsLoginVisible,
+}) {
 	if (!isVisible) return null;
-
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+	const [successModalVisible, setSuccessModalVisible] = useState(false);
+
 	const [titleValue, setTitleValue] = useState("");
 	const [shouldPulse, setShouldPulse] = useState(false);
 	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
@@ -315,6 +317,7 @@ export function Map({ isVisible, showMenu, data }) {
 	}, [shouldPulse]);
 
 	const getCurrentPosition = () => {
+		currentLocation && setFlyToLocation(true);
 		const options = {
 			enableHighAccuracy: true,
 			timeout: 5000,
@@ -340,12 +343,25 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
+			{" "}
+			<SuccessModal
+				isVisible={successModalVisible}
+				setIsVisible={setSuccessModalVisible}
+			/>
+			<UploadDialog
+				isOpen={isUploadDialogOpen}
+				setIsOpen={setIsUploadDialogOpen}
+				currentDataset={data.data}
+				setSuccessModalVisible={setSuccessModalVisible}
+				isLoginVisible={isLoginVisible}
+				setIsLoginVisible={setIsLoginVisible}
+			/>
 			<ShareModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
-				currentDataset={data}
+				currentDataset={data.data}
+				setIsUploadDialogOpen={setIsUploadDialogOpen}
 			/>
-
 			<div id="map">
 				<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
 					{titleValue}
@@ -396,6 +412,7 @@ export function Map({ isVisible, showMenu, data }) {
 					setPulse={setShouldPulse}
 					showMenu={showMenu}
 					setModalOpen={setIsModalOpen}
+					currentDataset={data.data}
 				/>
 			</div>
 		</>

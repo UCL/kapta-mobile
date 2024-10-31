@@ -19,6 +19,8 @@
         color: var(--mid-red);
         margin-top: 2vh;
         margin-bottom: 1vh;
+        z-index: 0;
+        /* setting because otherwise they're in front of other components*/
     }
 
     .button-area {
@@ -42,6 +44,10 @@
 
         >option {
             color: black;
+        }
+
+        &:focus-visible {
+            outline: none;
         }
     }
 

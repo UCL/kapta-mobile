@@ -32,7 +32,7 @@
 
     .map-button {
         position: absolute;
-        top: 2rem;
+        top: 0.8rem;
         z-index: 900;
         height: 45px;
         border-radius: 50%;
@@ -123,8 +123,7 @@
             align-items: center;
             justify-content: space-around;
             width: 100%;
-            margin-inline: 0.3rem;
-            margin-inline-start: 1rem;
+            margin-inline-start: 0.5rem;
 
             @media screen and (min-width: 600px) {
                 padding-inline: 16vw;
@@ -184,6 +183,7 @@
 
                 >svg {
                     height: 1.5rem;
+                    width: 1.5rem;
                     color: white;
                     padding: 0.3rem;
                 }
@@ -253,16 +253,17 @@
 
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 
-            svg {
+            .btn-icon {
                 height: 95%;
                 margin-right: 0.4rem;
                 transition: color 0.3s ease
             }
 
 
-            .disabled,
-            &[disabled]>svg {
-                color: var(--mid-grey);
+            &.disabled,
+            &.disabled>.btn-icon {
+                color: var(--mid-grey) !important;
+                fill: var(--mid-grey);
             }
 
             &:active,
@@ -281,57 +282,7 @@
     }
 }
 
-#upload-dialog {
-    background-color: #ffffffea;
-    backdrop-filter: blur(4px);
-    border-radius: 8px;
-    border: 1px solid white;
-    z-index: 902;
-    top: 16vh;
 
-    .upload-form {
-        width: 60vw;
-        min-height: 50vh;
-        display: flex;
-        flex-direction: column;
-        margin-inline: 1.4rem;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-
-        h3 {
-            color: var(--mid-red);
-            margin: 0 auto;
-        }
-
-        small {
-            margin-top: 0;
-            margin-bottom: 1rem;
-        }
-
-        label {
-            margin-bottom: 0.4rem;
-        }
-
-        textarea {
-            margin-bottom: 0.8rem;
-            min-width: 70%;
-        }
-
-        .btn-area {
-            display: flex;
-            flex-direction: row;
-            width: 80%;
-            justify-content: space-around;
-        }
-
-        .btn {
-            padding: 0.4rem;
-
-        }
-    }
-
-}
 
 .feature-images {
     display: flex;

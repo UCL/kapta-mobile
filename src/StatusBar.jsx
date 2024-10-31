@@ -1,25 +1,39 @@
-import { /* webpackPrefetch: true */ displayLoginDialog } from "./login.js";
 import React from "react";
-import Alpine from "alpinejs";
+import { hasCognito } from "../globals.js";
+import { useUserStore } from "./UserContext.jsx";
 
-window.displayLoginDialog = displayLoginDialog;
-
-export default function StatusBar({ isVisible }) {
-	if (!isVisible) return null;
-
-	const user = Alpine.store("user");
-	const onLogin = () => displayLoginDialog();
-	const onLogout = () => (user.logged_in = false);
-
+export default function StatusBar({
+	setIsSideMenuVisible,
+	setIsLoginVisible,
+	setIsWelcomeVisible,
+}) {
+	if (!hasCognito) return null; // don't render anything if we don't have cognito
+	const user = useUserStore();
+	const onLogin = async () => {
+		// check if user details are already in localStorage
+		var hasDetails;
+		const checkDetails = async () => {
+			hasDetails = await user.checkForDetails();
+			return hasDetails;
+		};
+		checkDetails();
+		if (!hasDetails) {
+			setIsLoginVisible(true);
+		} else {
+			setIsWelcomeVisible(true);
+		} // show welcome back
+		setIsSideMenuVisible(false);
+	};
+	const onLogout = () => (user.logout(), setIsSideMenuVisible(false));
 	return (
 		<div id="status-bar">
-			{user.logged_in ? (
+			{user.loggedIn ? (
 				<div className="logged-in">
 					<button onClick={onLogout} className="btn button--logout">
 						Logout
 					</button>
 					<small>
-						Logged in as: <span>{user.display_name}</span>
+						Logged in as: <span>{user.displayName}</span>
 					</small>
 				</div>
 			) : (
