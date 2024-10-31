@@ -7,6 +7,7 @@ import { useUserStore } from "./UserContext.jsx";
 import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { generateCampaignCode } from "./utils.js";
 
 const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
@@ -81,9 +82,11 @@ export function UploadDialog({
 		} else {
 			// create a new task and then submit the data
 			var formData = new FormData(e.target);
-			const taskId = `${opendataId}-${user.userId}`;
+			let uuid = crypto.randomUUID();
+			const taskId = `${opendataId}-${uuid}`;
+			let ccode = generateCampaignCode();
 			const data = {
-				campaignCode: opendataCode,
+				campaignCode: ccode,
 				title: formData.get("task-title"),
 				description: formData.get("task-description"),
 				createdBy: user.userId,
