@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import KaptaLogo from "./images/icons/kapta-white.png";
-import { isMobileOrTablet } from "./main";
+import { isIOS, isMobileOrTablet } from "./main";
 import ReactGA from "react-ga4";
 
 export default function InstallDialog() {
-	if (!isMobileOrTablet()) return null; // don't run install prompt on desktop
+	if (!isMobileOrTablet() || isIOS()) return null; // don't run install prompt on desktop
+
 	const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
 	if (isStandalone) return null; // don't run install prompt if already installed
 

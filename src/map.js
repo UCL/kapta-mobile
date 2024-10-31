@@ -27,6 +27,8 @@ import {
 	nextIcn,
 } from "./icons.js";
 import { MAPBOX_TOKEN } from "../globals.js";
+import { UploadDialog } from "./UploadDialog.jsx";
+import SuccessModal from "./SuccessModal.jsx";
 
 /************************************************************************************************
  *   Basemaps (TileLayers)
@@ -86,7 +88,6 @@ const getImageURLFromZip = async (zip, imgFilename) => {
 			return null;
 		}
 		const blob = await file[0].async("blob");
-		console.log(`Successfully extracted file: ${imgFilename}`);
 		let urlCreator = window.URL || window.webkitURL;
 		let url = urlCreator.createObjectURL(blob);
 		return url;
@@ -122,7 +123,6 @@ function MapDataLayer({ data }) {
 				feature.properties.imgFilenames.map(async (filename) =>
 					// check the image isn't already loaded
 					{
-						console.log("filename", filename);
 						if (filename && !featureImages[filename]) {
 							const url = await getImageURLFromZip(imgZip, filename);
 							setFeatureImages((prev) => ({
@@ -287,9 +287,18 @@ function UpdateMap({ currentLocation, flyToLocation, setFlyToLocation }) {
 	return null;
 }
 
-export function Map({ isVisible, showMenu, data }) {
+export function Map({
+	isVisible,
+	showMenu,
+	data,
+	isLoginVisible,
+	setIsLoginVisible,
+}) {
 	if (!isVisible) return null;
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+	const [successModalVisible, setSuccessModalVisible] = useState(false);
+
 	const [titleValue, setTitleValue] = useState("");
 	const [shouldPulse, setShouldPulse] = useState(false);
 	const [isSatelliteLayer, setIsSatelliteLayer] = useState(false);
@@ -334,12 +343,25 @@ export function Map({ isVisible, showMenu, data }) {
 
 	return (
 		<>
+			{" "}
+			<SuccessModal
+				isVisible={successModalVisible}
+				setIsVisible={setSuccessModalVisible}
+			/>
+			<UploadDialog
+				isOpen={isUploadDialogOpen}
+				setIsOpen={setIsUploadDialogOpen}
+				currentDataset={data.data}
+				setSuccessModalVisible={setSuccessModalVisible}
+				isLoginVisible={isLoginVisible}
+				setIsLoginVisible={setIsLoginVisible}
+			/>
 			<ShareModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
 				currentDataset={data.data}
+				setIsUploadDialogOpen={setIsUploadDialogOpen}
 			/>
-
 			<div id="map">
 				<div className={`map-title ${shouldPulse ? "pulse-shadow" : ""}`}>
 					{titleValue}

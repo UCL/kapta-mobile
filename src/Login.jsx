@@ -1,7 +1,7 @@
 import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
 import KaptaLogo from "./images/icons/kapta-white.png";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 import React, { useEffect, useState } from "react";
 
 var phone_number;
@@ -10,7 +10,13 @@ var display_name;
 function ButtonBox({ setIsDialogVisible }) {
 	return (
 		<div className="btn-box">
-			<button className="btn cancel" onClick={() => setIsDialogVisible(false)}>
+			<button
+				className="btn cancel"
+				onClick={() => {
+					console.log("closing");
+					setIsDialogVisible(false);
+				}}
+			>
 				{closeIcon}
 			</button>
 			<button className="btn confirm" form="dialog-form">
@@ -38,7 +44,7 @@ function LoginForm({
 		var formData = new FormData(e.target);
 		phone_number = formData.get("phone-number");
 		phoneNumber === phone_number &&
-			initiateAuth({ phone_number }).then(
+			initiateAuth(phone_number).then(
 				function (response) {
 					return getSMSVerificationCode(response.Session, phoneNumber);
 				},
@@ -73,9 +79,9 @@ function SignUpForm({
 		display_name = formData.get("display-name");
 		phone_number = formData.get("phone-number");
 		phoneNumber === phone_number &&
-			signUp({ phone_number, display_name })
+			signUp( phone_number, display_name )
 				.then(function (value) {
-					return initiateAuth({ phone_number })
+					return initiateAuth(phone_number)
 						.then(function (response) {
 							return getSMSVerificationCode(response.Session, phone_number);
 						})
@@ -113,7 +119,7 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 			} catch (error) {
 				console.error("Error hiding the dialog:", error);
 			}
-		}, 4000);
+		}, 3000);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes
 		return () => clearTimeout(timer);
@@ -127,19 +133,15 @@ export function WelcomeBackDialog({ isVisible, setIsVisible }) {
 	);
 }
 
-export function LoginDialog({
-	isDialogVisible,
-	setIsDialogVisible,
-	setIsWelcomeVisible,
-}) {
-	if (!isDialogVisible) return null;
-
+export function LoginDialog({ isVisible, setIsVisible, setIsWelcomeVisible }) {
 	const [isLoginFormVisible, setIsLoginFormVisible] = useState(true);
 	const [isSignupFormVisible, setIsSignupFormVisible] = useState(false);
 	const [isSmsInputVisible, setIsSmsInputVisible] = useState(false);
 	const [sessionToken, setSessionToken] = useState(null);
 	const [message, setMessage] = useState("Sign up to Kapta");
 	const [phoneNumber, setPhoneNumber] = useState(null);
+
+	if (!isVisible) return null;
 
 	const showSignupForm = (phone_number = null, message = null) => {
 		setIsLoginFormVisible(false);
@@ -182,13 +184,13 @@ export function LoginDialog({
 			)}
 			{isSmsInputVisible && (
 				<SmsInput
-					setIsDialogVisible={setIsDialogVisible}
+					setIsDialogVisible={setIsVisible}
 					sessionToken={sessionToken}
 					phoneNumber={phoneNumber}
 					setIsWelcomeVisible={setIsWelcomeVisible}
 				/>
 			)}
-			<ButtonBox setIsDialogVisible={setIsDialogVisible} />
+			<ButtonBox setIsDialogVisible={setIsVisible} />
 		</dialog>
 	);
 }

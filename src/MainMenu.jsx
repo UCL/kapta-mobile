@@ -8,8 +8,7 @@ import ReactGA from "react-ga4";
 import { ASK_URL } from "../globals.js";
 import BurgerMenu from "./BurgerMenu.jsx";
 import { menuIcon } from "./icons.js";
-import { LoginDialog, WelcomeBackDialog } from "./login.js";
-import { useUserStore } from "./UserContext.js";
+import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 
 function LanguageSelector({ supportedLanguages }) {
 	// Get the saved language from localStorage or fallback to i18next language
@@ -204,42 +203,39 @@ function Copyright() {
 	return <div id="copyright">{t("copyright")}</div>;
 }
 
-export default function MainMenu({ isVisible, dataset, ...dataDisplayProps }) {
-	const { setMapData, showMap } = dataDisplayProps;
+export default function MainMenu({
+	isVisible,
+	setIsLoginVisible,
+	setIsWelcomeVisible,
+	dataset,
+	...dataDisplayProps
+}) {
 	const [isBMVisible, setIsBMVisible] = useState(false);
-	const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
 	const toggleBM = () => {
 		setIsBMVisible((prevState) => !prevState);
 	};
-	useUserStore().checkForDetails(); // check if details and log them in
+
 	if (!isVisible) return null;
 
 	return (
 		<>
-			<LoginDialog
-				isDialogVisible={isDialogVisible}
-				setIsDialogVisible={setIsDialogVisible}
-				setIsWelcomeVisible={setIsWelcomeVisible}
-			/>
-			<WelcomeBackDialog
-				isVisible={isWelcomeVisible}
-				setIsVisible={setIsWelcomeVisible}
-			/>
 			<button onClick={toggleBM} className="btn--burger-menu">
 				{menuIcon}
 			</button>
 			<BurgerMenu
 				isVisible={isBMVisible}
 				setIsVisible={setIsBMVisible}
-				setIsDialogVisible={setIsDialogVisible}
+				setIsLoginVisible={setIsLoginVisible}
 				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
 			<div id="menuContainer">
 				<LanguageSelector supportedLanguages={supportedLanguages} />
 				<Instructions />
-				<ButtonArea showMap={showMap} hasCurrentDataset={dataset} />
+				<ButtonArea
+					showMap={dataDisplayProps.showMap}
+					hasCurrentDataset={dataset}
+				/>
 				{/* File picker (web only) */}
 				{(!isMobileOrTablet() || isIOS()) && (
 					<FilePicker {...dataDisplayProps} />

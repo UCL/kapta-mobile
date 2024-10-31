@@ -7,7 +7,7 @@ import { exitButtonIcon, GHIcon } from "./icons.js";
 export default function BurgerMenu({
 	isVisible,
 	setIsVisible,
-	setIsDialogVisible,
+	setIsLoginVisible,
 	setIsWelcomeVisible,
 }) {
 	const { t } = useTranslation();
@@ -22,7 +22,7 @@ export default function BurgerMenu({
 			</button>
 			<StatusBar
 				setIsSideMenuVisible={setIsVisible}
-				setIsDialogVisible={setIsDialogVisible}
+				setIsLoginVisible={setIsLoginVisible}
 				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
 			<details className="bm-item">

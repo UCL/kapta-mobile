@@ -1,26 +1,30 @@
 import React from "react";
 import { hasCognito } from "../globals.js";
-import { useUserStore } from "./UserContext.js";
+import { useUserStore } from "./UserContext.jsx";
 
 export default function StatusBar({
 	setIsSideMenuVisible,
-	setIsDialogVisible,
+	setIsLoginVisible,
 	setIsWelcomeVisible,
 }) {
 	if (!hasCognito) return null; // don't render anything if we don't have cognito
 	const user = useUserStore();
-	const onLogin = () => {
+	const onLogin = async () => {
 		// check if user details are already in localStorage
-		const hasDetails = user.checkForDetails();
-
+		var hasDetails;
+		const checkDetails = async () => {
+			hasDetails = await user.checkForDetails();
+			return hasDetails;
+		};
+		checkDetails();
 		if (!hasDetails) {
-			setIsDialogVisible(true);
+			setIsLoginVisible(true);
 		} else {
 			setIsWelcomeVisible(true);
 		} // show welcome back
 		setIsSideMenuVisible(false);
 	};
-	const onLogout = () => (user.loggedIn = false);
+	const onLogout = () => (user.logout(), setIsSideMenuVisible(false));
 	return (
 		<div id="status-bar">
 			{user.loggedIn ? (
