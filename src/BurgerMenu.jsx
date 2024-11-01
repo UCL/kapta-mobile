@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import StatusBar from "./StatusBar.jsx";
 import "./styles/burger-menu.css";
-import { exitButtonIcon, GHIcon } from "./icons.js";
+import { chevronDown, exitButtonIcon, GHIcon } from "./icons.js";
 
 export default function BurgerMenu({
 	isVisible,
@@ -11,16 +11,12 @@ export default function BurgerMenu({
 	setIsWelcomeVisible,
 }) {
 	const [openSection, setOpenSection] = useState(null);
-
 	const toggleSection = (sectionId) => {
-		setOpenSection((prevOpenSection) => {
-			if (prevOpenSection === sectionId) {
-				return null; // Close the section if it's already open
-			} else {
-				return sectionId; // Open the new section, which automatically closes others
-			}
-		});
+		setOpenSection((prevOpenSection) =>
+			prevOpenSection === sectionId ? null : sectionId
+		);
 	};
+
 	const { t } = useTranslation();
 
 	return (
@@ -38,40 +34,62 @@ export default function BurgerMenu({
 			/>
 			<div className="bm__content">
 				<div>
-					<details className="bm__item" open={openSection === "about"}>
-						<summary onClick={() => toggleSection("about")}>
-							{t("about")}
-						</summary>
+					<div className="bm__item">
 						<div
-							className="bm__item__content"
+							className="bm__item__summary"
+							onClick={() => toggleSection("about")}
+						>
+							{chevronDown} {t("about")}
+						</div>
+						<div
+							className={`bm__item__content ${
+								openSection === "about" ? "bm__item__content--open" : ""
+							}`}
 							dangerouslySetInnerHTML={{ __html: t("aboutContent") }}
 						></div>
-					</details>
-					<details className="bm__item" open={openSection === "why"}>
-						<summary onClick={() => toggleSection("why")}>Why Kapta</summary>
+					</div>
+					<div className="bm__item">
 						<div
-							className="bm__item__content"
-							dangerouslySetInnerHTML={{ __html: t("aboutContent") }}
+							className="bm__item__summary"
+							onClick={() => toggleSection("why")}
+						>
+							{chevronDown} Why Kapta
+						</div>
+						<div
+							className={`bm__item__content ${
+								openSection === "why" ? "bm__item__content--open" : ""
+							}`}
+							dangerouslySetInnerHTML={{ __html: t("whyContent") }}
 						></div>
-					</details>
-					<details className="bm__item" open={openSection === "what"}>
-						<summary onClick={() => toggleSection("what")}>
-							What's Next?
-						</summary>
+					</div>
+					<div className="bm__item">
 						<div
-							className="bm__item__content"
-							dangerouslySetInnerHTML={{ __html: t("aboutContent") }}
+							className="bm__item__summary"
+							onClick={() => toggleSection("what")}
+						>
+							{chevronDown} What's Next?
+						</div>
+						<div
+							className={`bm__item__content ${
+								openSection === "what" ? "bm__item__content--open" : ""
+							}`}
+							dangerouslySetInnerHTML={{ __html: t("whatContent") }}
 						></div>
-					</details>
-					<details className="bm__item" open={openSection === "people"}>
-						<summary onClick={() => toggleSection("people")}>
-							{t("people")}
-						</summary>
+					</div>
+					<div className="bm__item">
 						<div
-							className="bm__item__content"
+							className="bm__item__summary"
+							onClick={() => toggleSection("people")}
+						>
+							{chevronDown} {t("people")}
+						</div>
+						<div
+							className={`bm__item__content ${
+								openSection === "people" ? "bm__item__content--open" : ""
+							}`}
 							dangerouslySetInnerHTML={{ __html: t("peopleContent") }}
 						></div>
-					</details>
+					</div>
 				</div>
 				<div className="links-disclaimer__wrapper">
 					<div className="bm__item">
@@ -83,17 +101,11 @@ export default function BurgerMenu({
 							{GHIcon}
 						</a>
 					</div>
-					<p className="bm__item" id="disclaimer">
-						Disclaimer: The Kapta team has made every effort to develop an app
-						that enables users to create WhatsApp Maps with the highest possible
-						accuracy. However, we cannot accept responsibility for any errors,
-						omissions, or inconsistencies that may occur. If you encounter any
-						issues or have feedback, please reach out to us at{" "}
-						<a href="mailto:geog.excites@ucl.ac.uk?subject=Kapta Mobile Feedback">
-							geog.excites@ucl.ac.uk
-						</a>{" "}
-						or via <a href="ASK_URL">WhatsApp</a> at +34 678380944.
-					</p>
+					<p
+						className="bm__item"
+						id="disclaimer"
+						dangerouslySetInnerHTML={{ __html: t("legalDisclaimer") }}
+					></p>
 				</div>
 			</div>
 		</div>
