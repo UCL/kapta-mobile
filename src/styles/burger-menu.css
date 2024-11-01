@@ -101,7 +101,7 @@
 
     .links-disclaimer__wrapper {
         position: fixed;
-        bottom: 0;
+        bottom: 2rem;
     }
 
     #gh {
