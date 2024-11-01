@@ -56,7 +56,9 @@ i18next.use(initReactI18next).init({
 					"Do you allow the Kapta team to use your map to support your community?",
 				about: "About",
 				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
+				why: "Why Kapta?",
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
+				what: "What's Next?",
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
 
@@ -102,7 +104,9 @@ i18next.use(initReactI18next).init({
 				inputgoallabel: "¿Qué deseas lograr con este mapa?",
 				about: "Qué es Kapta?",
 				aboutContent: `Kapta Mobile es una app para crear WhatsApp Maps en 3 pasos.`,
+				why: "¿Por qué Kapta?",
 				whyContent: `Para popularizar el mapeo y conectar usuarios y productores de información de campo. Consulta nuestro último blog y dónde empezó esto en 2010:<br><li><a href='${whatsappMapsUrlSpanish}'>¿WhatsApp Maps? Conectando usuarios y productores de información de campo</a></li><br><li><a href='${extremeCitizenUrl}'>Ciencia Ciudadana Extrema en la selva tropical del Congo</a></li>`,
+				what: "Qué Sigue?",
 				whatContent:
 					"Kapta: Un sistema (des)centralizado de crowdsourcing para conectar a usuarios y productores de información de terreno.",
 
@@ -149,9 +153,11 @@ i18next.use(initReactI18next).init({
 					"Autorisez-vous l’équipe Kapta à utiliser votre carte pour soutenir votre communauté?",
 				about: "À propos",
 				aboutContent: `Kapta Mobile est une application web progressive pour créer des Cartes WhatsApp en 3 étapes.`,
+				why: "Pourquoi?",
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
+				what: "What's Next?",
 				whatContent:
-					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
+					"Kapta: Un système de crowdsourcing (dé)centralisé pour connecter les utilisateurs et les producteurs d'informations sur le terrain.",
 				people: "Personnes",
 				peopleContent: `Kapta est développé par le groupe de recherche Science Citoyenne Extrême (ExCiteS) de l'University College London (UCL) et le Centre de Calcul Avancé (UCL ARC), avec l'aide de partenaires externes et de contributeurs.<br>Actuellement, l'équipe centrale de Kapta se compose de:<br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Géographie</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Géographie</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Géographie</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Université de Durham</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Université d'Addis-Abeba, ONG IPC</a></li></ul>`,
 				legalDisclaimer: `Avertissement juridique : L'équipe de Kapta a fait tout son possible pour développer une application qui analyse les discussions WhatsApp afin de créer des WhatsApp Maps avec la plus grande précision possible. Cependant, nous ne pouvons accepter aucune responsabilité pour les erreurs, omissions ou incohérences qui pourraient survenir. Nous vous recommandons de toujours juger par vous-même de l'exactitude des cartes et de valider les informations en utilisant d'autres sources. Si vous rencontrez des problèmes ou avez des commentaires, veuillez nous contacter à <a href="mailto:geog.excites@ucl.ac.uk?subject=Kapta Mobile Feedback">geog.excites@ucl.ac.uk</a> ou via WhatsApp au <a href=${ASK_URL}>+34 678380944.</a>.`,
@@ -193,7 +199,9 @@ i18next.use(initReactI18next).init({
 				datasovmessage: "በኮምዩኒቲዎ ማገዶ እንዲረዳዎ ካፕታ ቡድን ካርታዎን ማጠቃለያን ትፈቅድለታለህ?",
 				about: "ስለ",
 				aboutContent: `Kapta ሞባይል ሶፍትዌር የእንቅስቃሴ ድህረ-ገጽ (Progressive Web App) ነው። በ3 ሰለስተኛ ደረጃዎች የWhatsApp ካርታዎችን ለመፍጠር ይህን ይጠቀሙ።`,
+				why: "Why Kapta?",
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
+				what: "What's Next?",
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
 				people: "ሰዎች",
@@ -238,6 +246,7 @@ i18next.use(initReactI18next).init({
 					"Você permite que a equipe Kapta use seu mapa para apoiar sua comunidade?",
 				about: "Sobre",
 				aboutContent: `Kapta Mobile é uma Aplicação Web Progressiva para criar Mapas WhatsApp em 3 passos.`,
+				what: "What's Next?",
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
 				people: "Pessoas",
@@ -282,7 +291,9 @@ i18next.use(initReactI18next).init({
 					"Ṣe o jẹ́ kí ẹgbẹ́ Kapta lò àwáàrí rẹ láti ṣèrànwọ́ ààárín rẹ?",
 				about: "Nipa",
 				aboutContent: `Kapta Mobile jẹ Progressive Web App lati ṣẹda Awọn Maapu WhatsApp ni awọn igbesẹ mẹta.`,
+				why: "Why Kapta?",
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
+				what: "What's Next?",
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
 				people: "Àwọn Ènìyàn",
