@@ -58,7 +58,8 @@ export default function BurgerMenu({
 							className="bm__item__summary"
 							onClick={() => toggleSection("why")}
 						>
-							{chevronDown} Why Kapta
+							{chevronDown}
+							{t("why")}
 						</div>
 						<div
 							className={`bm__item__content ${
@@ -72,7 +73,8 @@ export default function BurgerMenu({
 							className="bm__item__summary"
 							onClick={() => toggleSection("what")}
 						>
-							{chevronDown} What's Next?
+							{chevronDown}
+							{t("what")}
 						</div>
 						<div
 							className={`bm__item__content ${
