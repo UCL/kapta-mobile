@@ -58,6 +58,7 @@ i18next.use(initReactI18next).init({
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
+
 				people: "People",
 				peopleContent: `Kapta is being developed by the University College London (UCL) Extreme Citizen Science (ExCiteS) research group and the Advanced Research Computing Centre (UCL ARC), with help from outside partners & contributors.<br>Currently the core Kapta team consists of:<br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Geography</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Geography</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Geography</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Durham University</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Addis Ababa University, NGO IPC</a></li></ul>`,
 				legalDisclaimer:
@@ -100,10 +101,11 @@ i18next.use(initReactI18next).init({
 				inputtopiclabel: "¿Qué has mapeado en este grupo de WhatsApp?",
 				inputgoallabel: "¿Qué deseas lograr con este mapa?",
 				about: "Qué es Kapta?",
-				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
+				aboutContent: `Kapta Mobile es una app para crear WhatsApp Maps en 3 pasos.`,
 				whyContent: `Para popularizar el mapeo y conectar usuarios y productores de información de campo. Consulta nuestro último blog y dónde empezó esto en 2010:<br><li><a href='${whatsappMapsUrlSpanish}'>¿WhatsApp Maps? Conectando usuarios y productores de información de campo</a></li><br><li><a href='${extremeCitizenUrl}'>Ciencia Ciudadana Extrema en la selva tropical del Congo</a></li>`,
 				whatContent:
 					"Kapta: Un sistema (des)centralizado de crowdsourcing para conectar a usuarios y productores de información de terreno.",
+
 				people: "Quiénes Somos",
 				peopleContent: `Kapta está siendo desarrollado por el grupo de investigación de Ciencia Ciudadana Extrema (UCL ExCiteS) y el Centro de Computación Avanzada (UCL ARC) de la University College London (UCL), con ayuda de socios externos y colaboradores.<br>Actualmente, el equipo central de Kapta está formado por: <br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Geography</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Geography</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Geography</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Durham University</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Addis Ababa University, NGO IPC</a></li></ul>`,
 				legalDisclaimer:
@@ -119,7 +121,7 @@ i18next.use(initReactI18next).init({
 				cancel: "cancel",
 				addDescription: "Título del mapa",
 				updateDescription: "Cambia el título",
-				copyright: "Kapta por UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Ayuda para mejorar el mapa?",
 				installPrompt: "Instalar Kapta para crear WhatsApp Maps",
 				installClickMessage:
@@ -147,7 +149,7 @@ i18next.use(initReactI18next).init({
 				datasovmessage:
 					"Autorisez-vous l’équipe Kapta à utiliser votre carte pour soutenir votre communauté?",
 				about: "À propos",
-				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
+				aboutContent: `Kapta Mobile est une application web progressive pour créer des Cartes WhatsApp en 3 étapes.`,
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
@@ -192,7 +194,7 @@ i18next.use(initReactI18next).init({
 				inputgoallabel: "በዚህ ካርታ ምን ማንኛት ነገር ልታከናውን ትፈልጋለህ?",
 				datasovmessage: "በኮምዩኒቲዎ ማገዶ እንዲረዳዎ ካፕታ ቡድን ካርታዎን ማጠቃለያን ትፈቅድለታለህ?",
 				about: "ስለ",
-				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
+				aboutContent: `Kapta ሞባይል ሶፍትዌር የእንቅስቃሴ ድህረ-ገጽ (Progressive Web App) ነው። በ3 ሰለስተኛ ደረጃዎች የWhatsApp ካርታዎችን ለመፍጠር ይህን ይጠቀሙ።`,
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
@@ -238,8 +240,7 @@ i18next.use(initReactI18next).init({
 				datasovmessage:
 					"Você permite que a equipe Kapta use seu mapa para apoiar sua comunidade?",
 				about: "Sobre",
-				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
-				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
+				aboutContent: `Kapta Mobile é uma Aplicação Web Progressiva para criar Mapas WhatsApp em 3 passos.`,
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
 				people: "Pessoas",
@@ -284,7 +285,7 @@ i18next.use(initReactI18next).init({
 				datasovmessage:
 					"Ṣe o jẹ́ kí ẹgbẹ́ Kapta lò àwáàrí rẹ láti ṣèrànwọ́ ààárín rẹ?",
 				about: "Nipa",
-				aboutContent: `Kapta Mobile is a Progressive Web App to create WhatsApp Maps in 3 steps.`,
+				aboutContent: `Kapta Mobile jẹ Progressive Web App lati ṣẹda Awọn Maapu WhatsApp ni awọn igbesẹ mẹta.`,
 				whyContent: `To connect users and producers of ground information. See our latest blog and where this started in 2010:<br><li><a href='${whatsappMapsUrl}'>WhatsApp Maps? Connecting users and producers of ground information</a></li><br><li><a href='${extremeCitizenUrl}'>Extreme Citizen Science in the Congo rainforest</a></li>`,
 				whatContent:
 					"Kapta:A (de)centralised crowdsourcing system to connect users and producers of ground information.",
