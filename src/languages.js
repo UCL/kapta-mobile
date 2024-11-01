@@ -13,6 +13,8 @@ export const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 const youtubeOpts = "?rel=0&autoplay=1";
 const whatsappMapsUrl =
 	"https://uclexcites.blog/2024/06/26/whatsapp-maps-connecting-users-and-producers-of-ground-information/";
+const whatsappMapsUrlSpanish =
+"https://uclexcites-blog.translate.goog/2024/06/26/whatsapp-maps-connecting-users-and-producers-of-ground-information/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en-US&_x_tr_pto=wapp"
 const extremeCitizenUrl = "https://www.youtube.com/watch?v=IgQc7GQ1m_Y";
 const marcosUrl =
 	"https://www.ucl.ac.uk/geography/people/research-staff/marcos-moreu";
@@ -94,7 +96,7 @@ i18next.use(initReactI18next).init({
 				inputtopiclabel: "¿Qué has mapeado en este grupo de WhatsApp?",
 				inputgoallabel: "¿Qué deseas lograr con este mapa?",
 				about: "Qué es Kapta?",
-				aboutContent: `Kapta Mobile es una app para crear WhatsApp Maps en 3 pasos. <br><br><b>¿Por qué Kapta?<b><br><br>Para popularizar el mapeo y conectar usuarios y productores de información de campo. Consulta nuestro último blog y dónde empezó esto en 2010:<br><li><a href='${whatsappMapsUrl}'>¿Mapas de WhatsApp? Conectando usuarios y productores de información de campo</a></li><br><li><a href='${extremeCitizenUrl}'>Ciencia Ciudadana Extrema en la selva tropical del Congo</a></li><br><em> <br><br><b>Qué sigue?<b><br><br>Kapta: Un sistema (des)centralizado de crowdsourcing para conectar a usuarios y productores de información de terreno.</em>`,
+				aboutContent: `Kapta Mobile es una app para crear WhatsApp Maps en 3 pasos. <br><br><b>¿Por qué Kapta?<b><br><br>Para popularizar el mapeo y conectar usuarios y productores de información de campo. Consulta nuestro último blog y dónde empezó esto en 2010:<br><li><a href='${whatsappMapsUrlSpanish}'>¿WhatsApp Maps? Conectando usuarios y productores de información de campo</a></li><br><li><a href='${extremeCitizenUrl}'>Ciencia Ciudadana Extrema en la selva tropical del Congo</a></li><br><em> <br><br><b>Qué sigue?<b><br><br>Kapta: Un sistema (des)centralizado de crowdsourcing para conectar a usuarios y productores de información de terreno.</em>`,
 				people: "Quiénes Somos",
 				peopleContent: `Kapta está siendo desarrollado por el grupo de investigación de Ciencia Ciudadana Extrema (UCL ExCiteS) y el Centro de Computación Avanzada (UCL ARC) de la University College London (UCL), con ayuda de socios externos y colaboradores.<br>Actualmente, el equipo central de Kapta está formado por: <br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Geography</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Geography</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Geography</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Durham University</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Addis Ababa University, NGO IPC</a></li></ul>`,
 				legalDisclaimer: "Exención de responsabilidad: El equipo de Kapta ha hecho todo lo posible para desarrollar una aplicación que procesa chats de WhatsApp para crear WhatsApp Maps con la mayor precisión posible. Sin embargo, no podemos aceptar responsabilidad por errores, omisiones o inconsistencias que puedan ocurrir. Le recomendamos que siempre haga su propio juicio sobre la precisión de los mapas y valide la información utilizando otras fuentes. Si encuentra algún problema o tiene comentarios, comuníquese con nosotros en geog.excites@ucl.ac.uk o a través de WhatsApp en el +34 678380944.",
@@ -109,7 +111,7 @@ i18next.use(initReactI18next).init({
 				cancel: "cancel",
 				addDescription: "Título del mapa",
 				updateDescription: "Cambia el título",
-				copyright: "Kapta por UCL",
+				copyright: "Kapta by UCL",
 				supportOption: "Ayuda para mejorar el mapa?",
 				installPrompt: "Instalar Kapta para crear WhatsApp Maps",
 				installClickMessage:
