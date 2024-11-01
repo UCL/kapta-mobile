@@ -12,7 +12,7 @@ import {
 	exitButtonIcon,
 	msgIcon,
 } from "./icons";
-import { slugify } from "./utils.js";
+import { slugify, useClickOutside } from "./utils.js";
 import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./UserContext.jsx";
 import { ASK_URL, hasCognito } from "../globals.js";
@@ -111,9 +111,8 @@ export function ShareModal({
 	currentDataset,
 	setIsUploadDialogOpen,
 }) {
-	const shareModalRef = useRef(null);
 	if (!isOpen) return null;
-
+	const shareModalRef = useRef(null);
 	const { t } = useTranslation();
 	const user = useUserStore();
 	user.checkForDetails();

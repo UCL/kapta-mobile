@@ -111,8 +111,7 @@
 
     #disclaimer {
         color: inherit;
-        font-size: smaller;
-
+        font-size: 0.7rem;
     }
 
     &.drawer--open {
