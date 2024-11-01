@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import StatusBar from "./StatusBar.jsx";
 import "./styles/burger-menu.css";
 import { chevronDown, exitButtonIcon, GHIcon } from "./icons.js";
+import { useClickOutside } from "./utils.js";
 
 export default function BurgerMenu({
 	isVisible,
@@ -11,6 +12,8 @@ export default function BurgerMenu({
 	setIsWelcomeVisible,
 }) {
 	const [openSection, setOpenSection] = useState(null);
+	const burgerRef = useRef(null);
+
 	const toggleSection = (sectionId) => {
 		setOpenSection((prevOpenSection) =>
 			prevOpenSection === sectionId ? null : sectionId
@@ -18,11 +21,13 @@ export default function BurgerMenu({
 	};
 
 	const { t } = useTranslation();
+	useClickOutside(burgerRef, () => setIsVisible(false));
 
 	return (
 		<div
 			id="burger-menu"
 			className={`${isVisible ? "drawer--open" : "drawer--closed"}`}
+			ref={burgerRef}
 		>
 			<button onClick={() => setIsVisible(false)} className="btn--close-bm">
 				{exitButtonIcon}

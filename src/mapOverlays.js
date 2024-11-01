@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./styles/map-etc.css";
 import html2canvas from "html2canvas";
@@ -111,6 +111,7 @@ export function ShareModal({
 	currentDataset,
 	setIsUploadDialogOpen,
 }) {
+	const shareModalRef = useRef(null);
 	if (!isOpen) return null;
 
 	const { t } = useTranslation();
@@ -244,9 +245,12 @@ export function ShareModal({
 			evt.target.style.backgroundColor = "white";
 		}, 500);
 	};
+
+	useClickOutside(shareModalRef, () => setIsOpen(false));
+
 	return (
 		<>
-			<div id="sharing-modal">
+			<div id="sharing-modal" ref={shareModalRef}>
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
 				</button>
