@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./styles/map-etc.css";
 import html2canvas from "html2canvas";
@@ -12,7 +12,7 @@ import {
 	exitButtonIcon,
 	msgIcon,
 } from "./icons";
-import { slugify } from "./utils.js";
+import { slugify, useClickOutside } from "./utils.js";
 import { isMobileOrTablet } from "./main.js";
 import { useUserStore } from "./UserContext.jsx";
 import { ASK_URL, hasCognito } from "../globals.js";
@@ -112,7 +112,7 @@ export function ShareModal({
 	setIsUploadDialogOpen,
 }) {
 	if (!isOpen) return null;
-
+	const shareModalRef = useRef(null);
 	const { t } = useTranslation();
 	const user = useUserStore();
 	user.checkForDetails();
@@ -244,9 +244,12 @@ export function ShareModal({
 			evt.target.style.backgroundColor = "white";
 		}, 500);
 	};
+
+	useClickOutside(shareModalRef, () => setIsOpen(false));
+
 	return (
 		<>
-			<div id="sharing-modal">
+			<div id="sharing-modal" ref={shareModalRef}>
 				<button className="modal-close btn" onClick={() => setIsOpen(false)}>
 					{closeIcon}
 				</button>
