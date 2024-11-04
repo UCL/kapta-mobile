@@ -14,8 +14,8 @@ export const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 const youtubeOpts = "?rel=0&autoplay=1";
 const whatsappMapsUrl =
 	"https://uclexcites.blog/2024/06/26/whatsapp-maps-connecting-users-and-producers-of-ground-information/";
-const whatsappMapsUrlSpanish =
-	"https://uclexcites-blog.translate.goog/2024/06/26/whatsapp-maps-connecting-users-and-producers-of-ground-information/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en-US&_x_tr_pto=wapp";
+const whatsappMapsUrlSpanish = "https://uclexcites-blog.translate.goog/2024/06/26/whatsapp-maps-connecting-users-and-producers-of-ground-information/?_x_tr_sl=auto&_x_tr_tl=es&_x_tr_hl=en-US&_x_tr_pto=wapp";
+
 const extremeCitizenUrl = "https://www.youtube.com/watch?v=IgQc7GQ1m_Y";
 const marcosUrl =
 	"https://www.ucl.ac.uk/geography/people/research-staff/marcos-moreu";
@@ -65,6 +65,7 @@ i18next.use(initReactI18next).init({
 				people: "People",
 				peopleContent: `Kapta is being developed by the University College London (UCL) Extreme Citizen Science (ExCiteS) research group and the Advanced Research Computing Centre (UCL ARC), with help from outside partners & contributors.<br>Currently the core Kapta team consists of:<br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Geography</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Geography</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Geography</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Durham University</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Addis Ababa University, NGO IPC</a></li></ul>`,
 				legalDisclaimer: `<b>Disclaimer</b>: The Kapta team has made every effort to develop an app that parse WhatsApp chats to create WhatsApp Maps with the highest possible accuracy. However, we cannot accept responsibility for any errors, omissions, or inconsistencies that may occur. Please always make your own judgement about the accuracy of the maps and validate the information using other sources. If you encounter any issues or have feedback, please reach out to us at <a href="mailto:geog.excites@ucl.ac.uk?subject=Kapta Mobile Feedback">geog.excites@ucl.ac.uk</a> or via WhatsApp at <a href=${ASK_URL}>+34 678380944.</a>`,
+
 				confirm: "Confirm",
 				yes: "Yes",
 				no: "No",
@@ -113,6 +114,7 @@ i18next.use(initReactI18next).init({
 				people: "Quiénes Somos",
 				peopleContent: `Kapta está siendo desarrollado por el grupo de investigación de Ciencia Ciudadana Extrema (UCL ExCiteS) y el Centro de Computación Avanzada (UCL ARC) de la University College London (UCL), con ayuda de socios externos y colaboradores.<br>Actualmente, el equipo central de Kapta está formado por: <br><ul><li><a href='${marcosUrl}'>Marcos Moreu, UCL Geography</a></li><li><a href='${fabienUrl}'>Fabien Moustard, UCL Geography</a></li><li><a href='${tomUrl}'>Tom Couch, UCL ARC</a></li><li><a href='${mukiUrl}'>Muki Haklay, UCL Geography</a></li><li><a href='${jonathanUrl}'>Jonathan Cooper, UCL ARC</a></li><li><a href='${claireUrl}'>Claire Ellul, UCL CEGE</a></li><li><a href='${amandaUrl}'>Amanda Ho-Lyn, UCL ARC</a></li><li><a href='${jedUrl}'>Jed Stevenson, Durham University</a></li><li><a href='${desUrl}'>Dessalegn Teckle, Addis Ababa University, NGO IPC</a></li></ul>`,
 				legalDisclaimer: `<b>Exención de responsabilidad</b>: El equipo de Kapta ha hecho todo lo posible para desarrollar una aplicación que procesa chats de WhatsApp para crear WhatsApp Maps con la mayor precisión posible. Sin embargo, no podemos aceptar responsabilidad por errores, omisiones o inconsistencias que puedan ocurrir. Le recomendamos que siempre haga su propio juicio sobre la precisión de los mapas y valide la información utilizando otras fuentes. Si encuentra algún problema o tiene comentarios, comuníquese con nosotros en <a href="mailto:geog.excites@ucl.ac.uk?subject=Kapta Mobile Feedback">geog.excites@ucl.ac.uk</a> o a través de WhatsApp en el <a href=${ASK_URL}>+34 678380944.</a>.`,
+
 				confirm: "Confirmar",
 				yes: "Sí",
 				no: "No",
