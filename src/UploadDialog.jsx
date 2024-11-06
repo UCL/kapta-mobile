@@ -97,11 +97,7 @@ export function UploadDialog({
 			};
 			const response = await createTask(data, user.idToken);
 			if (response.includes(taskId)) {
-				const response = await submitData(
-					currentDataset,
-					task.id,
-					user.idToken
-				);
+				const response = await submitData(currentDataset, taskId, user.idToken);
 				if (response.status === 200) {
 					setIsOpen(false);
 					setSuccessModalVisible(true);
