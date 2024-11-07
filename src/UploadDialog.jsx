@@ -51,9 +51,9 @@ export function UploadDialog({
 				return setHasCodeError(true);
 			} else {
 				const task = {
-					id: response.task_id?.S,
-					description: response.task_description?.S,
-					title: response.task_title?.S,
+					id: response.task_id,
+					description: response.task_description,
+					title: response.task_title,
 				};
 				return setTask(task);
 			}
@@ -249,12 +249,12 @@ export function UploadDialog({
 								<h4 className="grey">Upload data to Kapta</h4>
 								<h2>Task Details</h2>
 								<h3 name="task-title" id="task-title">
-									<small>Title:</small> {task.task_title}
+									<small>Title:</small> {task.title}
 								</h3>
 
 								<p name="task-description" id="task-description">
 									<span>Description: </span>
-									{task.task_description}
+									{task.description}
 								</p>
 
 								<label htmlFor="data-sov">{t("datasovmessage")}</label>
