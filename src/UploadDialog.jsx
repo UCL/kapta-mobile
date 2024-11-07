@@ -249,12 +249,12 @@ export function UploadDialog({
 								<h4 className="grey">Upload data to Kapta</h4>
 								<h2>Task Details</h2>
 								<h3 name="task-title" id="task-title">
-									<small>Title:</small> {task.title}
+									<small>Title:</small> {task.task_title}
 								</h3>
 
 								<p name="task-description" id="task-description">
 									<span>Description: </span>
-									{task.description}
+									{task.task_description}
 								</p>
 
 								<label htmlFor="data-sov">{t("datasovmessage")}</label>
