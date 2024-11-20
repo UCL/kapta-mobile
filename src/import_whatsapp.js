@@ -1,5 +1,5 @@
 import * as JSZip from "jszip";
-import { slugify } from "./utils.js";
+import { sha256, slugify } from "./utils.js";
 import React, { useEffect, useCallback } from "react";
 
 export const colourPalette = [
@@ -79,7 +79,6 @@ const processFile = (file, setDataDisplayMap) => {
 						filename.match(/.*\.(jpg|jpeg|png|gif)$/i)
 					);
 					if (imgFilenames.length > 0) {
-						console.log("images found");
 					}
 					// if there is a chat file, process it and any images
 					if (chatFilename) {
@@ -314,11 +313,11 @@ const processText = (text) => {
 	let currentFeature = null;
 	let currentSender = null;
 
-	const createFeature = (message, groupName) => {
+	const createFeature = (message, groupName, contribID) => {
 		return {
 			type: "Feature",
 			properties: {
-				contributionid: crypto.randomUUID(),
+				contributionid: contribID,
 				mainattribute: groupName,
 				observations: "",
 				observer: message.sender,
@@ -335,15 +334,16 @@ const processText = (text) => {
 		};
 	};
 
-	messages.forEach((message) => {
+	messages.forEach(async (message) => {
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
 		// we assign it to a variable to be sure the validated content is used
+		const contribID = await sha256(message.datetime + message.sender); // hash a unique contrib id, this is difficult under more nesting
 
 		if (message.location || message.sender !== currentSender) {
 			if (currentFeature && currentFeature.geometry) {
 				mapdata.features.push(currentFeature);
 			}
-			currentFeature = createFeature(message, groupName);
+			currentFeature = createFeature(message, groupName, contribID);
 			currentSender = message.sender;
 		}
 
@@ -360,6 +360,5 @@ const processText = (text) => {
 	} else {
 		currentFeature = null;
 	}
-
 	return [mapdata, groupName];
 };
