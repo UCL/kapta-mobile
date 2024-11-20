@@ -353,6 +353,7 @@ const processText = async (text) => {
 				currentFeature.properties.imgFilenames.push(...message.imgFilenames);
 			}
 			currentFeature.properties.observations += message.content + "\n";
+			currentFeature.properties.contributionid = contribID;
 		}
 	}
 	// Push the last message to mapdata
