@@ -313,11 +313,11 @@ const processText = async (text) => {
 	let currentFeature = null;
 	let currentSender = null;
 
-	const createFeature = (message, groupName) => {
+	const createFeature = (message, groupName, contribID) => {
 		return {
 			type: "Feature",
 			properties: {
-				contributionid: "",
+				contributionid: contribID,
 				mainattribute: groupName,
 				observations: "",
 				observer: message.sender,
@@ -340,23 +340,22 @@ const processText = async (text) => {
 		// const contribID = await sha256(message.datetime + message.sender); // hash a unique contrib id, this is difficult under more nesting
 
 		if (message.location || message.sender !== currentSender) {
+			const contribID = await sha256(message.datetime + message.sender);
 			if (currentFeature && currentFeature.geometry) {
 				mapdata.features.push(currentFeature);
 			}
-			currentFeature = createFeature(message, groupName);
+			currentFeature = createFeature(message, groupName, contribID);
 			currentSender = message.sender;
 		}
 
 		if (currentFeature) {
-			const contribID = await sha256(message.datetime + message.sender);
 			if (message.imgFilenames) {
 				currentFeature.properties.imgFilenames.push(...message.imgFilenames);
 			}
 			currentFeature.properties.observations += message.content + "\n";
-			currentFeature.properties.contributionid = contribID;
 		}
 	}
-	// Push the last message to mapdata
+	// Push the last message to mapdataz
 	if (currentFeature && currentFeature.geometry) {
 		mapdata.features.push(currentFeature);
 	} else {
