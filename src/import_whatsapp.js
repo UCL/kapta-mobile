@@ -1,5 +1,5 @@
 import * as JSZip from "jszip";
-import { slugify } from "./utils.js";
+import { sha256, slugify } from "./utils.js";
 import React, { useEffect, useCallback } from "react";
 
 export const colourPalette = [
@@ -79,7 +79,6 @@ const processFile = (file, setDataDisplayMap) => {
 						filename.match(/.*\.(jpg|jpeg|png|gif)$/i)
 					);
 					if (imgFilenames.length > 0) {
-						console.log("images found");
 					}
 					// if there is a chat file, process it and any images
 					if (chatFilename) {
@@ -87,8 +86,8 @@ const processFile = (file, setDataDisplayMap) => {
 						zip
 							.file(chatFilename)
 							.async("string")
-							.then(function (fileContent) {
-								const [data, name] = processText(fileContent);
+							.then(async function (fileContent) {
+								const [data, name] = await processText(fileContent);
 								setDataDisplayMap(data, name, zip);
 							});
 					}
@@ -96,7 +95,7 @@ const processFile = (file, setDataDisplayMap) => {
 			} else {
 				// text or geojson
 				reader.readAsText(file);
-				reader.onloadend = function (e) {
+				reader.onloadend = async function (e) {
 					const content = e.target.result;
 					const geoJSONRegex = /^\s*{\s*"type"/;
 					// will process as geojson if extension is .geojson or if content starts with { "type"
@@ -108,7 +107,7 @@ const processFile = (file, setDataDisplayMap) => {
 							console.error("Error parsing GeoJSON:", error);
 						}
 					} else {
-						const [data, name] = processText(e.target.result);
+						const [data, name] = await processText(e.target.result);
 						setDataDisplayMap(data, name);
 					}
 				};
@@ -291,7 +290,7 @@ const sortMessages = (messages) => {
 	return messages;
 };
 
-const processText = (text) => {
+const processText = async (text) => {
 	const groupNameRegex = /"([^"]*)"/;
 	const groupNameMatches = text.match(groupNameRegex);
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
@@ -314,11 +313,11 @@ const processText = (text) => {
 	let currentFeature = null;
 	let currentSender = null;
 
-	const createFeature = (message, groupName) => {
+	const createFeature = (message, groupName, contribID) => {
 		return {
 			type: "Feature",
 			properties: {
-				contributionid: crypto.randomUUID(),
+				contributionid: contribID,
 				mainattribute: groupName,
 				observations: "",
 				observer: message.sender,
@@ -335,15 +334,17 @@ const processText = (text) => {
 		};
 	};
 
-	messages.forEach((message) => {
+	for (const message of messages) {
 		// if the content is valid and there is location or different sender, get the current feature or create a new one and push it to mapdata
 		// we assign it to a variable to be sure the validated content is used
+		// const contribID = await sha256(message.datetime + message.sender); // hash a unique contrib id, this is difficult under more nesting
 
 		if (message.location || message.sender !== currentSender) {
+			const contribID = await sha256(message.datetime + message.sender);
 			if (currentFeature && currentFeature.geometry) {
 				mapdata.features.push(currentFeature);
 			}
-			currentFeature = createFeature(message, groupName);
+			currentFeature = createFeature(message, groupName, contribID);
 			currentSender = message.sender;
 		}
 
@@ -353,13 +354,12 @@ const processText = (text) => {
 			}
 			currentFeature.properties.observations += message.content + "\n";
 		}
-	});
-	// Push the last message to mapdata
+	}
+	// Push the last message to mapdataz
 	if (currentFeature && currentFeature.geometry) {
 		mapdata.features.push(currentFeature);
 	} else {
 		currentFeature = null;
 	}
-
 	return [mapdata, groupName];
 };

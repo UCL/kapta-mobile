@@ -51,9 +51,9 @@ export function UploadDialog({
 				return setHasCodeError(true);
 			} else {
 				const task = {
-					id: response.task_id?.S,
-					description: response.task_description?.S,
-					title: response.task_title?.S,
+					id: response.task_id,
+					description: response.task_description,
+					title: response.task_title,
 				};
 				return setTask(task);
 			}
@@ -97,11 +97,7 @@ export function UploadDialog({
 			};
 			const response = await createTask(data, user.idToken);
 			if (response.includes(taskId)) {
-				const response = await submitData(
-					currentDataset,
-					task.id,
-					user.idToken
-				);
+				const response = await submitData(currentDataset, taskId, user.idToken);
 				if (response.status === 200) {
 					setIsOpen(false);
 					setSuccessModalVisible(true);
