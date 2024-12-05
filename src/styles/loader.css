@@ -6,9 +6,33 @@
     align-items: center;
     position: absolute;
     /* to be above scale line and attribution */
-    z-index: 1001;
+    z-index: 1002;
     gap: 5px;
     background-color: var(--mid-green);
+
+    &.loader:before,
+    &.loader:after {
+        box-shadow: 0 0 0 3px inset #fff;
+    }
+}
+
+#upload-loader {
+    z-index: 1003;
+    color: var(--mid-green);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 95%;
+    background-color: #fff;
+    border-radius: 8px;
+    top: 0;
+
+    &.loader:before,
+    &.loader:after {
+        box-shadow: 0 0 0 3px inset var(--mid-green);
+    }
 }
 
 
@@ -17,7 +41,7 @@
     content: "";
     width: 25px;
     aspect-ratio: 1;
-    box-shadow: 0 0 0 3px inset #fff;
+    /* box-shadow: 0 0 0 3px inset #fff; */
     animation: l5 1.5s infinite;
 }
 
