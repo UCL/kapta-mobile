@@ -19,3 +19,9 @@ export default function Loader({ isVisible, setIsVisible }) {
 
 	return <div id="loader" className="loader"></div>;
 }
+
+export function UploadLoader({ isVisible }) {
+	console.log("in loader", isVisible);
+	if (!isVisible) return null;
+	return <div id="upload-loader" className="loader"></div>;
+}

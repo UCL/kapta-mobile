@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 import { createTask, getTaskDetails, submitData } from "./data_submission.js";
 import "./styles/main.css";
 import { addMetaIcn, nextIcn } from "./icons";
+import { UploadLoader } from "./Loader.jsx";
 import { useUserStore } from "./UserContext.jsx";
 import { LoginDialog, WelcomeBackDialog } from "./Login.jsx";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { generateCampaignCode } from "./utils.js";
 
 const opendataCode = "OPENDATA";
 const opendataId = opendataCode.toLowerCase();
@@ -26,6 +28,7 @@ export function UploadDialog({
 	const [task, setTask] = useState(null);
 	const [showOpenDataForm, setShowOpenDataForm] = useState(false);
 	const [hasCodeError, setHasCodeError] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const user = useUserStore();
 	var hasDetails;
@@ -50,9 +53,9 @@ export function UploadDialog({
 				return setHasCodeError(true);
 			} else {
 				const task = {
-					id: response.task_id?.S,
-					description: response.task_description?.S,
-					title: response.task_title?.S,
+					id: response.task_id,
+					description: response.task_description,
+					title: response.task_title,
 				};
 				return setTask(task);
 			}
@@ -65,8 +68,10 @@ export function UploadDialog({
 			console.error("Permission not given");
 			return;
 		} else {
+			setIsLoading(true);
 			const response = await submitData(currentDataset, task.id, user.idToken);
 			if (response.status === 200) {
+				setIsLoading(false);
 				setIsOpen(false);
 				setSuccessModalVisible(true);
 			}
@@ -81,9 +86,11 @@ export function UploadDialog({
 		} else {
 			// create a new task and then submit the data
 			var formData = new FormData(e.target);
-			const taskId = `${opendataId}-${user.userId}`;
+			let uuid = crypto.randomUUID();
+			const taskId = `${opendataId}-${uuid}`;
+			let ccode = generateCampaignCode();
 			const data = {
-				campaignCode: opendataCode,
+				campaignCode: ccode,
 				title: formData.get("task-title"),
 				description: formData.get("task-description"),
 				createdBy: user.userId,
@@ -92,14 +99,12 @@ export function UploadDialog({
 				visible: true,
 				taskID: taskId,
 			};
+			setIsLoading(true);
 			const response = await createTask(data, user.idToken);
 			if (response.includes(taskId)) {
-				const response = await submitData(
-					currentDataset,
-					task.id,
-					user.idToken
-				);
+				const response = await submitData(currentDataset, taskId, user.idToken);
 				if (response.status === 200) {
+					setIsLoading(false);
 					setIsOpen(false);
 					setSuccessModalVisible(true);
 				}
@@ -128,13 +133,11 @@ export function UploadDialog({
 
 	return (
 		<>
-			{/* {!user.loggedIn && !hasDetails && ( */}
 			<LoginDialog
 				isVisible={isLoginVisible}
 				setIsVisible={setIsLoginVisible}
 				setIsWelcomeVisible={setIsWelcomeVisible}
 			/>
-			{/* )} */}
 			<WelcomeBackDialog
 				isVisible={isWelcomeVisible}
 				setIsVisible={setIsWelcomeVisible}
@@ -143,6 +146,7 @@ export function UploadDialog({
 			{user.loggedIn && (
 				<>
 					<dialog id="upload-dialog" open>
+						{isLoading && <UploadLoader isVisible={isLoading} />}
 						{!task && !showOpenDataForm && (
 							<>
 								{/* check the code or choose open data */}
