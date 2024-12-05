@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { closeIcon } from "./icons";
 
 export default function SuccessModal({ isVisible, setIsVisible }) {
