@@ -8,7 +8,7 @@
     /* to be above scale line and attribution */
     z-index: 1001;
     gap: 5px;
-    background-color: var(--mid-red);
+    background-color: var(--mid-green);
 }
 
 

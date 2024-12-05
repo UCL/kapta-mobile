@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import KaptaLogo from "./images/icons/kapta-white.png";
+import KaptaLogo from "./images/icons/kapta-green.svg";
 import { isIOS, isMobileOrTablet } from "./main";
 import ReactGA from "react-ga4";
 

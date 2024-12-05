@@ -1,5 +1,5 @@
 import { signUp, initiateAuth, respondToSMSChallenge } from "./auth.js";
-import KaptaLogo from "./images/icons/kapta-white.png";
+import KaptaLogo from "./images/icons/kapta-green.svg";
 import { closeIcon, thumbsUpIcon } from "./icons.js";
 import { useUserStore } from "./UserContext.jsx";
 import React, { useEffect, useState } from "react";
@@ -79,7 +79,7 @@ function SignUpForm({
 		display_name = formData.get("display-name");
 		phone_number = formData.get("phone-number");
 		phoneNumber === phone_number &&
-			signUp( phone_number, display_name )
+			signUp(phone_number, display_name)
 				.then(function (value) {
 					return initiateAuth(phone_number)
 						.then(function (response) {

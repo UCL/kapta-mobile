@@ -2,15 +2,19 @@
 
 /* tends to have the dialog styling and colours */
 :root {
+    --mid-green: #1ca64f;
+    --mid-green--translucent: #1ca64f7e;
     --mid-red: #9f1203;
     --mid-red--translucent: #9b11027e;
     --black-blue: #031927;
     --black-blue--translucent: #03192799;
     --mid-grey: #555;
     --light-grey: #808080;
-    --bright-green: #05f505;
+    --bright-green: #25D366;
     --black-grey: #2d2c2c;
     --link-blue: #2d53b4;
+    --wa-green: #25D366;
+    --wa-green--dark: #1ca64f;
 }
 
 html,
@@ -31,7 +35,7 @@ body {
 
 
 #main {
-    background-color: var(--mid-red);
+    background-color: var(--mid-green);
     width: 100vw;
     margin: auto;
     height: 100%;
@@ -130,7 +134,7 @@ body {
     width: 52vw;
     padding: 1rem;
     height: fit-content;
-    border: 1px solid var(--mid-red--translucent);
+    border: 1px solid var(--mid-green--translucent);
     text-align: center;
 
 
@@ -144,7 +148,7 @@ body {
     .code-input {
         padding: 0.5rem;
         min-height: 1.5rem;
-        border: 1px solid var(--mid-red--translucent);
+        border: 1px solid var(--mid-green--translucent);
         border-radius: 6px;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
@@ -168,7 +172,7 @@ body {
         }
 
         h3 {
-            color: var(--mid-red);
+            color: var(--mid-green);
             margin: 0 auto;
         }
 
@@ -193,7 +197,7 @@ body {
             min-height: 1.8rem;
 
             span {
-                color: var(--mid-red);
+                color: var(--mid-green);
             }
         }
 
@@ -218,9 +222,9 @@ body {
 
         .btn {
             padding: 0.6rem;
-            background-color: var(--mid-red);
+            background-color: var(--mid-green);
             color: white;
-            border-color: var(--mid-red--translucent);
+            border-color: var(--mid-green--translucent);
 
             &.check-code {
                 border-radius: 6px;
@@ -314,7 +318,7 @@ body {
     border: 1px solid #eeeeeeda;
 
     h3 {
-        color: green;
+        color: var(--mid-green);
     }
 }
 
@@ -338,8 +342,8 @@ body {
     box-shadow: 2px 2px 10px -6px rgba(34, 34, 34, 0.7);
 
     &.confirm:not(:disabled) {
-        color: green;
-        border-color: green;
+        color: var(--mid-green);
+        border-color: var(--mid-green);
 
         >svg {
             scale: 1.5
