@@ -26,8 +26,8 @@
 
     .button--logout {
         background-color: transparent;
-        color: var(--mid-red);
-        border: 1px solid var(--mid-red--translucent);
+        color: var(--mid-green);
+        border: 1px solid var(--mid-green--translucent);
     }
 }
 
@@ -56,7 +56,7 @@
         margin-inline-start: 0.3rem;
 
         svg {
-            color: var(--mid-red);
+            color: var(--mid-green);
         }
     }
 
@@ -106,7 +106,7 @@
 
     #gh {
         font-size: 2rem;
-        color: var(--mid-red);
+        color: var(--mid-green);
     }
 
     #disclaimer {

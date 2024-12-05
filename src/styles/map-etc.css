@@ -94,7 +94,7 @@
     }
 
     .error-popup {
-        color: var(--mid-red);
+        color: var(--mid-green);
     }
 }
 
@@ -130,9 +130,9 @@
             }
 
             #exit-map {
-                background-color: var(--mid-red);
+                background-color: var(--mid-green);
                 border-radius: 50%;
-                border-color: var(--mid-red--translucent);
+                border-color: var(--mid-green--translucent);
             }
 
 
@@ -177,9 +177,9 @@
                 justify-content: center;
                 width: 3rem;
                 height: 3rem;
-                background-color: var(--mid-red);
+                background-color: var(--mid-green);
                 border-radius: 50%;
-                border: 1px solid var(--mid-red--translucent);
+                border: 1px solid var(--mid-green--translucent);
 
                 >svg {
                     height: 1.5rem;
@@ -207,7 +207,7 @@
     position: absolute;
     top: 16vh;
     margin-inline: 20%;
-    background-color: var(--mid-red--translucent);
+    background-color: var(--mid-green--translucent);
     backdrop-filter: blur(2px);
     padding: 1rem;
 
@@ -302,7 +302,7 @@
 
     .next-image {
         display: flex;
-        background-color: var(--mid-red);
+        background-color: var(--mid-green);
         border-radius: 50%;
         width: 1.5rem;
         height: 1.5rem;

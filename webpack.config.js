@@ -75,7 +75,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: "./src/images/icons/kapta-white.png",
+					from: "./src/images/icons/kapta-green.svg",
 					to: "og-icon.png",
 				},
 			],
@@ -83,7 +83,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: "./src/index.html",
 			title: "Kapta",
-			favicon: "src/images/icons/favicon.ico",
+			favicon: "src/images/icons/favicon.svg",
 			meta: {
 				"Content-Type": {
 					"http-equiv": "content-type",
@@ -185,11 +185,11 @@ module.exports = {
 			},
 			icons: [
 				{
-					src: path.resolve("src/images/icons/kapta-white.png"),
+					src: path.resolve("src/images/icons/kapta-green.svg"),
 					sizes: [72, 96, 128, 192, 256, 512],
 				},
 				{
-					src: path.resolve("src/images/icons/kapta-white.png"),
+					src: path.resolve("src/images/icons/kapta-green.svg"),
 					size: "512x512",
 					purpose: "maskable",
 				},

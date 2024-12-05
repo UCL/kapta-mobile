@@ -16,7 +16,7 @@
         font-size: 145%;
         text-align: center;
         font-weight: 600;
-        color: var(--mid-red);
+        color: var(--mid-green);
         margin-top: 2vh;
         margin-bottom: 1vh;
         z-index: 0;
@@ -74,7 +74,7 @@
 }
 
 #copyright {
-    color: #DBC7C7;
+    color: #093f1d;
     position: fixed;
     width: 100%;
     text-align: center;
