@@ -3,6 +3,19 @@ import { closeIcon } from "./icons";
 
 export default function SuccessModal({ isVisible, setIsVisible }) {
 	if (!isVisible) return null;
+	useEffect(() => {
+		let timer = setTimeout(() => {
+			try {
+				setIsVisible(false);
+			} catch (error) {
+				console.error("Error hiding the loader:", error);
+			}
+		}, 2800);
+
+		// Clean up the timer if the component is unmounted or if `isVisible` changes
+		return () => clearTimeout(timer);
+	}, [isVisible, setIsVisible]);
+
 	return (
 		<dialog open={isVisible} id="success-dialog">
 			<button className="btn cancel" onClick={() => setIsVisible(false)}>
