@@ -10,7 +10,7 @@ export default function SuccessModal({ isVisible, setIsVisible }) {
 			} catch (error) {
 				console.error("Error hiding the loader:", error);
 			}
-		}, 2800);
+		}, 4800);
 
 		// Clean up the timer if the component is unmounted or if `isVisible` changes
 		return () => clearTimeout(timer);
