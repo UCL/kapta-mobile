@@ -129,7 +129,7 @@ module.exports = {
 			name: "Kapta",
 			short_name: "Kapta",
 			lang: "en-GB",
-			theme_color: " #1ca44c",
+			theme_color: " #1ca64f",
 			background_color: " #1ca44c",
 			display: "standalone",
 			orientation: "portrait",
