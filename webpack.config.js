@@ -130,7 +130,7 @@ module.exports = {
 			short_name: "Kapta",
 			lang: "en-GB",
 			theme_color: " #1ca64f",
-			background_color: " #1ca44c",
+			background_color: " #1ca64f",
 			display: "standalone",
 			orientation: "portrait",
 			start_url: "/",
