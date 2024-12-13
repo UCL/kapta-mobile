@@ -144,6 +144,10 @@ const formatDateString = (date, time) => {
 		}
 	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
+	if (year.length === 2) {
+		year = "20" + year;
+	}
+
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
 
@@ -252,13 +256,13 @@ const setImgMsgRegex = (fileType) => {
 		// console.info("ios format");
 		// iOS format
 		messageRegex =
-			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
 		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
 		// console.info("android format");
 		// Android format
 		messageRegex =
-			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+			/(\d{2,4}\/\d{2}\/\d{2,4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
 		// Regex to match and capture image filenames in messages
 		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
