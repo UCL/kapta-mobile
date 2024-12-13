@@ -202,6 +202,7 @@ const cleanMsgContent = (content, location, imgFileRegex) => {
 		)
 		.join("\n");
 	content = content.replace(/remove_this_msg\n/g, "");
+	content = content.replace(/\n\n\n/g, "\n");
 	return content;
 };
 
