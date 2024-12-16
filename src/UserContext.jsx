@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
 		if (userDetailsNotNull) {
 			const isValid = await isTokenValid(userDetails.idToken);
 			if (!isValid) {
-				if (userDetails.refreshToken) {
+				if (userDetails.refreshToken && userDetails.refreshToken !== "null") {
 					await refresh(userDetails.refreshToken);
 					try {
 						userDetails = getLocalStorageTokens();
@@ -109,15 +109,13 @@ export const UserProvider = ({ children }) => {
 	// Function to refresh tokens
 	const refresh = useCallback(
 		async (refreshToken) => {
-			if (refreshToken !== null && refreshToken !== "null") {
-				const response = await initiateAuthRefresh(refreshToken);
-				const authResult = response.AuthenticationResult;
-				setUserDetails({
-					accessToken: authResult.AccessToken,
-					idToken: authResult.IdToken,
-					refreshToken: authResult.RefreshToken,
-				});
-			}
+			const response = await initiateAuthRefresh(refreshToken);
+			const authResult = response.AuthenticationResult;
+			setUserDetails({
+				accessToken: authResult.AccessToken,
+				idToken: authResult.IdToken,
+				refreshToken: authResult.RefreshToken,
+			});
 		},
 		[refreshToken, setUserDetails]
 	);
