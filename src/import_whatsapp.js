@@ -258,13 +258,13 @@ const setImgMsgRegex = (fileType) => {
 		// console.info("ios format");
 		// iOS format
 		messageRegex =
-			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=(\n\d{2,4}\/\d{2}\/\d{2,4})|$)/gs;
 		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
 		// console.info("android format");
 		// Android format
 		messageRegex =
-			/(\d{2,4}\/\d{2}\/\d{2,4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+			/(\d{2,4}\/\d{2}\/\d{2,4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2,4}\/\d{2}\/\d{2,4})|$)/g;
 		// Regex to match and capture image filenames in messages
 		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
