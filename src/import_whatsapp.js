@@ -143,7 +143,25 @@ const formatDateString = (date, time) => {
 		}
 	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
-	let [day, month, year] = date.split("/");
+	// split date string into parts and then determine which is what
+	let [part1, part2, part3] = date.split("/");
+
+	let day, month, year;
+
+	if (part1.length === 4) {
+		year = part1;
+		month = part2;
+		day = part3;
+	} else if (part3.length === 4) {
+		day = part1;
+		month = part2;
+		year = part3;
+	} else {
+		// default to dd/mm/yy
+		day = part1;
+		month = part2;
+		year = part3;
+	}
 	if (year.length === 2) {
 		year = "20" + year;
 	}
