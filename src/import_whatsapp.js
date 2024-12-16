@@ -124,13 +124,12 @@ const getSenderColour = (senders) => {
 };
 
 const formatDateString = (date, time) => {
-	// Given strings representing a date (dd/mm/yyyy) and
-	// time (hh:mm:ss) return a datetime object
+	// Given strings representing a date in various formats (mm/dd/yyyy, dd/mm/yy, etc) and a time in 12 or 24 hour format, including or excluding seconds, return a string in the format YYYY-MM-DDTHH:MM:SS
+
 	// Check if time includes AM/PM to determine the format
 	const is12HourFormat =
 		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
 	let hour, min, sec;
-	let [day, month, year] = date.split("/");
 	if (is12HourFormat) {
 		// Handle 12-hour format
 		let [timePart, meridiem] = time.toLowerCase().split(" ");
@@ -144,6 +143,7 @@ const formatDateString = (date, time) => {
 		}
 	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
 
+	let [day, month, year] = date.split("/");
 	if (year.length === 2) {
 		year = "20" + year;
 	}
