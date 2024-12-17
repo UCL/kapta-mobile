@@ -60,6 +60,8 @@ export const UserProvider = ({ children }) => {
 	}
 
 	const getLocalStorageTokens = useCallback(() => {
+		console.log("getting tokens from local storage");
+
 		return {
 			idToken: localStorage.getItem("KM-idToken"),
 			accessToken: localStorage.getItem("KM-accessToken"),
@@ -101,6 +103,7 @@ export const UserProvider = ({ children }) => {
 
 	// update localStorage values
 	const setLocalStorage = (idToken, accessToken, refreshToken) => {
+		console.log("setting tokens in local storage", refreshToken);
 		localStorage.setItem("KM-idToken", idToken || "null"); // Save as "null" if null
 		localStorage.setItem("KM-accessToken", accessToken || "null");
 		localStorage.setItem("KM-refreshToken", refreshToken || "null");
@@ -114,7 +117,7 @@ export const UserProvider = ({ children }) => {
 			setUserDetails({
 				accessToken: authResult.AccessToken,
 				idToken: authResult.IdToken,
-				refreshToken: authResult.RefreshToken,
+				refreshToken: refreshToken,
 			});
 		},
 		[refreshToken, setUserDetails]
