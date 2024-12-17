@@ -124,13 +124,12 @@ const getSenderColour = (senders) => {
 };
 
 const formatDateString = (date, time) => {
-	// Given strings representing a date (dd/mm/yyyy) and
-	// time (hh:mm:ss) return a datetime object
+	// Given strings representing a date in various formats (mm/dd/yyyy, dd/mm/yy, etc) and a time in 12 or 24 hour format, including or excluding seconds, return a string in the format YYYY-MM-DDTHH:MM:SS
+
 	// Check if time includes AM/PM to determine the format
 	const is12HourFormat =
 		time.toLowerCase().includes("am") || time.toLowerCase().includes("pm");
 	let hour, min, sec;
-	let [day, month, year] = date.split("/");
 	if (is12HourFormat) {
 		// Handle 12-hour format
 		let [timePart, meridiem] = time.toLowerCase().split(" ");
@@ -143,6 +142,29 @@ const formatDateString = (date, time) => {
 			hour = "00";
 		}
 	} else [hour, min, sec = "00"] = time.split(":"); // 24hr format used already
+
+	// split date string into parts and then determine which is what
+	let [part1, part2, part3] = date.split("/");
+
+	let day, month, year;
+
+	if (part1.length === 4) {
+		year = part1;
+		month = part2;
+		day = part3;
+	} else if (part3.length === 4) {
+		day = part1;
+		month = part2;
+		year = part3;
+	} else {
+		// default to dd/mm/yy
+		day = part1;
+		month = part2;
+		year = part3;
+	}
+	if (year.length === 2) {
+		year = "20" + year;
+	}
 
 	return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 };
@@ -197,6 +219,8 @@ const cleanMsgContent = (content, location, imgFileRegex) => {
 				)
 		)
 		.join("\n");
+	content = content.replace(/remove_this_msg\n/g, "");
+	content = content.replace(/\n\n\n/g, "\n");
 	return content;
 };
 
@@ -252,13 +276,13 @@ const setImgMsgRegex = (fileType) => {
 		// console.info("ios format");
 		// iOS format
 		messageRegex =
-			/\[(\d{2}\/\d{2}\/\d{4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=\n\[|$)/gs;
+			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=(\n\d{2,4}\/\d{2}\/\d{2,4})|$)/gs;
 		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
 		// console.info("android format");
 		// Android format
 		messageRegex =
-			/(\d{2}\/\d{2}\/\d{4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2}\/\d{2}\/\d{4})|$)/g;
+			/(\d{2,4}\/\d{2}\/\d{2,4}),?\s(\d{1,2}:\d{2})(?:\s?(?:AM|PM|am|pm))?\s-\s(.*?):[\t\f\cK ]((.|\n)*?)(?=(\n\d{2,4}\/\d{2}\/\d{2,4})|$)/g;
 		// Regex to match and capture image filenames in messages
 		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
