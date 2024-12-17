@@ -72,27 +72,21 @@ export const UserProvider = ({ children }) => {
 	// Check for user tokens from localStorage and update user info
 	const checkForDetails = useCallback(async () => {
 		let userDetails = getLocalStorageTokens();
-		// check id and access tokens are there and not "null"
-		const userDetailsNotNull =
-			userDetails.idToken !== "null" &&
-			userDetails.idToken !== undefined &&
-			userDetails.idToken !== null &&
-			userDetails.accessToken !== "null" &&
-			userDetails.accessToken !== undefined &&
-			userDetails.accessToken !== null;
+		// check each of the tokens is there and not "null"
+		const userDetailsNotNull = Object.values(userDetails).every(
+			(value) => value !== null && value !== "null" && value !== undefined
+		);
 
 		if (userDetailsNotNull) {
 			const isValid = await isTokenValid(userDetails.idToken);
 			if (!isValid) {
-				if (userDetails.refreshToken && userDetails.refreshToken !== "null") {
-					await refresh(userDetails.refreshToken);
-					try {
-						userDetails = getLocalStorageTokens();
-						await isTokenValid();
-						setUserDetails(userDetails);
-					} catch (error) {
-						console.error("Error refreshing tokens", error);
-					}
+				await refresh(userDetails.refreshToken);
+				try {
+					userDetails = getLocalStorageTokens();
+					await isTokenValid();
+					setUserDetails(userDetails);
+				} catch (error) {
+					console.error("Error refreshing tokens", error);
 				}
 			} else {
 				setUserDetails(userDetails);
