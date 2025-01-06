@@ -83,7 +83,7 @@ export const UserProvider = ({ children }) => {
 				await refresh(userDetails.refreshToken);
 				try {
 					userDetails = getLocalStorageTokens();
-					await isTokenValid();
+					await isTokenValid(userDetails.idToken);
 					setUserDetails(userDetails);
 				} catch (error) {
 					console.error("Error refreshing tokens", error);
