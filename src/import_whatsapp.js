@@ -272,11 +272,12 @@ const setImgMsgRegex = (fileType) => {
 	// also accounts for if the datetime is wrapped in brackets and has s
 	// Capture group 1 = date, group 2 = time, group 3 = sender, group 4 = message content
 	// this has been tweaked for each format but gives the same output
+
 	if (fileType.match(/\[\d{2}/)) {
 		// console.info("ios format");
 		// iOS format
 		messageRegex =
-			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=(\n\d{2,4}\/\d{2}\/\d{2,4})|$)/gs;
+			/\[(\d{2,4}\/\d{2}\/\d{2,4}),\s(\d{1,2}:\d{2}:\d{2}\s(?:AM|PM))\]\s(.*?):\s(.+?)(?=(\n\[\d{2,4}\/\d{2}\/\d{2,4})|$)/gs;
 		imgFileRegex = /<attached: (\d+-[\w\-_]+\.(jpg|jpeg|png|gif))>/gim;
 	} else if (fileType.match(/\d{2}\//)) {
 		// console.info("android format");
@@ -286,7 +287,7 @@ const setImgMsgRegex = (fileType) => {
 		// Regex to match and capture image filenames in messages
 		imgFileRegex = /\b([\w\-_]*\.(jpg|jpeg|png|gif))\s\(file attached\)/gim;
 	} else {
-		console.error("Unknown file format");
+		console.error("Unknown file format; doesn't match iOS or Android format");
 		return [null, null];
 	}
 	return [messageRegex, imgFileRegex];
@@ -320,6 +321,7 @@ const processText = async (text) => {
 	const groupName = groupNameMatches ? groupNameMatches[1] : null;
 
 	// Check the first 3 characters to determine the format; iOS and Android
+	// iOS starts with a [ around the datetime, whereas android doesn't
 	const fileType = text.substring(0, 3);
 	const [messageRegex, imgFileRegex] = setImgMsgRegex(fileType);
 
