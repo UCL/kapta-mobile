@@ -40,6 +40,7 @@ export const UserProvider = ({ children }) => {
 			setIdToken(userDetails.idToken);
 			setRefreshToken(userDetails.refreshToken);
 			setLoggedIn(true);
+			console.log("userDetails", userDetails);
 
 			setLocalStorage(
 				userDetails.idToken,
@@ -59,10 +60,12 @@ export const UserProvider = ({ children }) => {
 	}
 
 	const getLocalStorageTokens = useCallback(() => {
+		console.log("getting tokens from local storage");
+
 		return {
-			idToken: localStorage.getItem("idToken"),
-			accessToken: localStorage.getItem("accessToken"),
-			refreshToken: localStorage.getItem("refreshToken"),
+			idToken: localStorage.getItem("KM-idToken"),
+			accessToken: localStorage.getItem("KM-accessToken"),
+			refreshToken: localStorage.getItem("KM-refreshToken"),
 		};
 	}, []);
 
@@ -80,7 +83,7 @@ export const UserProvider = ({ children }) => {
 				await refresh(userDetails.refreshToken);
 				try {
 					userDetails = getLocalStorageTokens();
-					await isTokenValid();
+					await isTokenValid(userDetails.idToken);
 					setUserDetails(userDetails);
 				} catch (error) {
 					console.error("Error refreshing tokens", error);
@@ -94,23 +97,22 @@ export const UserProvider = ({ children }) => {
 
 	// update localStorage values
 	const setLocalStorage = (idToken, accessToken, refreshToken) => {
-		localStorage.setItem("idToken", idToken || "null"); // Save as "null" if null
-		localStorage.setItem("accessToken", accessToken || "null");
-		localStorage.setItem("refreshToken", refreshToken || "null");
+		console.log("setting tokens in local storage", refreshToken);
+		localStorage.setItem("KM-idToken", idToken || "null"); // Save as "null" if null
+		localStorage.setItem("KM-accessToken", accessToken || "null");
+		localStorage.setItem("KM-refreshToken", refreshToken || "null");
 	};
 
 	// Function to refresh tokens
 	const refresh = useCallback(
 		async (refreshToken) => {
-			if (refreshToken) {
-				const response = await initiateAuthRefresh(refreshToken);
-				const authResult = response.AuthenticationResult;
-				setUserDetails({
-					accessToken: authResult.AccessToken,
-					idToken: authResult.IdToken,
-					refreshToken: authResult.RefreshToken,
-				});
-			}
+			const response = await initiateAuthRefresh(refreshToken);
+			const authResult = response.AuthenticationResult;
+			setUserDetails({
+				accessToken: authResult.AccessToken,
+				idToken: authResult.IdToken,
+				refreshToken: refreshToken,
+			});
 		},
 		[refreshToken, setUserDetails]
 	);
@@ -128,9 +130,9 @@ export const UserProvider = ({ children }) => {
 			);
 		}
 		// Clear localStorage and state
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("idToken");
-		localStorage.removeItem("refreshToken");
+		localStorage.removeItem("KM-accessToken");
+		localStorage.removeItem("KM-idToken");
+		localStorage.removeItem("KM-refreshToken");
 		setIdToken(null);
 		setAccessToken(null);
 		setRefreshToken(null);
