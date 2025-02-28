@@ -50,7 +50,7 @@ Kapta requires a configuration file to be created in the src directory. The file
 
 # Legal disclaimer
 
-Copyright 2024 Wisdom of the Crowd Labs (WCL)
+Copyright 2024 University College London (UCL)
 
 Licensed under the **Apache License, Version 2.0** (the "License");
 you may not use this file except in compliance with the License.
